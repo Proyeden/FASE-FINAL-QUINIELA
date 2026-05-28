@@ -7,6 +7,11 @@
 <meta name="description" content="Quiniela de amistosos previos al Mundial 2026. Llena tu pronóstico para los partidos seleccionados.">
 <title>🤝 Quiniela Amistosos 2026</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Quiniela 2026">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -92,8 +97,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
 .team-name{font-size:12px;font-weight:700;color:var(--text);line-height:1.25}
 .team-name.r{text-align:right}
 .team-flag{font-size:17px;display:block;line-height:1.1}
-.score-box{width:46px;height:44px;border:2px solid #d9eed9;border-radius:var(--radius-sm);font-size:20px;font-weight:700;text-align:center;background:#f5fbf6;color:var(--navy);font-family:'DM Sans',sans-serif;transition:.2s;-moz-appearance:textfield;appearance:textfield;cursor:pointer}
-.score-box::-webkit-inner-spin-button,.score-box::-webkit-outer-spin-button{-webkit-appearance:none}
+.score-box{width:46px;height:44px;border:2px solid #d9eed9;border-radius:var(--radius-sm);font-size:20px;font-weight:700;text-align:center;background:#f5fbf6;color:var(--navy);font-family:'DM Sans',sans-serif;transition:.2s;-moz-appearance:textfield;appearance:textfield;cursor:pointer;-webkit-appearance:none}
+.score-box::-webkit-inner-spin-button,.score-box::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .score-box:focus{outline:none;border-color:var(--green);background:#e8f8ee;box-shadow:0 0 0 3px rgba(39,174,96,.15)}
 .score-box.has-v{border-color:var(--green)!important;background:#e8f8ee!important}
 .vs-dash{font-size:16px;font-weight:800;color:var(--red);user-select:none}
@@ -187,6 +192,71 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
   .hero h1{font-size:1.75rem}
   .group-teams-txt{display:none}
 }
+
+/* ── DARK MODE (mejora 9) ── */
+@media(prefers-color-scheme:dark){
+  :root{--light:#111318;--card:#1E2128;--border:#2E3240;--text:#E8E8F0;--muted:#6B7280}
+  .name-input,.admin-pin-input{background:#252830;color:#E8E8F0;border-color:#2E3240}
+  .name-input:focus,.admin-pin-input:focus{background:#2E3240}
+  .rank-head:hover{background:#252830}
+  .export-select-box{background:#252830}
+  .export-check{background:#1E2128;border-color:#2E3240}
+  .mini-btn{background:#252830;color:#E8E8F0;border-color:#2E3240}
+  .mini-btn:hover{background:#2E3240}
+  .pick-row{border-bottom-color:#2E3240}
+  .prog-bar-bg{background:#2E3240}
+  .how-to{background:#162420;border-color:#1B4332;color:#86EFAC}
+  .how-to b{color:#4ADE80}
+  .private-note{background:#1A2340;border-color:#1E3A8A;color:#93C5FD}
+  .score-box{background:#1A2820;border-color:#1B4332;color:#E8E8F0}
+  .score-box.has-v{background:#14301E!important;border-color:#16A34A!important}
+  .admin-lock,.control-card,.export-card,.stat-card,.rank-card,.name-card,.mypicks-card{background:#1E2128;border-color:#2E3240}
+  .mypick-row{border-bottom-color:#2E3240}
+  .mypick-score{background:#1E3A5F;color:#93C5FD}
+  .mypick-row.guat{background:#0F2818}
+}
+
+/* ── PWA INSTALL BANNER (mejora 2) ── */
+.install-banner{position:fixed;bottom:0;left:0;right:0;z-index:500;background:linear-gradient(135deg,var(--navy3),#1a237e);padding:.85rem 1rem;display:none;animation:slideUp .35s ease}
+.install-banner.show{display:block}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.install-inner{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.install-icon{font-size:2rem;flex-shrink:0}
+.install-text{flex:1}
+.install-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:2px}
+.install-sub{font-size:11px;color:rgba(255,255,255,.6);line-height:1.4}
+.install-actions{display:flex;gap:8px;flex-shrink:0}
+.install-yes{background:var(--gold);color:var(--navy);border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap}
+.install-no{background:transparent;color:rgba(255,255,255,.5);border:none;font-size:11px;cursor:pointer;font-family:inherit;padding:4px 8px}
+.ios-tip{position:fixed;bottom:0;left:0;right:0;z-index:500;background:#1E2128;border-top:2px solid var(--gold);padding:1rem 1.25rem 1.5rem;display:none;animation:slideUp .35s ease}
+.ios-tip.show{display:block}
+.ios-tip-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center}
+.ios-tip-body{font-size:12px;color:rgba(255,255,255,.7);line-height:1.8}
+.ios-tip-body span{color:var(--gold);font-weight:700}
+.ios-close{background:none;border:none;color:#666;font-size:18px;cursor:pointer;padding:0 4px;line-height:1}
+
+/* ── MIS PRONÓSTICOS vista resumen (mejora 3) ── */
+.mypicks-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:1rem;overflow:hidden;box-shadow:var(--shadow)}
+.mypicks-header{padding:1rem 1.25rem .75rem;background:linear-gradient(135deg,var(--navy3),#1a237e);display:flex;justify-content:space-between;align-items:center}
+.mypicks-title{font-size:13px;font-weight:700;color:#fff}
+.mypicks-sub{font-size:10px;color:rgba(255,255,255,.6);margin-top:2px}
+.mypicks-edit-btn{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s}
+.mypicks-edit-btn:hover{background:rgba(255,255,255,.25)}
+.mypicks-pending{background:#fff3cd;border-bottom:1px solid #fde68a;padding:8px 14px;font-size:12px;color:#92400e;display:flex;align-items:center;gap:6px;font-weight:600}
+.mypick-row{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border);font-size:12px;transition:.1s}
+.mypick-row:last-child{border-bottom:none}
+.mypick-row.guat{background:#f0fdf4}
+.mypick-left{flex:1}
+.mypick-teams{font-weight:600;color:var(--text);font-size:12px}
+.mypick-meta{font-size:10px;color:var(--muted);margin-top:1px}
+.mypick-score{font-weight:800;font-size:15px;color:var(--navy);background:#e0f2fe;padding:3px 12px;border-radius:8px;min-width:54px;text-align:center;flex-shrink:0}
+.mypick-score.pending{color:#bbb;background:#f4f4f4;font-size:11px;font-weight:500}
+
+/* ── SAVE ANIMATION (mejora 8) ── */
+@keyframes savePulse{0%{transform:scale(1)}50%{transform:scale(.97)}100%{transform:scale(1)}}
+.submit-btn.saving{animation:savePulse .3s ease}
+.submit-btn.saved{background:#15803D!important}
+.submit-btn.saved::after{content:' ✓'}
 </style>
 </head>
 <body>
@@ -223,6 +293,34 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- PWA INSTALL BANNER Android/Chrome (mejora 2) -->
+<div class="install-banner" id="install-banner">
+  <div class="install-inner">
+    <div class="install-icon">⚽</div>
+    <div class="install-text">
+      <div class="install-title">Agregar a tu pantalla de inicio</div>
+      <div class="install-sub">Accede sin abrir el navegador, como una app</div>
+    </div>
+    <div class="install-actions">
+      <button class="install-yes" onclick="installPWA()">Instalar</button>
+      <button class="install-no" onclick="dismissInstall()">Ahora no</button>
+    </div>
+  </div>
+</div>
+
+<!-- iOS INSTALL TIP Safari (mejora 2) -->
+<div class="ios-tip" id="ios-tip">
+  <div class="ios-tip-title">
+    Instalar en iPhone / iPad
+    <button class="ios-close" onclick="document.getElementById('ios-tip').classList.remove('show')">✕</button>
+  </div>
+  <div class="ios-tip-body">
+    1. Toca el ícono <span>Compartir</span> (cuadro con flecha ↑) en Safari<br>
+    2. Toca <span>"Agregar a pantalla de inicio"</span><br>
+    3. Toca <span>Agregar</span> — listo, ya aparece como app en tu celular
+  </div>
+</div>
+
 <!-- ══════════════════ PAGE: FORM ══════════════════ -->
 <div class="page active" id="page-form">
   <div class="wrap">
@@ -233,7 +331,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
       <div class="name-row">
         <input class="name-input" id="inp-name" type="text" placeholder="Ej. María García" maxlength="30"
           autocomplete="off" autocorrect="off" spellcheck="false"/>
-        <button class="go-btn" onclick="startForm()">Ver partidos</button>
+        <button class="go-btn" id="go-btn" onclick="startForm()">Llenar pronósticos</button>
       </div>
       <div class="prog-wrap" id="prog-wrap" style="display:none">
         <div class="prog-bar-bg"><div class="prog-bar-fill" id="prog-fill" style="width:0%"></div></div>
@@ -244,6 +342,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
     <div id="locked-msg" class="locked-msg" style="display:none">
       🔒 La quiniela está cerrada — ya no se reciben pronósticos
     </div>
+
+    <!-- MIS PRONÓSTICOS resumen (mejora 3) -->
+    <div id="mypicks-wrap" style="display:none"></div>
 
     <div id="games-wrap" style="display:none">
       <div id="games-list"></div>
@@ -653,21 +754,38 @@ function startForm() {
   if (LOCKED) {
     document.getElementById('locked-msg').style.display = 'block';
     document.getElementById('games-wrap').style.display = 'none';
+    document.getElementById('mypicks-wrap').style.display = 'none';
     document.getElementById('submit-bar').style.display = 'none';
     return;
   }
   document.getElementById('locked-msg').style.display = 'none';
-  document.getElementById('games-wrap').style.display = 'block';
-  document.getElementById('submit-bar').style.display = 'block';
   document.getElementById('prog-wrap').style.display = 'block';
 
-  renderGames();
-  prefill();
-  refreshProgress();
-
-  setTimeout(() => {
-    document.getElementById('games-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 120);
+  // MEJORA 3: Si ya tiene pronósticos guardados, mostrar resumen primero
+  const existing = parts.find(p => p.name.toLowerCase() === n.toLowerCase());
+  if (existing && existing.filled > 0) {
+    editModeActive = false;
+    document.getElementById('games-wrap').style.display = 'none';
+    document.getElementById('submit-bar').style.display = 'none';
+    renderGames(); // preparar los inputs en background
+    prefill();
+    refreshProgress();
+    buildMyPicks(false);
+    // Cambiar botón para indicar que ya tiene picks
+    const btn = document.getElementById('go-btn');
+    if (btn) { btn.textContent = 'Ver mis pronósticos'; btn.style.background = 'var(--green)'; }
+    setTimeout(() => document.getElementById('mypicks-wrap').scrollIntoView({ behavior:'smooth', block:'start' }), 120);
+  } else {
+    // Primera vez — ir directo a llenar
+    editModeActive = true;
+    document.getElementById('mypicks-wrap').style.display = 'none';
+    document.getElementById('games-wrap').style.display = 'block';
+    document.getElementById('submit-bar').style.display = 'block';
+    renderGames();
+    prefill();
+    refreshProgress();
+    setTimeout(() => document.getElementById('games-wrap').scrollIntoView({ behavior:'smooth', block:'start' }), 120);
+  }
 }
 
 document.getElementById('inp-name').addEventListener('keydown', e => { if (e.key === 'Enter') startForm(); });
@@ -700,11 +818,11 @@ function renderGames() {
               <span class="team-flag">${m.lf}</span>${m.local}
             </div>
             <input class="score-box" type="number" id="gl-${m.id}" min="0" max="20" placeholder="–"
-              inputmode="numeric"
+              inputmode="decimal" pattern="[0-9]*"
               oninput="onScore(${m.id})">
             <span class="vs-dash">–</span>
             <input class="score-box" type="number" id="gv-${m.id}" min="0" max="20" placeholder="–"
-              inputmode="numeric"
+              inputmode="decimal" pattern="[0-9]*"
               oninput="onScore(${m.id})">
             <div class="team-name">
               <span class="team-flag">${m.vf}</span>${m.visita}
@@ -743,10 +861,16 @@ function refreshProgress() {
     return gl && gl.value !== '' && gv && gv.value !== '';
   }).length;
   const pct = Math.round(filled / TOTAL_MATCHES * 100);
+  const pending = TOTAL_MATCHES - filled;
   document.getElementById('prog-fill').style.width = pct + '%';
   const lbl = document.getElementById('prog-lbl');
-  lbl.innerHTML = `<span>${filled} / ${TOTAL_MATCHES} partidos pronosticados</span><span>${pct}%</span>`;
+  // MEJORA 4: contador de pendientes en rojo
+  const pendingTag = pending > 0
+    ? `<span style="color:var(--red);font-weight:700">${pending} pendientes</span>`
+    : `<span style="color:var(--green);font-weight:700">✓ Completo</span>`;
+  lbl.innerHTML = `<span>${filled} / ${TOTAL_MATCHES} pronosticados</span>${pendingTag}`;
   lbl.className = 'prog-label' + (filled === TOTAL_MATCHES ? ' done' : '');
+  hasUnsavedChanges = true; // MEJORA 5
 }
 
 async function saveQuiniela() {
@@ -767,11 +891,33 @@ async function saveQuiniela() {
     return;
   }
 
+  const btn = document.querySelector('.submit-btn');
+  if (btn) { btn.classList.add('saving'); btn.textContent = 'Guardando...'; btn.disabled = true; }
+
   try {
     await db.collection(COLLECTION).doc(docIdFromName(me)).set(entry);
-    toast(`✓ Guardado en la nube — ${filled}/${TOTAL_MATCHES} partidos pronósticados`);
+    hasUnsavedChanges = false; // MEJORA 5
+    if (btn) {
+      btn.classList.remove('saving'); btn.classList.add('saved');
+      btn.textContent = 'Guardado';
+      setTimeout(() => {
+        btn.classList.remove('saved'); btn.textContent = 'Guardar mi quiniela ✓'; btn.disabled = false;
+      }, 2200);
+    }
+    toast(`✓ Guardado — ${filled}/${TOTAL_MATCHES} partidos`);
+    // MEJORA 3: volver a vista de resumen
+    setTimeout(() => {
+      editModeActive = false;
+      document.getElementById('games-wrap').style.display = 'none';
+      document.getElementById('submit-bar').style.display = 'none';
+      buildMyPicks(false);
+      // Actualizar botón principal
+      const gb = document.getElementById('go-btn');
+      if (gb) { gb.textContent = 'Ver mis pronósticos'; gb.style.background = 'var(--green)'; }
+    }, 2300);
   } catch (err) {
     console.error(err);
+    if (btn) { btn.classList.remove('saving'); btn.textContent = 'Guardar mi quiniela ✓'; btn.disabled = false; }
     toast('No se pudo guardar en Firebase');
   }
 }
@@ -1289,6 +1435,149 @@ function toast(msg) {
   clearTimeout(t._tid);
   t._tid = setTimeout(() => t.classList.remove('show'), 3200);
 }
+
+// ══════════════════════════════════════════
+//  MEJORA 3: VISTA "MIS PRONÓSTICOS"
+// ══════════════════════════════════════════
+function buildMyPicks(editMode = false) {
+  const wrap = document.getElementById('mypicks-wrap');
+  if (!wrap || !me) return;
+
+  const ex = parts.find(p => p.name.toLowerCase() === me.toLowerCase());
+  if (!ex) { wrap.style.display = 'none'; return; }
+
+  const picks = ex.picks || [];
+  const filled = picks.filter(p => p.gl !== '' && p.gv !== '').length;
+  const pending = TOTAL_MATCHES - filled;
+
+  wrap.style.display = 'block';
+  const pendingBanner = pending > 0
+    ? `<div class="mypicks-pending">⚠️ Te faltan <strong>${pending}</strong> partido${pending===1?'':'s'} por pronosticar</div>`
+    : `<div class="mypicks-pending" style="background:#d1fae5;border-color:#6ee7b7;color:#065f46">✅ Tienes todos los ${TOTAL_MATCHES} partidos pronósticados</div>`;
+
+  const rows = MATCHES.map(m => {
+    const pk = picks.find(x => x.id === m.id) || {};
+    const has = pk.gl !== '' && pk.gv !== '' && pk.gl != null;
+    const isGuat = m.local === 'Guatemala' || m.visita === 'Guatemala';
+    return `<div class="mypick-row${isGuat?' guat':''}">
+      <div class="mypick-left">
+        <div class="mypick-teams">${m.lf} ${m.local} vs ${m.visita} ${m.vf}${isGuat?' 🇬🇹':''}</div>
+        <div class="mypick-meta">${m.date} · ${m.venue||''}</div>
+      </div>
+      <span class="mypick-score${has?'':' pending'}">${has?pk.gl+' – '+pk.gv:'pendiente'}</span>
+    </div>`;
+  }).join('');
+
+  wrap.innerHTML = `<div class="mypicks-card">
+    <div class="mypicks-header">
+      <div>
+        <div class="mypicks-title">Mis pronósticos — ${ex.name}</div>
+        <div class="mypicks-sub">${filled}/${TOTAL_MATCHES} partidos completados</div>
+      </div>
+      <button class="mypicks-edit-btn" onclick="toggleEditMode()">
+        ${editMode ? '👁 Ver resumen' : '✏️ Editar pronósticos'}
+      </button>
+    </div>
+    ${pendingBanner}
+    ${rows}
+  </div>`;
+}
+
+let editModeActive = false;
+function toggleEditMode() {
+  editModeActive = !editModeActive;
+  const gw = document.getElementById('games-wrap');
+  const mw = document.getElementById('mypicks-wrap');
+  const sb = document.getElementById('submit-bar');
+  const pw = document.getElementById('prog-wrap');
+
+  if (editModeActive) {
+    gw.style.display = 'block';
+    mw.style.display = 'none';
+    sb.style.display = 'block';
+    pw.style.display = 'block';
+    // MEJORA 6: scroll al primer partido sin pronóstico
+    setTimeout(() => scrollToFirstMissing(), 200);
+  } else {
+    gw.style.display = 'none';
+    mw.style.display = 'block';
+    sb.style.display = 'none';
+    buildMyPicks(false);
+  }
+}
+
+// MEJORA 6: Scroll al primer partido sin pronóstico
+function scrollToFirstMissing() {
+  for (const m of MATCHES) {
+    const gl = document.getElementById('gl-' + m.id);
+    const gv = document.getElementById('gv-' + m.id);
+    if (gl && (gl.value === '' || gv.value === '')) {
+      const card = document.getElementById('card-' + m.id);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => gl.focus(), 400);
+        break;
+      }
+    }
+  }
+}
+
+// ══════════════════════════════════════════
+//  MEJORA 2: PWA / INSTALAR EN PANTALLA
+// ══════════════════════════════════════════
+let deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  // Solo mostrar si no lo ha descartado antes
+  if (!localStorage.getItem('pwa_dismissed')) {
+    setTimeout(() => {
+      document.getElementById('install-banner').classList.add('show');
+    }, 3000);
+  }
+});
+
+function installPWA() {
+  document.getElementById('install-banner').classList.remove('show');
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then(r => {
+    if (r.outcome === 'accepted') toast('¡App instalada!');
+    deferredInstallPrompt = null;
+  });
+}
+
+function dismissInstall() {
+  document.getElementById('install-banner').classList.remove('show');
+  localStorage.setItem('pwa_dismissed', '1');
+}
+
+// Detectar iOS para mostrar instrucciones manuales
+function isIOS() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+}
+function isInStandaloneMode() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+}
+
+window.addEventListener('load', () => {
+  if (isIOS() && !isInStandaloneMode() && !localStorage.getItem('ios_tip_dismissed')) {
+    setTimeout(() => document.getElementById('ios-tip').classList.add('show'), 3500);
+    localStorage.setItem('ios_tip_dismissed', '1');
+  }
+});
+
+// ══════════════════════════════════════════
+//  MEJORA 5: AVISO CAMBIOS SIN GUARDAR
+// ══════════════════════════════════════════
+let hasUnsavedChanges = false;
+window.addEventListener('beforeunload', e => {
+  if (hasUnsavedChanges) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
 
 // ── INIT ──
 load();
