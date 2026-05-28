@@ -258,6 +258,46 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
 .submit-btn.saving{animation:savePulse .3s ease}
 .submit-btn.saved{background:#15803D!important}
 .submit-btn.saved::after{content:' ✓'}
+
+/* ── PRÓXIMOS PARTIDOS ── */
+.upcoming-section{margin-bottom:1rem}
+.upcoming-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.65rem}
+.upcoming-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:6px}
+.live-dot{width:7px;height:7px;background:var(--red);border-radius:50%;animation:blink 1.4s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.upcoming-date-label{font-size:10px;color:var(--muted);font-weight:500}
+
+.upcoming-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:8px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:.15s}
+.upcoming-card:hover{box-shadow:var(--shadow-lg);border-color:#ccc;transform:translateY(-1px)}
+.upcoming-card.guat{border-left:4px solid var(--green)!important}
+.upcoming-top{padding:5px 12px;display:flex;justify-content:space-between;align-items:center}
+.upcoming-match-date{font-size:9px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;text-transform:uppercase}
+.upcoming-venue{font-size:9px;color:rgba(255,255,255,.5);font-style:italic;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upcoming-body{padding:10px 12px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
+.upcoming-team{font-size:13px;font-weight:700;color:var(--text);line-height:1.25}
+.upcoming-team.r{text-align:right}
+.upcoming-flag{font-size:18px;display:block;line-height:1.1}
+.upcoming-vs{font-size:13px;font-weight:800;color:var(--red);text-align:center;padding:0 4px}
+.upcoming-footer{padding:5px 12px 8px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.upcoming-picks-count{font-size:10px;color:var(--muted);font-weight:600}
+.upcoming-expand-hint{font-size:10px;color:var(--navy3);font-weight:700;display:flex;align-items:center;gap:4px}
+.upcoming-chevron{font-size:10px;color:var(--muted);transition:.2s;display:inline-block}
+.upcoming-chevron.open{transform:rotate(180deg)}
+
+/* Panel de pronósticos de un partido */
+.upcoming-picks-panel{display:none;border-top:1px solid var(--border);background:#fafaf8}
+.upcoming-picks-panel.open{display:block}
+.picks-panel-header{padding:7px 12px;background:var(--navy3);display:flex;justify-content:space-between;align-items:center}
+.picks-panel-title{font-size:10px;font-weight:800;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.6px}
+.picks-panel-locked{font-size:10px;color:rgba(255,255,255,.5)}
+.pick-participant-row{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-bottom:1px solid #f0f0eb;font-size:12px}
+.pick-participant-row:last-child{border-bottom:none}
+.pick-participant-name{font-weight:600;color:var(--text);flex:1}
+.pick-participant-score{font-weight:800;font-size:14px;color:var(--navy);background:#e0f2fe;padding:3px 12px;border-radius:8px;min-width:52px;text-align:center;flex-shrink:0}
+.pick-participant-score.no-pick{color:#ccc;background:#f4f4f4;font-size:11px;font-weight:500}
+.picks-locked-msg{padding:12px;text-align:center;font-size:12px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:6px}
+
+.upcoming-none{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:1rem;text-align:center;font-size:12px;color:var(--muted);box-shadow:var(--shadow)}
 </style>
 </head>
 <body>
@@ -330,6 +370,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
 <!-- ══════════════════ PAGE: FORM ══════════════════ -->
 <div class="page active" id="page-form">
   <div class="wrap">
+
+    <!-- PRÓXIMOS PARTIDOS (se renderiza por JS) -->
+    <div id="upcoming-section"></div>
 
     <!-- Nombre -->
     <div class="name-card">
@@ -705,6 +748,7 @@ function load() {
     const activePage = document.querySelector('.page.active')?.id || '';
     if (activePage === 'page-ranking') buildRanking();
     if (activePage === 'page-admin') buildAdmin();
+    buildUpcoming(); // Refrescar según visibilidad
   }, err => console.warn('No se pudo leer configuración', err));
 
   db.collection(COLLECTION).orderBy('ts', 'desc').onSnapshot(snapshot => {
@@ -715,6 +759,7 @@ function load() {
     if (activePage === 'page-ranking') buildRanking();
     if (activePage === 'page-admin') buildAdmin();
     if (activePage === 'page-form' && me) prefill();
+    buildUpcoming(); // Actualizar próximos partidos siempre
   }, err => {
     console.error(err);
     toast('Error conectando con Firebase');
@@ -1434,6 +1479,176 @@ function downloadMyPDF() {
   toast('PDF generado correctamente');
 }
 
+
+// ══════════════════════════════════════════
+//  PRÓXIMOS PARTIDOS
+// ══════════════════════════════════════════
+
+// Mapeo de fecha string → objeto Date 2026
+const DATE_MAP = {
+  '30 may': new Date(2026,4,30), // mes 0-based
+  '31 may': new Date(2026,4,31),
+  '1 jun':  new Date(2026,5,1),
+  '2 jun':  new Date(2026,5,2),
+  '4 jun':  new Date(2026,5,4),
+  '6 jun':  new Date(2026,5,6),
+  '7 jun':  new Date(2026,5,7),
+  '8 jun':  new Date(2026,5,8),
+  '9 jun':  new Date(2026,5,9),
+  '10 jun': new Date(2026,5,10),
+};
+
+// Colores por fecha (mismo que el excel)
+const DATE_COLORS_MAP = {
+  '30 may':'#1565C0','31 may':'#2E7D32','1 jun':'#E65100',
+  '2 jun':'#C62828','4 jun':'#F57F17','6 jun':'#6A1B9A',
+  '7 jun':'#880E4F','8 jun':'#37474F','9 jun':'#00695C','10 jun':'#0D47A1'
+};
+
+function getMatchDate(dateStr) {
+  return DATE_MAP[dateStr] || null;
+}
+
+function buildUpcoming() {
+  const wrap = document.getElementById('upcoming-section');
+  if (!wrap) return;
+
+  // Fecha actual (hora local Guatemala = UTC-6)
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const dayAfterTomorrow = new Date(today); dayAfterTomorrow.setDate(today.getDate() + 2);
+
+  // Filtrar partidos de hoy y mañana (ventana de 2 días)
+  const upcoming = MATCHES.filter(m => {
+    const d = getMatchDate(m.date);
+    if (!d) return false;
+    const md = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    return md >= today && md < dayAfterTomorrow;
+  });
+
+  if (upcoming.length === 0) {
+    // Buscar el próximo partido futuro aunque sea de pasado mañana
+    const future = MATCHES.filter(m => {
+      const d = getMatchDate(m.date);
+      if (!d) return false;
+      return new Date(d.getFullYear(), d.getMonth(), d.getDate()) >= today;
+    });
+    if (future.length === 0) {
+      wrap.innerHTML = ''; return; // Torneo terminado, no mostrar nada
+    }
+    // Mostrar vacío con próxima fecha
+    const nextDate = future[0].date;
+    wrap.innerHTML = `<div class="upcoming-none">No hay partidos hoy ni mañana. Próximos: <strong>${nextDate}</strong></div>`;
+    return;
+  }
+
+  // Agrupar por fecha
+  const byDate = {};
+  upcoming.forEach(m => { if (!byDate[m.date]) byDate[m.date]=[]; byDate[m.date].push(m); });
+
+  let html = `<div class="upcoming-section">
+    <div class="upcoming-header">
+      <div class="upcoming-title">
+        <span class="live-dot"></span>
+        Próximos partidos
+      </div>
+      <span class="upcoming-date-label">Hoy y mañana</span>
+    </div>`;
+
+  for (const [date, matches] of Object.entries(byDate)) {
+    const dc = DATE_COLORS_MAP[date] || '#555';
+    matches.forEach(m => {
+      const isGuat = m.local === 'Guatemala' || m.visita === 'Guatemala';
+      const borderColor = isGuat ? '#1B5E20' : dc;
+      const topBg = isGuat ? '#1B5E20' : dc;
+      const guatTag = isGuat ? ' 🇬🇹' : '';
+      // Contar cuántos participantes tienen pronóstico para este partido
+      const withPick = parts.filter(p => {
+        const pk = (p.picks||[]).find(x => x.id === m.id);
+        return pk && pk.gl !== '' && pk.gv !== '';
+      }).length;
+      const totalParts = parts.length;
+      const picksLabel = totalParts > 0 ? `${withPick}/${totalParts} pronósticos` : 'Sin participantes aún';
+      const expandHint = showPublicPicks
+        ? `Ver pronósticos <span class="upcoming-chevron" id="uchev-${m.id}">▼</span>`
+        : `<span style="color:var(--muted)">🔒 Pronósticos ocultos</span>`;
+
+      html += `
+        <div class="upcoming-card${isGuat?' guat':''}" style="border-left:3px solid ${borderColor}" onclick="toggleUpcomingPicks(${m.id})">
+          <div class="upcoming-top" style="background:${topBg}">
+            <span class="upcoming-match-date">${date}${guatTag}</span>
+            <span class="upcoming-venue">${m.venue}</span>
+          </div>
+          <div class="upcoming-body">
+            <div class="upcoming-team r">
+              <span class="upcoming-flag">${m.lf}</span>${m.local}
+            </div>
+            <div class="upcoming-vs">vs</div>
+            <div class="upcoming-team">
+              <span class="upcoming-flag">${m.vf}</span>${m.visita}
+            </div>
+          </div>
+          <div class="upcoming-footer">
+            <span class="upcoming-picks-count">⚽ ${picksLabel}</span>
+            <span class="upcoming-expand-hint">${expandHint}</span>
+          </div>
+          <div class="upcoming-picks-panel" id="upanel-${m.id}">
+            ${buildPicksPanel(m)}
+          </div>
+        </div>`;
+    });
+  }
+
+  html += '</div>';
+  wrap.innerHTML = html;
+}
+
+function buildPicksPanel(m) {
+  // Si pronósticos no son públicos aún → mensaje de candado
+  if (!showPublicPicks) {
+    return `<div class="picks-locked-msg">🔒 El administrador aún no ha habilitado la vista de pronósticos</div>`;
+  }
+
+  const sorted = [...parts].sort((a,b) => a.name.localeCompare(b.name));
+  if (!sorted.length) {
+    return `<div class="picks-locked-msg">Aún no hay participantes registrados</div>`;
+  }
+
+  let html = `<div class="picks-panel-header">
+    <span class="picks-panel-title">Pronósticos de todos</span>
+    <span class="picks-panel-locked">${sorted.length} participantes</span>
+  </div>`;
+
+  sorted.forEach((p, i) => {
+    const pk = (p.picks||[]).find(x => x.id === m.id);
+    const has = pk && pk.gl !== '' && pk.gv !== '';
+    const av = AV_COLORS[i % AV_COLORS.length];
+    const ini = p.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+    html += `<div class="pick-participant-row">
+      <div style="display:flex;align-items:center;gap:8px;flex:1">
+        <div style="width:28px;height:28px;border-radius:50%;background:${av.bg};color:${av.c};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">${ini}</div>
+        <span class="pick-participant-name">${p.name}</span>
+      </div>
+      <span class="pick-participant-score${has?'':' no-pick'}">${has ? pk.gl+' – '+pk.gv : 'pendiente'}</span>
+    </div>`;
+  });
+
+  return html;
+}
+
+function toggleUpcomingPicks(matchId) {
+  const panel = document.getElementById('upanel-' + matchId);
+  const chev = document.getElementById('uchev-' + matchId);
+  if (!panel) return;
+
+  // Actualizar contenido del panel cada vez (por si cambiaron los datos)
+  const m = MATCHES.find(x => x.id === matchId);
+  if (m) panel.innerHTML = buildPicksPanel(m);
+
+  panel.classList.toggle('open');
+  if (chev) chev.classList.toggle('open');
+}
+
 // ── TOAST ──
 function toast(msg) {
   const t = document.getElementById('toast');
@@ -1663,6 +1878,8 @@ window.addEventListener('beforeunload', e => {
 
 // ── INIT ──
 load();
+// Renderizar próximos partidos de inmediato (sin esperar Firebase)
+setTimeout(buildUpcoming, 100);
 </script>
 </body>
 </html>
