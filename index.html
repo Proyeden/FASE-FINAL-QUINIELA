@@ -298,7 +298,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
 .picks-locked-msg{padding:12px;text-align:center;font-size:12px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:6px}
 
 .upcoming-none{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:1rem;text-align:center;font-size:12px;color:var(--muted);box-shadow:var(--shadow)}
-
 /* ── SIMULADOR DE PUNTOS (nuevo) ── */
 .simulator-card{margin:0 12px 10px;border-top:2px solid var(--gold);background:#fffdf4;border-radius:0 0 var(--radius-sm) var(--radius-sm);overflow:hidden}
 .simulator-header{background:linear-gradient(135deg,#1A1A2E,#0F3460);padding:8px 12px;display:flex;align-items:center;justify-content:space-between}
@@ -335,18 +334,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
 .sim-pts-gain.gain-none{background:#f1f5f9;color:#94a3b8}
 .sim-no-picks{padding:10px 12px;font-size:11px;color:var(--muted);text-align:center;font-style:italic}
 
-/* ── SCORING LEGEND ── */
-.scoring-legend{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1rem;overflow:hidden;box-shadow:var(--shadow)}
-.scoring-legend-head{padding:8px 14px;background:linear-gradient(90deg,var(--navy),var(--navy3));display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
-.scoring-legend-title{font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1px}
-.scoring-legend-body{display:none;padding:8px 0}
-.scoring-legend-body.open{display:block}
-.score-rule{display:flex;align-items:center;gap:10px;padding:6px 14px;border-bottom:1px solid #f5f5f0}
-.score-rule:last-child{border-bottom:none}
-.score-rule-pts{font-size:16px;font-weight:800;color:var(--navy);font-family:'Bebas Neue',sans-serif;width:42px;flex-shrink:0;letter-spacing:.5px}
-.score-rule-stars{font-size:12px;width:60px;flex-shrink:0}
-.score-rule-desc{font-size:11px;color:var(--text);flex:1;line-height:1.45}
-.score-rule-ex{font-size:10px;color:var(--muted);margin-top:1px}
 </style>
 </head>
 <body>
@@ -422,41 +409,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
 
     <!-- PRÓXIMOS PARTIDOS (se renderiza por JS) -->
     <div id="upcoming-section"></div>
-
-    <!-- TABLA DE PUNTUACIÓN (colapsable) -->
-    <div class="scoring-legend" id="scoring-legend">
-      <div class="scoring-legend-head" onclick="toggleScoringLegend()">
-        <span class="scoring-legend-title">🏆 Sistema de Puntuación</span>
-        <span class="chev" id="scoring-chev">▼</span>
-      </div>
-      <div class="scoring-legend-body" id="scoring-body">
-        <div class="score-rule">
-          <div class="score-rule-pts">50</div>
-          <div class="score-rule-stars">⭐⭐⭐⭐</div>
-          <div><div class="score-rule-desc">Resultado <strong>EXACTO</strong> (ambos goles correctos)</div><div class="score-rule-ex">Pronosticas 2-1 → Sale 2-1</div></div>
-        </div>
-        <div class="score-rule">
-          <div class="score-rule-pts">30</div>
-          <div class="score-rule-stars">⭐⭐⭐</div>
-          <div><div class="score-rule-desc">Ganador correcto <strong>+ 1 gol exacto</strong></div><div class="score-rule-ex">Pronosticas 2-1 → Sale 3-1</div></div>
-        </div>
-        <div class="score-rule">
-          <div class="score-rule-pts">20</div>
-          <div class="score-rule-stars">⭐⭐</div>
-          <div><div class="score-rule-desc">Solo <strong>ganador o empate</strong> correcto</div><div class="score-rule-ex">Pronosticas 2-1 → Sale 3-2</div></div>
-        </div>
-        <div class="score-rule">
-          <div class="score-rule-pts">10</div>
-          <div class="score-rule-stars">⭐</div>
-          <div><div class="score-rule-desc">1 equipo con <strong>goles exactos</strong> sin acertar ganador</div><div class="score-rule-ex">Pronosticas 2-1 → Sale 2-3</div></div>
-        </div>
-        <div class="score-rule">
-          <div class="score-rule-pts">0</div>
-          <div class="score-rule-stars">✕</div>
-          <div><div class="score-rule-desc">Nada correcto</div><div class="score-rule-ex">Pronosticas 2-1 → Sale 0-3</div></div>
-        </div>
-      </div>
-    </div>
 
     <!-- Nombre -->
     <div class="name-card">
@@ -767,6 +719,18 @@ const MATCHES = [
 ];
 const TOTAL_MATCHES = MATCHES.length;
 
+// Mapeo de fecha string → objeto Date 2026
+const DATE_MAP = {};
+(function(){
+  const months = { 'may': 4, 'jun': 5, 'jul': 6 };
+  const dates = [...new Set(MATCHES.map(m => m.date))];
+  dates.forEach(ds => {
+    const [d, mon] = ds.split(' ');
+    DATE_MAP[ds] = new Date(2026, months[mon] ?? 5, parseInt(d, 10));
+  });
+})();
+
+
 // ── CONFIG ──
 const LOCKED = false; // → true cuando empiece el torneo y ya no quieras recibir pronósticos
 const ADMIN_PIN = "20262026"; // Cambia esta clave antes de compartir el enlace
@@ -819,20 +783,21 @@ function docIdFromName(name) {
     .substring(0, 80) || 'participante';
 }
 
+
 // ═══════════════════════════════════════
-//  SISTEMA DE PUNTUACIÓN / SIMULADOR
-//  Temporal: no guarda resultados ni modifica Firebase
+//  SISTEMA DE PUNTUACIÓN / SIMULACIÓN
+//  Solo calcula en pantalla. No guarda resultados ni modifica Firebase.
 // ═══════════════════════════════════════
 function calcPoints(myGl, myGv, realGl, realGv) {
-  const ml = parseInt(myGl), mv = parseInt(myGv);
-  const rl = parseInt(realGl), rv = parseInt(realGv);
+  const ml = parseInt(myGl, 10), mv = parseInt(myGv, 10);
+  const rl = parseInt(realGl, 10), rv = parseInt(realGv, 10);
   if (isNaN(ml) || isNaN(mv) || isNaN(rl) || isNaN(rv)) return null;
 
-  const exactLocal = ml === rl;
+  const exactLocal  = ml === rl;
   const exactVisita = mv === rv;
-  const myWinner = ml > mv ? 'L' : ml < mv ? 'V' : 'E';
-  const realWinner = rl > rv ? 'L' : rl < rv ? 'V' : 'E';
-  const winnerOk = myWinner === realWinner;
+  const myWinner    = ml > mv ? 'L' : ml < mv ? 'V' : 'E';
+  const realWinner  = rl > rv ? 'L' : rl < rv ? 'V' : 'E';
+  const winnerOk    = myWinner === realWinner;
 
   if (exactLocal && exactVisita) return 50;
   if (winnerOk && (exactLocal || exactVisita)) return 30;
@@ -841,12 +806,10 @@ function calcPoints(myGl, myGv, realGl, realGv) {
   return 0;
 }
 
-function toggleScoringLegend() {
-  const body = document.getElementById('scoring-body');
-  const chev = document.getElementById('scoring-chev');
-  if (!body || !chev) return;
-  body.classList.toggle('open');
-  chev.classList.toggle('open');
+function calcMatchPoints(participant, matchId, realGl, realGv) {
+  const pk = (participant.picks || []).find(p => String(p.id) === String(matchId));
+  if (!pk || pk.gl === '' || pk.gv === '') return null;
+  return calcPoints(pk.gl, pk.gv, realGl, realGv);
 }
 
 function load() {
@@ -884,7 +847,6 @@ function persist() {
   // Fallback local si Firebase todavía no está configurado.
   localStorage.setItem('qm26_v4', JSON.stringify(parts));
   syncBadges();
-  buildUpcoming();
 }
 
 function syncBadges() {
@@ -1595,171 +1557,109 @@ function downloadMyPDF() {
 }
 
 
-// ══════════════════════════════════════════
-//  PRÓXIMOS PARTIDOS + SIMULADOR TEMPORAL
-// ══════════════════════════════════════════
 
-// Mapeo de fecha string → objeto Date 2026
-const DATE_MAP = {
-  '30 may': new Date(2026,4,30),
-  '31 may': new Date(2026,4,31),
-  '1 jun':  new Date(2026,5,1),
-  '2 jun':  new Date(2026,5,2),
-  '4 jun':  new Date(2026,5,4),
-  '6 jun':  new Date(2026,5,6),
-  '7 jun':  new Date(2026,5,7),
-  '8 jun':  new Date(2026,5,8),
-  '9 jun':  new Date(2026,5,9),
-  '10 jun': new Date(2026,5,10),
-};
 
-// Colores por fecha (mismo que el excel)
+// Colores por fecha para próximos partidos
 const DATE_COLORS_MAP = {
   '30 may':'#1565C0','31 may':'#2E7D32','1 jun':'#E65100',
   '2 jun':'#C62828','4 jun':'#F57F17','6 jun':'#6A1B9A',
   '7 jun':'#880E4F','8 jun':'#37474F','9 jun':'#00695C','10 jun':'#0D47A1'
 };
 
-function getMatchDate(dateStr) {
-  return DATE_MAP[dateStr] || null;
-}
+// ══════════════════════════════════════════
+//  PRÓXIMOS PARTIDOS + SIMULADOR
+// ══════════════════════════════════════════
+function getUpcomingMatches() {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const dayAfterTomorrow = new Date(today);
+  dayAfterTomorrow.setDate(today.getDate() + 2);
 
-function sameCalendarDay(a, b) {
-  return a && b &&
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate();
-}
-
-function getTodayGuatemala() {
-  // Evita que el navegador, GitHub Pages o una zona horaria distinta mueva la fecha.
-  // La quiniela se maneja con fecha de Guatemala.
-  const partsGT = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'America/Guatemala',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  }).formatToParts(new Date());
-  const y = Number(partsGT.find(p => p.type === 'year').value);
-  const m = Number(partsGT.find(p => p.type === 'month').value) - 1;
-  const d = Number(partsGT.find(p => p.type === 'day').value);
-  return new Date(y, m, d);
-}
-
-function getUpcomingMatchesWindow() {
-  const today = getTodayGuatemala();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(today.getDate() + 1);
-
-  const todayAndTomorrow = MATCHES.filter(m => {
-    const md = getMatchDate(m.date);
-    return sameCalendarDay(md, today) || sameCalendarDay(md, tomorrow);
+  const upcoming = MATCHES.filter(m => {
+    const d = DATE_MAP[m.date];
+    if (!d) return false;
+    const md = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    return md >= today && md < dayAfterTomorrow;
   });
 
-  if (todayAndTomorrow.length > 0) return todayAndTomorrow;
+  if (upcoming.length > 0) return { matches: upcoming, emptyMessage: '' };
 
-  // Si no hay partidos hoy/mañana, muestra la próxima fecha disponible completa.
-  const future = MATCHES
-    .filter(m => {
-      const md = getMatchDate(m.date);
-      return md && md >= today;
-    })
-    .sort((a, b) => getMatchDate(a.date) - getMatchDate(b.date));
+  const future = MATCHES.filter(m => {
+    const d = DATE_MAP[m.date];
+    if (!d) return false;
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate()) >= today;
+  });
 
-  if (!future.length) return [];
-  const nextDate = future[0].date;
-  return MATCHES.filter(m => m.date === nextDate);
+  if (!future.length) return { matches: [], emptyMessage: '' };
+  return { matches: [], emptyMessage: `No hay partidos hoy ni mañana. Próximos: <strong>${future[0].date}</strong>` };
 }
 
 function buildUpcoming() {
   const wrap = document.getElementById('upcoming-section');
   if (!wrap) return;
 
-  const upcoming = getUpcomingMatchesWindow();
+  const { matches: upcoming, emptyMessage } = getUpcomingMatches();
 
   if (upcoming.length === 0) {
-    wrap.innerHTML = '';
+    wrap.innerHTML = emptyMessage ? `<div class="upcoming-none">${emptyMessage}</div>` : '';
     return;
-  }
-
-  const today = getTodayGuatemala();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(today.getDate() + 1);
-
-  const byDate = {};
-  upcoming.forEach(m => {
-    if (!byDate[m.date]) byDate[m.date] = [];
-    byDate[m.date].push(m);
-  });
-
-  let label = 'Hoy y mañana';
-  const dateKeys = Object.keys(byDate);
-  if (dateKeys.length === 1) {
-    const onlyDate = getMatchDate(dateKeys[0]);
-    if (sameCalendarDay(onlyDate, today)) label = 'Hoy';
-    else if (sameCalendarDay(onlyDate, tomorrow)) label = 'Mañana';
-    else label = `Próxima fecha: ${dateKeys[0]}`;
   }
 
   let html = `<div class="upcoming-section">
     <div class="upcoming-header">
-      <div class="upcoming-title">
-        <span class="live-dot"></span>
-        Próximos partidos
-      </div>
-      <span class="upcoming-date-label">${label}</span>
+      <div class="upcoming-title"><span class="live-dot"></span>Próximos partidos</div>
+      <span class="upcoming-date-label">Hoy y mañana</span>
     </div>`;
 
-  for (const [date, matches] of Object.entries(byDate)) {
-    const dc = DATE_COLORS_MAP[date] || '#555';
-    matches.forEach(m => {
-      const isGuat = m.local === 'Guatemala' || m.visita === 'Guatemala';
-      const borderColor = isGuat ? '#1B5E20' : dc;
-      const topBg = isGuat ? '#1B5E20' : dc;
-      const guatTag = isGuat ? ' 🇬🇹' : '';
+  upcoming.forEach(m => {
+    const bgColor = DATE_COLORS_MAP[m.date] || (m.local === 'Guatemala' || m.visita === 'Guatemala' ? '#006B3F' : '#0F3460');
+    const isGuat = m.local === 'Guatemala' || m.visita === 'Guatemala';
+    const topBg = isGuat ? '#006B3F' : bgColor;
+    const borderColor = isGuat ? '#006B3F' : bgColor;
 
-      const withPick = parts.filter(p => {
-        const pk = (p.picks || []).find(x => String(x.id) === String(m.id));
-        return pk && pk.gl !== '' && pk.gv !== '';
-      }).length;
-      const totalParts = parts.length;
-      const picksLabel = totalParts > 0 ? `${withPick}/${totalParts} pronósticos` : 'Sin participantes aún';
+    const withPick = parts.filter(p => {
+      const pk = (p.picks || []).find(x => String(x.id) === String(m.id));
+      return pk && pk.gl !== '' && pk.gv !== '';
+    }).length;
+    const totalParts = parts.length;
+    const picksLabel = totalParts > 0 ? `${withPick}/${totalParts} pronósticos` : 'Sin participantes aún';
 
-      const showPicksBtn = showPublicPicks
-        ? `Ver pronósticos <span class="upcoming-chevron" id="uchev-${m.id}">▼</span>`
-        : `<span style="color:var(--muted)">🔒 Pronósticos ocultos</span>`;
+    const showPicksBtn = showPublicPicks
+      ? `Ver todos los pronósticos <span class="upcoming-chevron" id="uchev-${m.id}">▼</span>`
+      : `<span style="color:var(--muted)">🔒 Pronósticos ocultos</span>`;
 
-      html += `
-        <div class="upcoming-card${isGuat ? ' guat' : ''}" style="border-left:3px solid ${borderColor}">
-          <div class="upcoming-top" style="background:${topBg}">
-            <span class="upcoming-match-date">${date}${guatTag}</span>
-            <span class="upcoming-venue">${safeHtml(m.venue || '')}</span>
+    const simBtnHtml = `<span class="upcoming-expand-hint" style="color:var(--gold);cursor:pointer" onclick="event.stopPropagation();toggleSimulator(${m.id})">
+      🧮 Simular puntos <span class="upcoming-chevron" id="simchev-${m.id}">▼</span>
+    </span>`;
+
+    html += `
+      <div class="upcoming-card${isGuat ? ' guat' : ''}" style="border-left:3px solid ${borderColor}">
+        <div class="upcoming-top" style="background:${topBg}">
+          <span class="upcoming-match-date">${m.date}${isGuat ? ' · 🇬🇹 Guatemala' : ''}</span>
+          <span class="upcoming-venue">${safeHtml(m.venue || '')}</span>
+        </div>
+        <div class="upcoming-body">
+          <div class="upcoming-team r"><span class="upcoming-flag">${m.lf}</span>${safeHtml(m.local)}</div>
+          <div class="upcoming-vs">vs</div>
+          <div class="upcoming-team"><span class="upcoming-flag">${m.vf}</span>${safeHtml(m.visita)}</div>
+        </div>
+        <div class="upcoming-footer">
+          <span class="upcoming-picks-count">⚽ ${picksLabel}</span>
+          <span class="upcoming-expand-hint" onclick="event.stopPropagation();toggleUpcomingPicks(${m.id})">${showPicksBtn}</span>
+        </div>
+        <div class="upcoming-picks-panel" id="upanel-${m.id}">
+          ${buildPicksPanel(m)}
+        </div>
+        <div style="padding:0 12px 0;border-top:1px solid var(--border)">
+          <div style="display:flex;align-items:center;justify-content:flex-end;padding:6px 0">
+            ${simBtnHtml}
           </div>
-          <div class="upcoming-body">
-            <div class="upcoming-team r"><span class="upcoming-flag">${m.lf}</span>${safeHtml(m.local)}</div>
-            <div class="upcoming-vs">vs</div>
-            <div class="upcoming-team"><span class="upcoming-flag">${m.vf}</span>${safeHtml(m.visita)}</div>
-          </div>
-          <div class="upcoming-footer">
-            <span class="upcoming-picks-count">⚽ ${picksLabel}</span>
-            <span class="upcoming-expand-hint" onclick="event.stopPropagation();toggleUpcomingPicks(${m.id})">${showPicksBtn}</span>
-          </div>
-          <div class="upcoming-picks-panel" id="upanel-${m.id}">
-            ${buildPicksPanel(m)}
-          </div>
-          <div style="padding:0 12px 0;border-top:1px solid var(--border)">
-            <div style="display:flex;align-items:center;justify-content:flex-end;padding:6px 0">
-              <span class="upcoming-expand-hint" style="color:var(--gold);cursor:pointer" onclick="event.stopPropagation();toggleSimulator(${m.id})">
-                🧮 Simular puntos <span class="upcoming-chevron" id="simchev-${m.id}">▼</span>
-              </span>
-            </div>
-          </div>
-          <div class="simulator-card" id="sim-${m.id}" style="display:none">
-            ${buildSimulatorInner(m)}
-          </div>
-        </div>`;
-    });
-  }
+        </div>
+        <div class="simulator-card" id="sim-${m.id}" style="display:none">
+          ${buildSimulatorInner(m)}
+        </div>
+      </div>`;
+  });
 
   html += '</div>';
   wrap.innerHTML = html;
@@ -1774,7 +1674,7 @@ function buildPicksPanel(m) {
   if (!sorted.length) return `<div class="picks-locked-msg">Aún no hay participantes registrados</div>`;
 
   let html = `<div class="picks-panel-header">
-    <span class="picks-panel-title">Pronósticos de todos</span>
+    <span class="picks-panel-title">Pronósticos registrados</span>
     <span class="picks-panel-locked">${sorted.length} participantes</span>
   </div>`;
 
@@ -1785,13 +1685,12 @@ function buildPicksPanel(m) {
     const ini = p.name.split(' ').map(w => w[0]).join('').substring(0,2).toUpperCase();
     html += `<div class="pick-participant-row">
       <div style="display:flex;align-items:center;gap:8px;flex:1">
-        <div style="width:28px;height:28px;border-radius:50%;background:${av.bg};color:${av.c};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">${ini}</div>
+        <div style="width:28px;height:28px;border-radius:50%;background:${av.bg};color:${av.c};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">${safeHtml(ini)}</div>
         <span class="pick-participant-name">${safeHtml(p.name)}</span>
       </div>
       <span class="pick-participant-score${has ? '' : ' no-pick'}">${has ? pk.gl + ' – ' + pk.gv : 'pendiente'}</span>
     </div>`;
   });
-
   return html;
 }
 
@@ -1805,6 +1704,7 @@ function toggleUpcomingPicks(matchId) {
   if (chev) chev.classList.toggle('open');
 }
 
+// ── SIMULADOR ──
 function buildSimulatorInner(m) {
   return `<div class="simulator-header">
       <span class="simulator-title">🧮 Simulador de puntos · ${m.lf} vs ${m.vf}</span>
@@ -1812,14 +1712,14 @@ function buildSimulatorInner(m) {
     </div>
     <div class="sim-input-row">
       <span class="sim-label">${m.lf} ${safeHtml(m.local)}</span>
-      <input class="sim-score-box" type="number" id="simgl-${m.id}" min="0" max="20" placeholder="–" inputmode="numeric" oninput="runSimulation(${m.id})">
+      <input class="sim-score-box" type="number" id="simgl-${m.id}" min="0" max="20" placeholder="–" inputmode="numeric">
       <span class="sim-dash">–</span>
-      <input class="sim-score-box" type="number" id="simgv-${m.id}" min="0" max="20" placeholder="–" inputmode="numeric" oninput="runSimulation(${m.id})">
+      <input class="sim-score-box" type="number" id="simgv-${m.id}" min="0" max="20" placeholder="–" inputmode="numeric">
       <span class="sim-label">${safeHtml(m.visita)} ${m.vf}</span>
       <button type="button" class="sim-btn" onclick="event.stopPropagation();runSimulation(${m.id})">Calcular</button>
     </div>
     <div class="sim-results" id="simresults-${m.id}">
-      <div class="sim-no-picks">Ingrese un marcador para ver los puntos hipotéticos. No se guarda ningún resultado.</div>
+      <div class="sim-no-picks">Ingrese un marcador y presione Calcular. Esto no se guarda.</div>
     </div>`;
 }
 
@@ -1832,23 +1732,21 @@ function toggleSimulator(matchId) {
   if (!isOpen) {
     const m = MATCHES.find(x => String(x.id) === String(matchId));
     if (m) card.innerHTML = buildSimulatorInner(m);
-    setTimeout(() => document.getElementById('simgl-' + matchId)?.focus(), 50);
   }
   if (chev) chev.classList.toggle('open', !isOpen);
 }
 
 function runSimulation(matchId) {
-  const glEl = document.getElementById('simgl-' + matchId);
-  const gvEl = document.getElementById('simgv-' + matchId);
-  const gl = glEl?.value;
-  const gv = gvEl?.value;
-  const resultsContainer = document.getElementById('simresults-' + matchId);
-  if (!resultsContainer) return;
+  const gl = document.getElementById('simgl-' + matchId)?.value;
+  const gv = document.getElementById('simgv-' + matchId)?.value;
 
   if (gl === '' || gv === '' || gl == null || gv == null) {
-    resultsContainer.innerHTML = `<div class="sim-no-picks">Ingrese ambos marcadores para calcular puntos hipotéticos.</div>`;
+    toast('Ingrese el resultado simulado completo');
     return;
   }
+
+  const resultsContainer = document.getElementById('simresults-' + matchId);
+  if (!resultsContainer) return;
 
   const m = MATCHES.find(x => String(x.id) === String(matchId));
 
@@ -1897,7 +1795,7 @@ function runSimulation(matchId) {
     html += `<div class="sim-row${isMe ? ' me-row' : ''}">
       <div class="sim-row-left">
         <span class="sim-pos">${i + 1}</span>
-        <div class="sim-av" style="background:${av.bg};color:${av.c}">${ini}</div>
+        <div class="sim-av" style="background:${av.bg};color:${av.c}">${safeHtml(ini)}</div>
         <div>
           <div class="sim-name">${safeHtml(p.name)}${isMe ? ' 👤' : ''}</div>
           <div style="font-size:10px;color:var(--muted)">Pronóstico: ${p.pickGl} – ${p.pickGv}</div>
