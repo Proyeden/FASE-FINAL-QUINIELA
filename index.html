@@ -6,10 +6,10 @@
 <meta name="theme-color" content="#1A1A2E">
 <meta name="description" content="Quiniela de amistosos previos al Mundial 2026. Llena tu pronóstico para los partidos seleccionados.">
 <title>🤝 Quiniela Amistosos 2026</title>
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%BD%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Quiniela Amistosos 2026">
+<meta name="apple-mobile-web-app-title" content="Quiniela 2026">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" id="pwa-manifest">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
@@ -194,41 +194,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
   .group-teams-txt{display:none}
 }
 
-/* ── PWA INSTALL BANNER ── */
-.install-banner{position:fixed;bottom:0;left:0;right:0;z-index:500;background:linear-gradient(135deg,var(--navy3),#1a237e);padding:.85rem 1rem;display:none;animation:slideUp .35s ease}
-.install-banner.show{display:block}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.install-inner{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:12px}
-.install-icon{font-size:2rem;flex-shrink:0}
-.install-text{flex:1}
-.install-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:2px}
-.install-sub{font-size:11px;color:rgba(255,255,255,.6);line-height:1.4}
-.install-actions{display:flex;gap:8px;flex-shrink:0}
-.install-yes{background:var(--gold);color:var(--navy);border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap}
-.install-no{background:transparent;color:rgba(255,255,255,.5);border:none;font-size:11px;cursor:pointer;font-family:inherit;padding:4px 8px}
-.ios-tip{position:fixed;bottom:0;left:0;right:0;z-index:500;background:#1E2128;border-top:2px solid var(--gold);padding:1rem 1.25rem 1.5rem;display:none;animation:slideUp .35s ease}
-.ios-tip.show{display:block}
-.ios-tip-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center}
-.ios-tip-body{font-size:12px;color:rgba(255,255,255,.7);line-height:1.8}
-.ios-tip-body span{color:var(--gold);font-weight:700}
-.ios-close{background:none;border:none;color:#666;font-size:18px;cursor:pointer;padding:0 4px;line-height:1}
-
-/* ── MIS PRONÓSTICOS ── */
-.mypicks-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:1rem;overflow:hidden;box-shadow:var(--shadow)}
-.mypicks-header{padding:1rem 1.25rem .75rem;background:linear-gradient(135deg,var(--navy3),#1a237e);display:flex;justify-content:space-between;align-items:center}
-.mypicks-title{font-size:13px;font-weight:700;color:#fff}
-.mypicks-sub{font-size:10px;color:rgba(255,255,255,.6);margin-top:2px}
-.mypicks-edit-btn{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
-.mypicks-edit-btn:hover{background:rgba(255,255,255,.25)}
-.mypicks-pending{background:#fff3cd;border-bottom:1px solid #fde68a;padding:8px 14px;font-size:12px;color:#92400e;display:flex;align-items:center;gap:6px;font-weight:600}
-.mypick-row{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border);font-size:12px}
-.mypick-row:last-child{border-bottom:none}
-.mypick-row.guat{background:#f0fdf4}
-.mypick-left{flex:1}
-.mypick-teams{font-weight:600;color:var(--text);font-size:12px}
-.mypick-meta{font-size:10px;color:var(--muted);margin-top:1px}
-.mypick-score{font-weight:800;font-size:15px;color:var(--navy);background:#e0f2fe;padding:3px 12px;border-radius:8px;min-width:54px;text-align:center;flex-shrink:0}
-.mypick-score.pending{color:#bbb;background:#f4f4f4;font-size:11px;font-weight:500}
+/* ── SCORING LEGEND ── */
+.scoring-legend{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1rem;overflow:hidden;box-shadow:var(--shadow)}
+.scoring-legend-head{padding:8px 14px;background:linear-gradient(90deg,var(--navy),var(--navy3));display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.scoring-legend-title{font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1px}
+.scoring-legend-body{display:none;padding:8px 0}
+.scoring-legend-body.open{display:block}
+.score-rule{display:flex;align-items:center;gap:10px;padding:6px 14px;border-bottom:1px solid #f5f5f0}
+.score-rule:last-child{border-bottom:none}
+.score-rule-pts{font-size:16px;font-weight:800;color:var(--navy);font-family:'Bebas Neue',sans-serif;width:42px;flex-shrink:0}
+.score-rule-stars{font-size:12px;width:60px;flex-shrink:0}
+.score-rule-desc{font-size:11px;color:var(--text);flex:1;line-height:1.45}
+.score-rule-ex{font-size:10px;color:var(--muted);margin-top:1px}
 
 /* ── PRÓXIMOS PARTIDOS ── */
 .upcoming-section{margin-bottom:1rem}
@@ -239,7 +216,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
 .upcoming-date-label{font-size:10px;color:var(--muted);font-weight:500}
 .upcoming-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:8px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:.15s}
 .upcoming-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-1px)}
-.upcoming-card.guat{border-left:4px solid #1B5E20!important}
+.upcoming-card.guat{border-left:4px solid var(--green)!important}
 .upcoming-top{padding:5px 12px;display:flex;justify-content:space-between;align-items:center}
 .upcoming-match-date{font-size:9px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;text-transform:uppercase}
 .upcoming-venue{font-size:9px;color:rgba(255,255,255,.5);font-style:italic;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -247,7 +224,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
 .upcoming-team{font-size:13px;font-weight:700;color:var(--text);line-height:1.25}
 .upcoming-team.r{text-align:right}
 .upcoming-flag{font-size:18px;display:block;line-height:1.1}
-.upcoming-vs{font-size:13px;font-weight:800;color:var(--red);text-align:center}
+.upcoming-vs{font-size:13px;font-weight:800;color:var(--red);text-align:center;padding:0 4px}
 .upcoming-footer{padding:5px 12px 8px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .upcoming-picks-count{font-size:10px;color:var(--muted);font-weight:600}
 .upcoming-expand-hint{font-size:10px;color:var(--navy3);font-weight:700;display:flex;align-items:center;gap:4px}
@@ -266,32 +243,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
 .picks-locked-msg{padding:12px;text-align:center;font-size:12px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:6px}
 .upcoming-none{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:1rem;text-align:center;font-size:12px;color:var(--muted);box-shadow:var(--shadow)}
 
-/* ── DARK MODE ── */
-@media(prefers-color-scheme:dark){
-  :root{--light:#111318;--card:#1E2128;--border:#2E3240;--text:#E8E8F0;--muted:#6B7280}
-  .name-input,.admin-pin-input,.sim-score-box{background:#252830;color:#E8E8F0;border-color:#2E3240}
-  .name-input:focus,.admin-pin-input:focus{background:#2E3240}
-  .rank-head:hover{background:#252830}
-  .export-select-box{background:#252830}
-  .export-check{background:#1E2128;border-color:#2E3240}
-  .mini-btn{background:#252830;color:#E8E8F0;border-color:#2E3240}
-  .pick-row{border-bottom-color:#2E3240}
-  .prog-bar-bg{background:#2E3240}
-  .how-to{background:#162420;border-color:#1B4332;color:#86EFAC}
-  .score-box{background:#1A2820;border-color:#1B4332;color:#E8E8F0}
-  .score-box.has-v{background:#14301E!important;border-color:#16A34A!important}
-  .admin-lock,.control-card,.export-card,.stat-card,.rank-card,.name-card,.mypicks-card,.upcoming-card,.scoring-legend{background:#1E2128;border-color:#2E3240}
-  .mypick-row,.pick-participant-row{border-bottom-color:#2E3240}
-  .mypick-score{background:#1E3A5F;color:#93C5FD}
-  .upcoming-picks-panel{background:#252830}
-}
-
-/* ── SIMULADOR DE PUNTOS ── */
-.simulator-card{margin:0;border-top:2px solid var(--gold);background:#fffdf4;overflow:hidden}
+/* ── SIMULADOR ── */
+.simulator-card{border-top:2px solid var(--gold);background:#fffdf4;overflow:hidden}
 .simulator-header{background:linear-gradient(135deg,#1A1A2E,#0F3460);padding:8px 12px;display:flex;align-items:center;justify-content:space-between}
 .simulator-title{font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.8px;display:flex;align-items:center;gap:5px}
-.simulator-close{background:none;border:none;color:rgba(255,255,255,.4);font-size:14px;cursor:pointer;line-height:1;padding:2px 5px;border-radius:4px}
-.simulator-close:hover{color:#fff;background:rgba(255,255,255,.1)}
 .sim-input-row{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff8e8;border-bottom:1px solid #fde68a;flex-wrap:wrap}
 .sim-label{font-size:11px;font-weight:600;color:#92400e;white-space:nowrap}
 .sim-score-box{width:42px;height:38px;border:2px solid #fbbf24;border-radius:6px;font-size:18px;font-weight:700;text-align:center;background:#fff;color:var(--navy);font-family:'DM Sans',sans-serif;-moz-appearance:textfield;appearance:textfield;-webkit-appearance:none}
@@ -302,11 +257,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
 .sim-results-header{padding:6px 12px;background:#1A1A2E;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px}
 .sim-results-title{font-size:9px;font-weight:800;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.6px}
 .sim-results-hint{font-size:9px;color:rgba(255,255,255,.35)}
-.sim-row{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-bottom:1px solid #fef9ec;font-size:12px;transition:.15s}
+.sim-row{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-bottom:1px solid #fef9ec;font-size:12px}
 .sim-row:last-child{border-bottom:none}
 .sim-row.me-row{background:#fff8e8;border-left:3px solid var(--gold)}
 .sim-row-left{display:flex;align-items:center;gap:8px;flex:1}
-.sim-pos{font-size:12px;width:20px;text-align:center;flex-shrink:0}
+.sim-pos{font-size:12px;width:22px;text-align:center;flex-shrink:0}
 .sim-av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
 .sim-name{font-weight:600;color:var(--text);font-size:12px}
 .sim-pts-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0}
@@ -319,8 +274,65 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
 .sim-no-picks{padding:12px;font-size:11px;color:var(--muted);text-align:center;font-style:italic}
 .sim-teams-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;width:100%}
 .sim-action-line{display:flex;justify-content:center;width:100%;margin-top:4px}
-@media(max-width:480px){
-  .sim-label{font-size:10px;max-width:80px;text-align:center;line-height:1.2}
+
+/* ── MIS PRONÓSTICOS ── */
+.mypicks-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:1rem;overflow:hidden;box-shadow:var(--shadow)}
+.mypicks-header{padding:1rem 1.25rem .75rem;background:linear-gradient(135deg,var(--navy3),#1a237e);display:flex;justify-content:space-between;align-items:center}
+.mypicks-title{font-size:13px;font-weight:700;color:#fff}
+.mypicks-sub{font-size:10px;color:rgba(255,255,255,.6);margin-top:2px}
+.mypicks-edit-btn{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
+.mypicks-edit-btn:hover{background:rgba(255,255,255,.25)}
+.mypicks-pending{background:#fff3cd;border-bottom:1px solid #fde68a;padding:8px 14px;font-size:12px;color:#92400e;display:flex;align-items:center;gap:6px;font-weight:600}
+.mypick-row{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border);font-size:12px}
+.mypick-row:last-child{border-bottom:none}
+.mypick-row.guat{background:#f0fdf4}
+.mypick-left{flex:1}
+.mypick-teams{font-weight:600;color:var(--text);font-size:12px}
+.mypick-meta{font-size:10px;color:var(--muted);margin-top:1px}
+.mypick-score{font-weight:800;font-size:15px;color:var(--navy);background:#e0f2fe;padding:3px 12px;border-radius:8px;min-width:54px;text-align:center;flex-shrink:0}
+.mypick-score.pending{color:#bbb;background:#f4f4f4;font-size:11px;font-weight:500}
+
+/* ── PWA ── */
+.install-banner{position:fixed;bottom:0;left:0;right:0;z-index:500;background:linear-gradient(135deg,var(--navy3),#1a237e);padding:.85rem 1rem;display:none;animation:slideUp .35s ease}
+.install-banner.show{display:block}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.install-inner{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.install-icon{font-size:2rem;flex-shrink:0}
+.install-text{flex:1}
+.install-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:2px}
+.install-sub{font-size:11px;color:rgba(255,255,255,.6)}
+.install-actions{display:flex;gap:8px;flex-shrink:0}
+.install-yes{background:var(--gold);color:var(--navy);border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap}
+.install-no{background:transparent;color:rgba(255,255,255,.5);border:none;font-size:11px;cursor:pointer;font-family:inherit;padding:4px 8px}
+.ios-tip{position:fixed;bottom:0;left:0;right:0;z-index:500;background:#1E2128;border-top:2px solid var(--gold);padding:1rem 1.25rem 1.5rem;display:none;animation:slideUp .35s ease}
+.ios-tip.show{display:block}
+.ios-tip-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center}
+.ios-tip-body{font-size:12px;color:rgba(255,255,255,.7);line-height:1.8}
+.ios-tip-body span{color:var(--gold);font-weight:700}
+.ios-close{background:none;border:none;color:#666;font-size:18px;cursor:pointer;padding:0 4px}
+
+/* ── SAVE ANIMATION ── */
+@keyframes savePulse{0%{transform:scale(1)}50%{transform:scale(.97)}100%{transform:scale(1)}}
+.submit-btn.saving{animation:savePulse .3s ease}
+.submit-btn.saved{background:#15803D!important}
+.submit-btn.saved::after{content:' ✓'}
+
+/* ── DARK MODE ── */
+@media(prefers-color-scheme:dark){
+  :root{--light:#111318;--card:#1E2128;--border:#2E3240;--text:#E8E8F0;--muted:#6B7280}
+  .name-input,.admin-pin-input,.sim-score-box{background:#252830;color:#E8E8F0;border-color:#2E3240}
+  .name-input:focus,.admin-pin-input:focus{background:#2E3240}
+  .rank-head:hover{background:#252830}
+  .export-select-box{background:#252830}
+  .export-check{background:#1E2128;border-color:#2E3240}
+  .mini-btn{background:#252830;color:#E8E8F0;border-color:#2E3240}
+  .prog-bar-bg{background:#2E3240}
+  .how-to{background:#162420;border-color:#1B4332;color:#86EFAC}
+  .score-box{background:#1A2820;border-color:#1B4332;color:#E8E8F0}
+  .score-box.has-v{background:#14301E!important;border-color:#16A34A!important}
+  .admin-lock,.control-card,.export-card,.stat-card,.rank-card,.name-card,.mypicks-card,.upcoming-card,.scoring-legend{background:#1E2128;border-color:#2E3240}
+  .mypick-row,.pick-participant-row,.pick-row{border-bottom-color:#2E3240}
+  .mypick-score{background:#1E3A5F;color:#93C5FD}
 }
 </style>
 </head>
@@ -359,7 +371,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
     <h1>QUINIELA<br><span>AMISTOSOS</span></h1>
     <p class="hero-sub">Amistosos previos · 23 partidos · Pronóstico privado</p>
     <div class="hero-sedes">
-      <span class="sede-flag">🇬🇹</span> Guatemala &nbsp;·&nbsp;
+      <span class="sede-flag">🇺🇸</span> Guatemala &nbsp;·&nbsp;
       <span class="sede-flag">🌎</span> Selecciones mundialistas &nbsp;·&nbsp;
       <span class="sede-flag">🏟️</span> Amistosos
     </div>
@@ -388,6 +400,24 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
 <div class="page active" id="page-form">
   <div class="wrap">
 
+    <!-- PRÓXIMOS PARTIDOS (se renderiza por JS) -->
+    <div id="upcoming-section"></div>
+
+    <!-- TABLA DE PUNTUACIÓN -->
+    <div class="scoring-legend" id="scoring-legend">
+      <div class="scoring-legend-head" onclick="toggleScoringLegend()">
+        <span class="scoring-legend-title">🏆 Sistema de Puntuación</span>
+        <span class="chev" id="scoring-chev">▼</span>
+      </div>
+      <div class="scoring-legend-body" id="scoring-body">
+        <div class="score-rule"><div class="score-rule-pts">50</div><div class="score-rule-stars">⭐⭐⭐⭐</div><div><div class="score-rule-desc">Resultado <strong>EXACTO</strong> (ambos goles correctos)</div><div class="score-rule-ex">Pronostica 2-1 → Sale 2-1</div></div></div>
+        <div class="score-rule"><div class="score-rule-pts">30</div><div class="score-rule-stars">⭐⭐⭐</div><div><div class="score-rule-desc">Ganador correcto <strong>+ 1 gol exacto</strong></div><div class="score-rule-ex">Pronostica 2-1 → Sale 3-1</div></div></div>
+        <div class="score-rule"><div class="score-rule-pts">20</div><div class="score-rule-stars">⭐⭐</div><div><div class="score-rule-desc">Solo <strong>ganador o empate</strong> correcto</div><div class="score-rule-ex">Pronostica 2-1 → Sale 3-2</div></div></div>
+        <div class="score-rule"><div class="score-rule-pts">10</div><div class="score-rule-stars">⭐</div><div><div class="score-rule-desc">1 equipo con <strong>goles exactos</strong> sin acertar ganador</div><div class="score-rule-ex">Pronostica 2-1 → Sale 2-3</div></div></div>
+        <div class="score-rule"><div class="score-rule-pts">0</div><div class="score-rule-stars">✕</div><div><div class="score-rule-desc">Nada correcto</div><div class="score-rule-ex">Pronostica 2-1 → Sale 0-3</div></div></div>
+      </div>
+    </div>
+
     <!-- Nombre -->
     <div class="name-card">
       <div class="field-label">Tu nombre completo</div>
@@ -402,11 +432,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
       </div>
     </div>
 
-    <div id="mypicks-wrap" style="display:none"></div>
-
     <div id="locked-msg" class="locked-msg" style="display:none">
       🔒 La quiniela está cerrada — ya no se reciben pronósticos
     </div>
+
+    <!-- MIS PRONÓSTICOS resumen -->
+    <div id="mypicks-wrap" style="display:none"></div>
 
     <div id="games-wrap" style="display:none">
       <div id="games-list"></div>
@@ -919,9 +950,10 @@ function refreshProgress() {
   const pct = Math.round(filled / TOTAL_MATCHES * 100);
   document.getElementById('prog-fill').style.width = pct + '%';
   const lbl = document.getElementById('prog-lbl');
-  const pending = TOTAL_MATCHES - filled;
-  const pendTag = pending > 0 ? `<span style="color:var(--red);font-weight:700">${pending} pendientes</span>` : `<span style="color:var(--green);font-weight:700">✓ Completo</span>`;
+  const pending2 = TOTAL_MATCHES - filled;
+  const pendTag = pending2>0?`<span style="color:var(--red);font-weight:700">${pending2} pendientes</span>`:`<span style="color:var(--green);font-weight:700">✓ Completo</span>`;
   lbl.innerHTML = `<span>${filled} / ${TOTAL_MATCHES} pronosticados</span>${pendTag}`;
+  hasUnsavedChanges = true;
   lbl.className = 'prog-label' + (filled === TOTAL_MATCHES ? ' done' : '');
 }
 
@@ -945,7 +977,16 @@ async function saveQuiniela() {
 
   try {
     await db.collection(COLLECTION).doc(docIdFromName(me)).set(entry);
-    toast(`✓ Guardado en la nube — ${filled}/${TOTAL_MATCHES} partidos pronósticados`);
+    hasUnsavedChanges = false;
+    toast(`✓ Guardado — ${filled}/${TOTAL_MATCHES} partidos`);
+    setTimeout(() => {
+      editModeActive = false;
+      document.getElementById('games-wrap').style.display = 'none';
+      document.getElementById('submit-bar').style.display = 'none';
+      buildMyPicks(false);
+      const gb = document.getElementById('go-btn');
+      if (gb) { gb.textContent = 'Ver mis pronósticos'; gb.style.background = 'var(--green)'; }
+    }, 1500);
   } catch (err) {
     console.error(err);
     toast('No se pudo guardar en Firebase');
@@ -1459,15 +1500,48 @@ function downloadMyPDF() {
 }
 
 
-// ══════════════════════════════════════════
-//  PRÓXIMOS PARTIDOS (hoy y mañana)
-// ══════════════════════════════════════════
-const DATE_MAP_UP = {
-  '30 may':new Date(2026,4,30),'31 may':new Date(2026,4,31),'1 jun':new Date(2026,5,1),
-  '2 jun':new Date(2026,5,2),'4 jun':new Date(2026,5,4),'6 jun':new Date(2026,5,6),
-  '7 jun':new Date(2026,5,7),'8 jun':new Date(2026,5,8),'9 jun':new Date(2026,5,9),'10 jun':new Date(2026,5,10)
+// ═══════════════════════════════════════
+//  SISTEMA DE PUNTUACIÓN
+// ═══════════════════════════════════════
+function getPickForMatch(participant, matchId) {
+  return (participant.picks || []).find(p => String(p.id) === String(matchId));
+}
+
+function calcPoints(myGl, myGv, realGl, realGv) {
+  const ml = parseInt(myGl, 10), mv = parseInt(myGv, 10);
+  const rl = parseInt(realGl, 10), rv = parseInt(realGv, 10);
+  if (isNaN(ml) || isNaN(mv) || isNaN(rl) || isNaN(rv)) return null;
+  const exactLocal  = ml === rl;
+  const exactVisita = mv === rv;
+  const myWinner    = ml > mv ? 'L' : ml < mv ? 'V' : 'E';
+  const realWinner  = rl > rv ? 'L' : rl < rv ? 'V' : 'E';
+  const winnerOk    = myWinner === realWinner;
+  if (exactLocal && exactVisita) return 50;
+  if (winnerOk && (exactLocal || exactVisita)) return 30;
+  if (winnerOk) return 20;
+  if (exactLocal || exactVisita) return 10;
+  return 0;
+}
+
+function toggleScoringLegend() {
+  const body = document.getElementById('scoring-body');
+  const chev = document.getElementById('scoring-chev');
+  if (!body || !chev) return;
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+// ═══════════════════════════════════════
+//  PRÓXIMOS PARTIDOS
+// ═══════════════════════════════════════
+const DATE_MAP = {
+  '30 may': new Date(2026,4,30), '31 may': new Date(2026,4,31),
+  '1 jun':  new Date(2026,5,1),  '2 jun':  new Date(2026,5,2),
+  '4 jun':  new Date(2026,5,4),  '6 jun':  new Date(2026,5,6),
+  '7 jun':  new Date(2026,5,7),  '8 jun':  new Date(2026,5,8),
+  '9 jun':  new Date(2026,5,9),  '10 jun': new Date(2026,5,10),
 };
-const DATE_COLORS_UP = {
+const DATE_COLORS_MAP = {
   '30 may':'#1565C0','31 may':'#2E7D32','1 jun':'#E65100','2 jun':'#C62828',
   '4 jun':'#F57F17','6 jun':'#6A1B9A','7 jun':'#880E4F','8 jun':'#37474F',
   '9 jun':'#00695C','10 jun':'#0D47A1'
@@ -1481,33 +1555,43 @@ function buildUpcoming() {
   const limit = new Date(today); limit.setDate(today.getDate() + 2);
 
   const upcoming = MATCHES.filter(m => {
-    const d = DATE_MAP_UP[m.date]; if (!d) return false;
+    const d = DATE_MAP[m.date]; if (!d) return false;
     const md = new Date(d.getFullYear(), d.getMonth(), d.getDate());
     return md >= today && md < limit;
   });
 
   if (!upcoming.length) {
-    const future = MATCHES.filter(m => { const d = DATE_MAP_UP[m.date]; return d && new Date(d.getFullYear(),d.getMonth(),d.getDate()) >= today; });
+    const future = MATCHES.filter(m => {
+      const d = DATE_MAP[m.date];
+      return d && new Date(d.getFullYear(),d.getMonth(),d.getDate()) >= today;
+    });
     if (!future.length) { wrap.innerHTML = ''; return; }
     wrap.innerHTML = `<div class="upcoming-none">No hay partidos hoy ni mañana · Próximos: <strong>${future[0].date}</strong></div>`;
     return;
   }
 
   const byDate = {};
-  upcoming.forEach(m => { if (!byDate[m.date]) byDate[m.date] = []; byDate[m.date].push(m); });
+  upcoming.forEach(m => { if (!byDate[m.date]) byDate[m.date]=[]; byDate[m.date].push(m); });
 
-  let html = `<div class="upcoming-section"><div class="upcoming-header"><div class="upcoming-title"><span class="live-dot"></span>Próximos partidos</div><span class="upcoming-date-label">Hoy y mañana</span></div>`;
+  let html = `<div class="upcoming-section">
+    <div class="upcoming-header">
+      <div class="upcoming-title"><span class="live-dot"></span>Próximos partidos</div>
+      <span class="upcoming-date-label">Hoy y mañana</span>
+    </div>`;
 
   for (const [date, ms] of Object.entries(byDate)) {
-    const dc = DATE_COLORS_UP[date] || '#555';
+    const dc = DATE_COLORS_MAP[date] || '#555';
     ms.forEach(m => {
       const isGuat = m.local === 'Guatemala' || m.visita === 'Guatemala';
       const topBg = isGuat ? '#1B5E20' : dc;
       const guatTag = isGuat ? ' 🇬🇹' : '';
-      const withPick = parts.filter(p => { const pk = (p.picks||[]).find(x=>String(x.id)===String(m.id)); return pk&&pk.gl!==''&&pk.gv!==''; }).length;
+      const withPick = parts.filter(p => {
+        const pk = getPickForMatch(p, m.id);
+        return pk && pk.gl !== '' && pk.gv !== '';
+      }).length;
       const picksLabel = parts.length > 0 ? `${withPick}/${parts.length} pronósticos` : 'Sin participantes aún';
       const expandHint = showPublicPicks
-        ? `Ver pronósticos y simular <span class="upcoming-chevron" id="uchev-${m.id}">▼</span>`
+        ? `Ver pronósticos <span class="upcoming-chevron" id="uchev-${m.id}">▼</span>`
         : `<span style="color:var(--muted)">🔒 Pronósticos ocultos</span>`;
 
       html += `<div class="upcoming-card${isGuat?' guat':''}" style="border-left:3px solid ${topBg}">
@@ -1524,10 +1608,11 @@ function buildUpcoming() {
           <span class="upcoming-picks-count">⚽ ${picksLabel}</span>
           <span class="upcoming-expand-hint">${expandHint}</span>
         </div>
-        <div class="upcoming-picks-panel" id="upanel-${m.id}">${buildUpcomingPanel(m)}</div>
+        <div class="upcoming-picks-panel" id="upanel-${m.id}">${buildPicksPanel(m)}</div>
         <div style="padding:0 12px;border-top:1px solid var(--border)">
           <div style="display:flex;align-items:center;justify-content:flex-end;padding:6px 0">
-            <button type="button" style="color:var(--gold);background:none;border:none;font-family:inherit;cursor:pointer;font-size:10px;font-weight:700" onclick="event.stopPropagation();toggleSimulator(${m.id})">
+            <button type="button" style="color:var(--gold);background:none;border:none;font-family:inherit;cursor:pointer;font-size:10px;font-weight:700"
+              onclick="event.stopPropagation();toggleSimulator(${m.id})">
               🧮 Simular puntos <span class="upcoming-chevron" id="simchev-${m.id}">▼</span>
             </button>
           </div>
@@ -1540,13 +1625,16 @@ function buildUpcoming() {
   wrap.innerHTML = html;
 }
 
-function buildUpcomingPanel(m) {
+function buildPicksPanel(m) {
   if (!showPublicPicks) return '<div class="picks-locked-msg">🔒 El administrador aún no ha habilitado la vista de pronósticos</div>';
   const sorted = [...parts].sort((a,b) => a.name.localeCompare(b.name));
-  if (!sorted.length) return '<div class="picks-locked-msg">Sin participantes aún</div>';
-  let html = `<div class="picks-panel-header"><span class="picks-panel-title">Pronósticos de todos</span><span class="picks-panel-locked">${sorted.length} participantes</span></div>`;
+  if (!sorted.length) return '<div class="picks-locked-msg">Aún no hay participantes registrados</div>';
+  let html = `<div class="picks-panel-header">
+    <span class="picks-panel-title">Pronósticos de todos</span>
+    <span class="picks-panel-locked">${sorted.length} participantes</span>
+  </div>`;
   sorted.forEach((p,i) => {
-    const pk = (p.picks||[]).find(x => String(x.id) === String(m.id));
+    const pk = getPickForMatch(p, m.id);
     const has = pk && pk.gl !== '' && pk.gv !== '';
     const av = AV_COLORS[i % AV_COLORS.length];
     const ini = p.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
@@ -1563,49 +1651,44 @@ function buildUpcomingPanel(m) {
 
 function toggleUpcomingPicks(matchId) {
   const panel = document.getElementById('upanel-' + matchId);
-  const chev = document.getElementById('uchev-' + matchId);
+  const chev  = document.getElementById('uchev-' + matchId);
   if (!panel) return;
   const m = MATCHES.find(x => String(x.id) === String(matchId));
-  if (m) panel.innerHTML = buildUpcomingPanel(m);
+  if (m) panel.innerHTML = buildPicksPanel(m);
   panel.classList.toggle('open');
   if (chev) chev.classList.toggle('open');
 }
 
-
-// ══════════════════════════════════════════
+// ═══════════════════════════════════════
 //  SIMULADOR DE PUNTOS
-// ══════════════════════════════════════════
-
-
+// ═══════════════════════════════════════
 function toggleSimulator(matchId) {
   const id = String(matchId);
   const card = document.getElementById('sim-' + id);
   const chev = document.getElementById('simchev-' + id);
   if (!card) return;
   const isOpen = card.style.display !== 'none';
+  card.style.display = isOpen ? 'none' : 'block';
   if (!isOpen) {
     const m = MATCHES.find(x => String(x.id) === id);
     if (m) card.innerHTML = buildSimulatorInner(m);
-    card.style.display = 'block';
-  } else {
-    card.style.display = 'none';
   }
   if (chev) chev.classList.toggle('open', !isOpen);
 }
 
 function buildSimulatorInner(m) {
   return `<div class="simulator-header">
-    <span class="simulator-title">🧮 Simulador · ${m.lf} ${m.local} vs ${m.visita} ${m.vf}</span>
+    <span class="simulator-title">🧮 Simulador de puntos · ${m.lf} ${m.local} vs ${m.visita} ${m.vf}</span>
   </div>
   <div class="sim-input-row">
     <div class="sim-teams-line">
       <span class="sim-label">${m.lf} ${m.local}</span>
       <input class="sim-score-box" type="number" id="simgl-${m.id}" min="0" max="20"
-        placeholder="–" inputmode="decimal" pattern="[0-9]*" data-sim-input="${m.id}"
+        placeholder="–" inputmode="decimal" pattern="[0-9]*"
         oninput="onSimInput(${m.id})">
       <span class="sim-dash">–</span>
       <input class="sim-score-box" type="number" id="simgv-${m.id}" min="0" max="20"
-        placeholder="–" inputmode="decimal" pattern="[0-9]*" data-sim-input="${m.id}"
+        placeholder="–" inputmode="decimal" pattern="[0-9]*"
         oninput="onSimInput(${m.id})">
       <span class="sim-label">${m.visita} ${m.vf}</span>
     </div>
@@ -1621,9 +1704,7 @@ function buildSimulatorInner(m) {
 function onSimInput(matchId) {
   const gl = document.getElementById('simgl-' + matchId);
   const gv = document.getElementById('simgv-' + matchId);
-  if (gl && gv && gl.value !== '' && gv.value !== '') {
-    runSimulation(matchId);
-  }
+  if (gl && gv && gl.value !== '' && gv.value !== '') runSimulation(matchId);
 }
 
 function runSimulation(matchId) {
@@ -1632,110 +1713,61 @@ function runSimulation(matchId) {
   const gvEl = document.getElementById('simgv-' + id);
   const resultsEl = document.getElementById('simresults-' + id);
   const m = MATCHES.find(x => String(x.id) === id);
-
-  if (!resultsEl || !m) return;
-  if (!glEl || !gvEl || glEl.value === '' || gvEl.value === '') {
+  if (!resultsEl || !m || !glEl || !gvEl) return;
+  if (glEl.value === '' || gvEl.value === '') {
     resultsEl.innerHTML = '<div class="sim-no-picks">Ingresa ambos goles para calcular</div>';
     return;
   }
-
   const rl = glEl.value, rv = gvEl.value;
-
-  // Calcular puntos para cada participante que tiene pronóstico de este partido
-  const withPick = parts
-    .map(p => {
-      const pk = (p.picks || []).find(x => String(x.id) === id);
-      const hasPick = pk && pk.gl !== '' && pk.gv !== '' && pk.gl != null;
-      const pts = hasPick ? calcPoints(pk.gl, pk.gv, rl, rv) : null;
-      return { name: p.name, pickGl: hasPick ? pk.gl : null, pickGv: hasPick ? pk.gv : null, pts };
-    })
-    .sort((a, b) => (b.pts ?? -1) - (a.pts ?? -1) || a.name.localeCompare(b.name));
-
-  if (!withPick.length) {
-    resultsEl.innerHTML = '<div class="sim-no-picks">Sin participantes registrados</div>';
+  if (!parts.length) {
+    resultsEl.innerHTML = '<div class="sim-no-picks">Sin participantes en Firebase aún</div>';
     return;
   }
+  const rows = parts.map(p => {
+    const pk = getPickForMatch(p, id);
+    const hasPick = pk && pk.gl !== '' && pk.gv !== '' && pk.gl != null;
+    const pts = hasPick ? calcPoints(pk.gl, pk.gv, rl, rv) : null;
+    return { name: p.name, pickGl: hasPick?pk.gl:null, pickGv: hasPick?pk.gv:null, pts };
+  }).sort((a,b) => (b.pts??-1)-(a.pts??-1) || a.name.localeCompare(b.name));
 
-  // Resultado descripción
-  const ri = parseInt(rl), rv2 = parseInt(rv);
-  const resDesc = ri > rv2
-    ? `${m.lf} ${m.local} gana ${rl}–${rv}`
-    : ri < rv2
-    ? `${m.vf} ${m.visita} gana ${rl}–${rv}`
-    : `Empate ${rl}–${rv}`;
+  const ri=parseInt(rl), rv2=parseInt(rv);
+  const resDesc = ri>rv2?`${m.lf} ${m.local} gana ${rl}–${rv}`:ri<rv2?`${m.vf} ${m.visita} gana ${rl}–${rv}`:`Empate ${rl}–${rv}`;
 
-  function gainClass(pts) {
-    if (pts === 50) return 'gain-50';
-    if (pts === 30) return 'gain-30';
-    if (pts === 20) return 'gain-20';
-    if (pts === 10) return 'gain-10';
-    return 'gain-0';
-  }
-  function gainLabel(pts) {
-    if (pts === 50) return '⭐⭐⭐⭐ +50 pts';
-    if (pts === 30) return '⭐⭐⭐ +30 pts';
-    if (pts === 20) return '⭐⭐ +20 pts';
-    if (pts === 10) return '⭐ +10 pts';
-    if (pts === 0) return '✕ +0 pts';
-    return '– sin pronóstico';
-  }
-
+  const gainClass = p => p===50?'gain-50':p===30?'gain-30':p===20?'gain-20':p===10?'gain-10':'gain-0';
+  const gainLabel = p => p===50?'⭐⭐⭐⭐ +50':p===30?'⭐⭐⭐ +30':p===20?'⭐⭐ +20':p===10?'⭐ +10':p===0?'✕ +0':'– sin pronóstico';
   const medals = ['🥇','🥈','🥉'];
 
   let html = `<div class="sim-results-header">
     <span class="sim-results-title">${resDesc}</span>
-    <span class="sim-results-hint">Simulación — no afecta puntos reales</span>
+    <span class="sim-results-hint">Simulación temporal</span>
   </div>`;
-
-  let pos = 0;
-  let lastPts = null;
-  withPick.forEach((r, i) => {
-    const isMe = me && r.name.toLowerCase() === me.toLowerCase();
-    const av = AV_COLORS[i % AV_COLORS.length];
-    const ini = r.name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
-    if (r.pts !== lastPts) { pos = i + 1; lastPts = r.pts; }
-    const pickStr = r.pickGl !== null ? `${r.pickGl}–${r.pickGv}` : 'sin pronóstico';
-    html += `<div class="sim-row${isMe ? ' me-row' : ''}">
+  let lastPts=null, pos=0;
+  rows.forEach((r,i) => {
+    const isMe = me && r.name.toLowerCase()===me.toLowerCase();
+    const av = AV_COLORS[i%AV_COLORS.length];
+    const ini = r.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+    if(r.pts!==lastPts){pos=i+1;lastPts=r.pts;}
+    const pickStr = r.pickGl!==null?`${r.pickGl}–${r.pickGv}`:'sin pronóstico';
+    html += `<div class="sim-row${isMe?' me-row':''}">
       <div class="sim-row-left">
-        <span class="sim-pos">${r.pts !== null ? (medals[pos-1] || pos) : '–'}</span>
+        <span class="sim-pos">${r.pts!==null?(medals[pos-1]||pos):'–'}</span>
         <div class="sim-av" style="background:${av.bg};color:${av.c}">${ini}</div>
         <div>
-          <div class="sim-name">${r.name}${isMe ? ' 👤' : ''}</div>
+          <div class="sim-name">${r.name}${isMe?' 👤':''}</div>
           <div style="font-size:10px;color:var(--muted)">Pronóstico: ${pickStr}</div>
         </div>
       </div>
       <div class="sim-pts-wrap">
-        <span class="sim-pts-gain ${r.pts !== null ? gainClass(r.pts) : 'gain-0'}">${gainLabel(r.pts)}</span>
+        <span class="sim-pts-gain ${r.pts!==null?gainClass(r.pts):'gain-0'}">${gainLabel(r.pts)}</span>
       </div>
     </div>`;
   });
-
   resultsEl.innerHTML = html;
 }
 
-// Delegación de eventos para simulador
-document.addEventListener('click', function(ev) {
-  const toggleBtn = ev.target.closest('[data-sim-toggle]');
-  if (toggleBtn) {
-    ev.preventDefault();
-    ev.stopPropagation();
-    toggleSimulator(toggleBtn.getAttribute('data-sim-toggle'));
-    return;
-  }
-});
-
-document.addEventListener('input', function(ev) {
-  const matchId = ev.target.getAttribute && ev.target.getAttribute('data-sim-input');
-  if (!matchId) return;
-  const gl = document.getElementById('simgl-' + matchId)?.value;
-  const gv = document.getElementById('simgv-' + matchId)?.value;
-  if (gl !== '' && gv !== '') runSimulation(matchId);
-});
-
-
-// ══════════════════════════════════════════
-//  MIS PRONÓSTICOS — vista resumen
-// ══════════════════════════════════════════
+// ═══════════════════════════════════════
+//  MIS PRONÓSTICOS
+// ═══════════════════════════════════════
 let editModeActive = false;
 
 function buildMyPicks(editMode = false) {
@@ -1748,7 +1780,7 @@ function buildMyPicks(editMode = false) {
   const pending = TOTAL_MATCHES - filled;
   wrap.style.display = 'block';
   const pendBanner = pending > 0
-    ? `<div class="mypicks-pending">⚠️ Faltan <strong>${pending}</strong> partido${pending===1?'':'s'} por pronosticar</div>`
+    ? `<div class="mypicks-pending">⚠️ Te faltan <strong>${pending}</strong> partido${pending===1?'':'s'} por pronosticar</div>`
     : `<div class="mypicks-pending" style="background:#d1fae5;border-color:#6ee7b7;color:#065f46">✅ Todos los ${TOTAL_MATCHES} partidos pronósticados</div>`;
   const rows = MATCHES.map(m => {
     const pk = picks.find(x => x.id === m.id) || {};
@@ -1764,75 +1796,82 @@ function buildMyPicks(editMode = false) {
   }).join('');
   wrap.innerHTML = `<div class="mypicks-card">
     <div class="mypicks-header">
-      <div><div class="mypicks-title">Mis pronósticos — ${ex.name}</div><div class="mypicks-sub">${filled}/${TOTAL_MATCHES} completados</div></div>
-      <button class="mypicks-edit-btn" onclick="toggleEditMode()">${editMode?'👁 Ver resumen':'✏️ Editar pronósticos'}</button>
-    </div>${pendBanner}${rows}</div>`;
+      <div>
+        <div class="mypicks-title">Mis pronósticos — ${ex.name}</div>
+        <div class="mypicks-sub">${filled}/${TOTAL_MATCHES} partidos completados</div>
+      </div>
+      <button class="mypicks-edit-btn" onclick="toggleEditMode()">
+        ${editMode ? '👁 Ver resumen' : '✏️ Editar pronósticos'}
+      </button>
+    </div>
+    ${pendBanner}${rows}
+  </div>`;
 }
 
 function toggleEditMode() {
   editModeActive = !editModeActive;
-  const gw = document.getElementById('games-wrap');
-  const mw = document.getElementById('mypicks-wrap');
-  const sb = document.getElementById('submit-bar');
-  const pw = document.getElementById('prog-wrap');
+  const gw=document.getElementById('games-wrap');
+  const mw=document.getElementById('mypicks-wrap');
+  const sb=document.getElementById('submit-bar');
+  const pw=document.getElementById('prog-wrap');
   if (editModeActive) {
-    gw.style.display='block'; mw.style.display='none'; sb.style.display='block'; pw.style.display='block';
+    gw.style.display='block'; mw.style.display='none';
+    sb.style.display='block'; pw.style.display='block';
     setTimeout(() => scrollToFirstMissing(), 200);
   } else {
-    gw.style.display='none'; mw.style.display='block'; sb.style.display='none';
-    buildMyPicks(false);
+    gw.style.display='none'; mw.style.display='block';
+    sb.style.display='none'; buildMyPicks(false);
   }
 }
 
 function scrollToFirstMissing() {
   for (const m of MATCHES) {
-    const gl = document.getElementById('gl-' + m.id);
-    const gv = document.getElementById('gv-' + m.id);
-    if (gl && (gl.value === '' || gv.value === '')) {
-      const card = document.getElementById('card-' + m.id);
+    const gl=document.getElementById('gl-'+m.id);
+    const gv=document.getElementById('gv-'+m.id);
+    if (gl && (gl.value===''||gv.value==='')) {
+      const card=document.getElementById('card-'+m.id);
       if (card) { card.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(()=>gl.focus(),400); break; }
     }
   }
 }
 
-// ══════════════════════════════════════════
-//  PWA — INSTALAR EN PANTALLA
-// ══════════════════════════════════════════
+// ═══════════════════════════════════════
+//  PWA
+// ═══════════════════════════════════════
 (function injectManifest() {
   const manifest = {
-    name:"Quiniela Amistosos 2026",short_name:"Quiniela 2026",
+    name:"Quiniela Amistosos 2026", short_name:"Quiniela 2026",
     description:"Pronósticos amistosos previos al Mundial 2026",
-    start_url:"./",display:"standalone",background_color:"#1A1A2E",theme_color:"#1A1A2E",orientation:"portrait",
+    start_url:"./", display:"standalone",
+    background_color:"#1A1A2E", theme_color:"#1A1A2E", orientation:"portrait",
     icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%231A1A2E'/%3E%3Ctext y='155' x='16' font-size='160'%3E%E2%9A%BD%3C/text%3E%3C/svg%3E",sizes:"192x192",type:"image/svg+xml"}]
   };
-  const blob = new Blob([JSON.stringify(manifest)],{type:'application/json'});
-  const link = document.getElementById('pwa-manifest');
-  if (link) link.href = URL.createObjectURL(blob);
+  const blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
+  const link=document.getElementById('pwa-manifest');
+  if(link) link.href=URL.createObjectURL(blob);
 })();
 
 if ('serviceWorker' in navigator) {
-  const swCode = "self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>new Response(''))));";
-  navigator.serviceWorker.register(URL.createObjectURL(new Blob([swCode],{type:'text/javascript'}))).catch(()=>{});
+  const sw="self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>new Response(''))));";
+  navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'text/javascript'}))).catch(()=>{});
 }
 
 let deferredInstallPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault(); deferredInstallPrompt = e; showInstallButton();
-  if (!localStorage.getItem('pwa_dismissed')) setTimeout(()=>document.getElementById('install-banner').classList.add('show'),2000);
+  e.preventDefault(); deferredInstallPrompt=e; showInstallButton();
+  if (!localStorage.getItem('pwa_dismissed'))
+    setTimeout(()=>document.getElementById('install-banner').classList.add('show'),2000);
 });
-window.addEventListener('appinstalled', () => { hideInstallButton(); deferredInstallPrompt=null; toast('✅ App instalada en tu pantalla de inicio'); });
+window.addEventListener('appinstalled', ()=>{ hideInstallButton(); deferredInstallPrompt=null; toast('✅ App instalada'); });
 
 function showInstallButton() {
   if (!document.getElementById('hero-install-btn')) {
-    const heroInner = document.querySelector('.hero-inner');
-    if (heroInner) {
-      const btn = document.createElement('button');
-      btn.id='hero-install-btn'; btn.innerHTML='📲 Agregar a pantalla de inicio'; btn.onclick=installPWA;
-      btn.style.cssText='margin-top:.75rem;background:rgba(245,166,35,.18);border:1px solid rgba(245,166,35,.4);color:var(--gold);border-radius:99px;padding:7px 18px;font-size:11px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;letter-spacing:.5px;display:block;width:100%;max-width:260px;margin-left:auto;margin-right:auto';
-      heroInner.appendChild(btn);
-    }
+    const h=document.querySelector('.hero-inner');
+    if(h){const b=document.createElement('button');b.id='hero-install-btn';b.innerHTML='📲 Agregar a pantalla de inicio';b.onclick=installPWA;
+      b.style.cssText='margin-top:.75rem;background:rgba(245,166,35,.18);border:1px solid rgba(245,166,35,.4);color:var(--gold);border-radius:99px;padding:7px 18px;font-size:11px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;letter-spacing:.5px;display:block;width:100%;max-width:260px;margin-left:auto;margin-right:auto';
+      h.appendChild(b);}
   }
-  const b = document.getElementById('hero-install-btn'); if (b) b.style.display='block';
+  const b=document.getElementById('hero-install-btn'); if(b) b.style.display='block';
 }
 function hideInstallButton() {
   const b=document.getElementById('hero-install-btn'); if(b) b.style.display='none';
@@ -1840,28 +1879,22 @@ function hideInstallButton() {
 }
 function installPWA() {
   document.getElementById('install-banner').classList.remove('show');
-  if (deferredInstallPrompt) { deferredInstallPrompt.prompt(); deferredInstallPrompt.userChoice.then(r=>{if(r.outcome==='accepted')toast('✅ Instalando...');deferredInstallPrompt=null;hideInstallButton();}); }
-  else if (isIOS()) { document.getElementById('ios-tip').classList.add('show'); }
-  else { toast('Abre el menú del navegador → "Agregar a pantalla de inicio"'); }
+  if(deferredInstallPrompt){deferredInstallPrompt.prompt();deferredInstallPrompt.userChoice.then(r=>{if(r.outcome==='accepted')toast('✅ Instalando...');deferredInstallPrompt=null;hideInstallButton();});}
+  else if(isIOS()){document.getElementById('ios-tip').classList.add('show');}
+  else{toast('Abre el menú del navegador → "Agregar a pantalla de inicio"');}
 }
-function dismissInstall() { document.getElementById('install-banner').classList.remove('show'); localStorage.setItem('pwa_dismissed','1'); }
-function isIOS() { return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream; }
-function isInStandaloneMode() { return window.matchMedia('(display-mode: standalone)').matches || !!window.navigator.standalone; }
-
-window.addEventListener('load', () => {
-  if (isInStandaloneMode()) { hideInstallButton(); return; }
-  if (isIOS()) { showInstallButton(); if (!localStorage.getItem('ios_tip_shown')) { setTimeout(()=>document.getElementById('ios-tip').classList.add('show'),3000); localStorage.setItem('ios_tip_shown','1'); } }
+function dismissInstall(){document.getElementById('install-banner').classList.remove('show');localStorage.setItem('pwa_dismissed','1');}
+function isIOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream;}
+function isInStandaloneMode(){return window.matchMedia('(display-mode: standalone)').matches||!!window.navigator.standalone;}
+window.addEventListener('load',()=>{
+  if(isInStandaloneMode()){hideInstallButton();return;}
+  if(isIOS()){showInstallButton();if(!localStorage.getItem('ios_tip_shown')){setTimeout(()=>document.getElementById('ios-tip').classList.add('show'),3000);localStorage.setItem('ios_tip_shown','1');}}
 });
 
-// Aviso cambios sin guardar
 let hasUnsavedChanges = false;
-window.addEventListener('beforeunload', e => { if (hasUnsavedChanges) { e.preventDefault(); e.returnValue=''; } });
+window.addEventListener('beforeunload', e => { if(hasUnsavedChanges){e.preventDefault();e.returnValue='';} });
 
 
-
-
-
-function buildPicksPanel(m) { return buildUpcomingPanel(m); }
 // ── TOAST ──
 function toast(msg) {
   const t = document.getElementById('toast');
@@ -1873,29 +1906,6 @@ function toast(msg) {
 // ── INIT ──
 load();
 setTimeout(buildUpcoming, 150);
-
-
-// ── CÁLCULO DE PUNTOS ──
-function calcPoints(myGl, myGv, realGl, realGv) {
-  const ml = parseInt(myGl, 10), mv = parseInt(myGv, 10);
-  const rl = parseInt(realGl, 10), rv = parseInt(realGv, 10);
-  if (isNaN(ml) || isNaN(mv) || isNaN(rl) || isNaN(rv)) return null;
-  const exactLocal  = ml === rl;
-  const exactVisita = mv === rv;
-  const myWinner  = ml > mv ? 'L' : ml < mv ? 'V' : 'E';
-  const realWinner = rl > rv ? 'L' : rl < rv ? 'V' : 'E';
-  const winnerOk  = myWinner === realWinner;
-  if (exactLocal && exactVisita) return 50;
-  if (winnerOk && (exactLocal || exactVisita)) return 30;
-  if (winnerOk) return 20;
-  if (exactLocal || exactVisita) return 10;
-  return 0;
-}
-
-function getPickForMatch(participant, matchId) {
-  return (participant.picks || []).find(p => String(p.id) === String(matchId));
-}
-
 </script>
 </body>
 </html>
