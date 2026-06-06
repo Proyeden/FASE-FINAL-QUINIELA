@@ -293,17 +293,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
 .mypick-score.pending{color:#bbb;background:#f4f4f4;font-size:11px;font-weight:500}
 
 /* ── PWA ── */
-.install-banner{position:fixed;bottom:0;left:0;right:0;z-index:500;background:linear-gradient(135deg,var(--navy3),#1a237e);padding:.85rem 1rem;display:none;animation:slideUp .35s ease}
+.install-banner{position:fixed;bottom:0;left:0;right:0;z-index:500;background:linear-gradient(135deg,#0F3460,#1a237e);padding:1rem 1rem 1.1rem;display:none;animation:slideUp .35s ease;box-shadow:0 -4px 30px rgba(0,0,0,.4)}
 .install-banner.show{display:block}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .install-inner{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:12px}
-.install-icon{font-size:2rem;flex-shrink:0}
+.install-icon{font-size:2.2rem;flex-shrink:0;animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 .install-text{flex:1}
-.install-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:2px}
-.install-sub{font-size:11px;color:rgba(255,255,255,.6)}
-.install-actions{display:flex;gap:8px;flex-shrink:0}
-.install-yes{background:var(--gold);color:var(--navy);border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap}
-.install-no{background:transparent;color:rgba(255,255,255,.5);border:none;font-size:11px;cursor:pointer;font-family:inherit;padding:4px 8px}
+.install-title{font-size:14px;font-weight:800;color:#fff;margin-bottom:3px}
+.install-sub{font-size:11px;color:rgba(255,255,255,.65);line-height:1.4}
+.install-actions{display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.install-yes{background:var(--gold);color:var(--navy);border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;box-shadow:0 3px 12px rgba(245,166,35,.5)}
+.install-no{background:transparent;color:rgba(255,255,255,.4);border:none;font-size:10px;cursor:pointer;font-family:inherit;padding:2px 4px;text-align:center}
 .ios-tip{position:fixed;bottom:0;left:0;right:0;z-index:500;background:#1E2128;border-top:2px solid var(--gold);padding:1rem 1.25rem 1.5rem;display:none;animation:slideUp .35s ease}
 .ios-tip.show{display:block}
 .ios-tip-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center}
@@ -355,7 +356,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
 <div class="ios-tip" id="ios-tip">
   <div class="ios-tip-title">
     Instalar en iPhone / iPad
-    <button class="ios-close" onclick="document.getElementById('ios-tip').classList.remove('show')">✕</button>
+    <button class="ios-close" onclick="document.getElementById('ios-tip').classList.remove('show');localStorage.setItem('ios_snoozed',String(Date.now()+24*60*60*1000))">✕</button>
   </div>
   <div class="ios-tip-body">
     1. Toca el ícono <span>Compartir ↑</span> en la barra de Safari<br>
@@ -371,7 +372,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
     <h1>QUINIELA<br><span>AMISTOSOS</span></h1>
     <p class="hero-sub">Amistosos previos · 23 partidos · Pronóstico privado</p>
     <div class="hero-sedes">
-      <span class="sede-flag">🇺🇸</span> Guatemala &nbsp;·&nbsp;
+      <span class="sede-flag">🇬🇹</span> Guatemala &nbsp;·&nbsp;
       <span class="sede-flag">🌎</span> Selecciones mundialistas &nbsp;·&nbsp;
       <span class="sede-flag">🏟️</span> Amistosos
     </div>
@@ -1859,19 +1860,27 @@ if ('serviceWorker' in navigator) {
 let deferredInstallPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault(); deferredInstallPrompt=e; showInstallButton();
-  if (!localStorage.getItem('pwa_dismissed'))
-    setTimeout(()=>document.getElementById('install-banner').classList.add('show'),2000);
+  const snoozed = parseInt(localStorage.getItem('pwa_snoozed')||'0');
+  if (Date.now() > snoozed)
+    setTimeout(()=>document.getElementById('install-banner').classList.add('show'), 2000);
 });
 window.addEventListener('appinstalled', ()=>{ hideInstallButton(); deferredInstallPrompt=null; toast('✅ App instalada'); });
 
 function showInstallButton() {
   if (!document.getElementById('hero-install-btn')) {
-    const h=document.querySelector('.hero-inner');
-    if(h){const b=document.createElement('button');b.id='hero-install-btn';b.innerHTML='📲 Agregar a pantalla de inicio';b.onclick=installPWA;
-      b.style.cssText='margin-top:.75rem;background:rgba(245,166,35,.18);border:1px solid rgba(245,166,35,.4);color:var(--gold);border-radius:99px;padding:7px 18px;font-size:11px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;letter-spacing:.5px;display:block;width:100%;max-width:260px;margin-left:auto;margin-right:auto';
-      h.appendChild(b);}
+    const h = document.querySelector('.hero-inner');
+    if (h) {
+      const wrap = document.createElement('div');
+      wrap.id = 'hero-install-btn';
+      wrap.style.cssText = 'margin-top:.9rem;padding:.6rem 1rem .8rem;background:linear-gradient(135deg,rgba(245,166,35,.15),rgba(245,166,35,.05));border:1px solid rgba(245,166,35,.35);border-radius:12px;text-align:center';
+      wrap.innerHTML = '<div style="font-size:10px;color:rgba(255,255,255,.5);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Instala la app en tu celular</div>'
+        + '<button onclick="installPWA()" style="background:var(--gold);color:#1A1A2E;border:none;border-radius:99px;padding:9px 22px;font-size:12px;font-weight:800;cursor:pointer;font-family:DM Sans,sans-serif;letter-spacing:.5px;box-shadow:0 3px 14px rgba(245,166,35,.45)">📲 Agregar a pantalla de inicio</button>'
+        + '<div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:6px">Sin App Store · Funciona sin internet</div>';
+      h.appendChild(wrap);
+    }
   }
-  const b=document.getElementById('hero-install-btn'); if(b) b.style.display='block';
+  const b = document.getElementById('hero-install-btn');
+  if (b) b.style.display = 'block';
 }
 function hideInstallButton() {
   const b=document.getElementById('hero-install-btn'); if(b) b.style.display='none';
@@ -1883,12 +1892,18 @@ function installPWA() {
   else if(isIOS()){document.getElementById('ios-tip').classList.add('show');}
   else{toast('Abre el menú del navegador → "Agregar a pantalla de inicio"');}
 }
-function dismissInstall(){document.getElementById('install-banner').classList.remove('show');localStorage.setItem('pwa_dismissed','1');}
+function dismissInstall() {
+  document.getElementById('install-banner').classList.remove('show');
+  // Solo recordar por 24h, luego volver a mostrar
+  const until = Date.now() + 24*60*60*1000;
+  localStorage.setItem('pwa_snoozed', String(until));
+}
 function isIOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream;}
 function isInStandaloneMode(){return window.matchMedia('(display-mode: standalone)').matches||!!window.navigator.standalone;}
 window.addEventListener('load',()=>{
   if(isInStandaloneMode()){hideInstallButton();return;}
-  if(isIOS()){showInstallButton();if(!localStorage.getItem('ios_tip_shown')){setTimeout(()=>document.getElementById('ios-tip').classList.add('show'),3000);localStorage.setItem('ios_tip_shown','1');}}
+  if(isIOS()){showInstallButton();const iosSnoozed = parseInt(localStorage.getItem('ios_snoozed')||'0');
+    if (Date.now() > iosSnoozed) setTimeout(()=>document.getElementById('ios-tip').classList.add('show'),3000);}
 });
 
 let hasUnsavedChanges = false;
