@@ -1715,26 +1715,23 @@ function runSimulation(matchId) {
 
 // Delegación de eventos para simulador
 document.addEventListener('click', function(ev) {
-  const btn = ev.target.closest('[data-sim-toggle]');
-  if (btn) {
-    ev.preventDefault(); ev.stopPropagation();
-    const id = btn.getAttribute('data-sim-toggle');
-    const card = document.getElementById('sim-' + id);
-    const chev = document.getElementById('simchev-' + id);
-    if (!card) return;
-    const isOpen = card.style.display !== 'none';
-    card.style.display = isOpen ? 'none' : 'block';
-    if (!isOpen) { const m = MATCHES.find(x => String(x.id) === String(id)); if (m) card.innerHTML = buildSimulatorInner(m); }
-    if (chev) chev.classList.toggle('open', !isOpen);
+  const toggleBtn = ev.target.closest('[data-sim-toggle]');
+  if (toggleBtn) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    toggleSimulator(toggleBtn.getAttribute('data-sim-toggle'));
+    return;
   }
 });
+
 document.addEventListener('input', function(ev) {
   const matchId = ev.target.getAttribute && ev.target.getAttribute('data-sim-input');
   if (!matchId) return;
   const gl = document.getElementById('simgl-' + matchId)?.value;
   const gv = document.getElementById('simgv-' + matchId)?.value;
-  if (gl !== '' && gv !== '') onSimInput(matchId);
+  if (gl !== '' && gv !== '') runSimulation(matchId);
 });
+
 
 // ══════════════════════════════════════════
 //  MIS PRONÓSTICOS — vista resumen
@@ -1863,6 +1860,8 @@ window.addEventListener('beforeunload', e => { if (hasUnsavedChanges) { e.preven
 
 
 
+
+function buildPicksPanel(m) { return buildUpcomingPanel(m); }
 // ── TOAST ──
 function toast(msg) {
   const t = document.getElementById('toast');
@@ -1874,9 +1873,8 @@ function toast(msg) {
 // ── INIT ──
 load();
 setTimeout(buildUpcoming, 150);
-</script>
-</body>
-</html>
+
+
 // ── CÁLCULO DE PUNTOS ──
 function calcPoints(myGl, myGv, realGl, realGv) {
   const ml = parseInt(myGl, 10), mv = parseInt(myGv, 10);
@@ -1897,3 +1895,7 @@ function calcPoints(myGl, myGv, realGl, realGv) {
 function getPickForMatch(participant, matchId) {
   return (participant.picks || []).find(p => String(p.id) === String(matchId));
 }
+
+</script>
+</body>
+</html>
