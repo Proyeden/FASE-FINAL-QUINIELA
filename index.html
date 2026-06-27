@@ -644,7 +644,7 @@ function buildMatchCard(m, phaseOpen, phColor){
         <option value="local" ${myPick?.ganador==='local'?' selected':''}>🏠 ${m.local} gana (+25)</option>
         <option value="visita" ${myPick?.ganador==='visita'?' selected':''}>✈️ ${m.visita} gana (+25)</option>
       </select>
-    </div>\`;
+    </div>`;
     footerHtml=`<div class="match-footer">
       ${hasPick?`<span class="my-pick-badge">✅ ${myPick.gl} – ${myPick.gv}</span>`:`<span style="font-size:11px;color:var(--muted)">Sin pronóstico</span>`}
       ${me?`<button class="spbtn" id="spbtn-${m.id}" onclick="savePick(${m.id})">Guardar</button>`:`<span style="font-size:11px;color:var(--muted)">Ingresa tu nombre</span>`}
@@ -674,7 +674,7 @@ async function toggleGanador(matchId){
   const wrap=document.getElementById('gw-'+matchId);
   if(wrap) wrap.style.display=(gl!==''&&gv!==''&&gl===gv)?'flex':'none';
 }
-function savePick(matchId){
+async function savePick(matchId){
   if(!me)return toast('Ingresa tu nombre primero');
   const gl=document.getElementById('gl-'+matchId)?.value??'';
   const gv=document.getElementById('gv-'+matchId)?.value??'';
