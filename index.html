@@ -665,7 +665,10 @@ function load(){
     if(ap==='page-ranking')buildRanking();
     if(ap==='page-admin')buildAdmin();
     buildUpcoming();
-    if(pinVerified){renderCurrentPhase();buildMyPicks();}
+    // No re-renderizar el formulario desde este snapshot.
+    // Evita que otros participantes guardando borre lo que el usuario está escribiendo.
+    // El formulario se actualiza solo cuando cambia la config (fases, resultados).
+    if(pinVerified)buildMyPicks();
   },err=>{console.error(err);toast('Error conectando');});
 }
 
@@ -1124,8 +1127,8 @@ function renderCurrentPhase(){
   if(!isOpen)html+=`<div style="background:#fff3cd;border:1px solid #fde68a;border-radius:var(--radius-sm);padding:12px;font-size:12px;color:#92400e;font-weight:600;text-align:center;margin-bottom:.75rem">🔒 Esta fase aún no está abierta</div>`;
   matches.forEach(m=>{html+=buildMatchCard(m,isOpen,ph.color);});
   sec.innerHTML=html;
-  // Event delegation — funciona aunque el botón estuviera oculto al crear el listener
-  sec.addEventListener('click',e=>{
+  // onclick = sobreescribe siempre → nunca acumula listeners aunque se llame varias veces
+  sec.onclick=e=>{
     // Botón Guardar (data-mid)
     const savBtn=e.target.closest('button[data-mid]');
     if(savBtn){savePick(parseInt(savBtn.getAttribute('data-mid')));return;}
@@ -1145,7 +1148,7 @@ function renderCurrentPhase(){
       wBtn.classList.add('sel');
       return;
     }
-  });
+  };
 }
 
 // ── SAVE PICK ──
@@ -1189,11 +1192,43 @@ async function savePick(matchId){
     if(btn){btn.textContent='✅';btn.classList.add('saved');setTimeout(()=>{btn.textContent='Guardar';btn.disabled=false;btn.classList.remove('saved');},2000);}
     toast(toastMsg);return;
   }
+  // Actualizar parts LOCAL antes del snapshot (evita sobreescribir en saves rápidos)
+  const _pidx=parts.findIndex(p=>p._id===docId||p.name?.toLowerCase()===me.toLowerCase());
+  if(_pidx>=0)parts[_pidx]={...parts[_pidx],...entry};
+  else parts.push({_id:docId,...entry});
+
   try{
-    await db.collection(COLLECTION).doc(docId).set(entry,{merge:true});
+    // Timeout de 10s — evita que el botón quede bloqueado para siempre
+    const timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),10000));
+    await Promise.race([
+      db.collection(COLLECTION).doc(docId).set(entry,{merge:true}),
+      timeout
+    ]);
     toast(toastMsg);
-    if(btn){btn.textContent='✅';btn.classList.add('saved');setTimeout(()=>{btn.textContent='Guardar';btn.disabled=false;btn.classList.remove('saved');},2000);}
-  }catch(e){console.error(e);if(btn){btn.textContent='Error';btn.disabled=false;}toast('No se pudo guardar');}
+    // Actualizar badge del partido SIN re-renderizar toda la sección
+    if(btn){
+      btn.textContent='✅';btn.classList.add('saved');
+      // Actualizar el texto del pick en el footer
+      const footer=btn.closest('.match-footer');
+      if(footer){
+        let badge=footer.querySelector('.my-pick-badge');
+        const penLabel=pickData.penWinner
+          ?' · '+(pickData.penWinner==='local'?m?.local:m?.visita)+' (pen)'
+          :pickData.penLocal?' pen:'+pickData.penLocal+'–'+pickData.penVisita:'';
+        const badgeText='✅ '+pickData.gl+'–'+pickData.gv+penLabel;
+        if(badge){badge.textContent=badgeText;}
+        else{
+          const ph=footer.querySelector('span');
+          if(ph){ph.className='my-pick-badge';ph.textContent=badgeText;}
+        }
+      }
+      setTimeout(()=>{btn.textContent='Guardar';btn.disabled=false;btn.classList.remove('saved');},2000);
+    }
+  }catch(e){
+    console.error(e);
+    if(btn){btn.textContent='Guardar';btn.disabled=false;btn.classList.remove('saved');}
+    toast(e.message==='timeout'?'⏱ Sin respuesta — verifica tu conexión y vuelve a intentar':'❌ No se pudo guardar — intenta de nuevo');
+  }
 }
 
 // ── BONUS ──
