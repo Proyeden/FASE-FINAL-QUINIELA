@@ -1978,8 +1978,8 @@ function buildUpcoming(){
     const matchStart=new Date(DATE_MAP[m.date]||new Date());
     matchStart.setHours(hh,mm,0,0);
     const started=now>=new Date(matchStart.getTime()-10*60*1000);
-    // Admin puede reportar cualquier partido sin resultado (sin límite de hora)
-    const showReport=(!isFinal&&!isPending(m))&&(isAdmin||started);
+    // ¿Cómo va? aparece solo cuando el partido inició y desaparece al confirmar FINAL
+    const showReport=started&&!isFinal&&!isPending(m);
     // Votes summary
     const props=_proposals[String(m.id)]||{};
     const voteCount=Object.values(props).reduce((s,v)=>s+v.length,0);
