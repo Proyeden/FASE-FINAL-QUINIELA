@@ -580,7 +580,22 @@ let db=null;
 const COLLECTION='quiniela_elim_2026';
 const SCOL='quiniela_elim_config';
 const SDOC='control';
-try{ firebase.initializeApp(firebaseConfig); db=firebase.firestore(); }catch(e){ console.warn('Firebase',e); }
+try{
+  firebase.initializeApp(firebaseConfig);
+  db=firebase.firestore();
+  // Persistencia offline: los writes se guardan en caché local y
+  // se sincronizan con Firebase cuando hay conexión.
+  // Las promesas de set/update resuelven inmediatamente (sin esperar al servidor).
+  db.enablePersistence({synchronizeTabs:true}).catch(err=>{
+    if(err.code==='failed-precondition'){
+      console.warn('Persistencia no disponible — múltiples pestañas abiertas');
+    } else if(err.code==='unimplemented'){
+      console.warn('Persistencia no soportada en este navegador');
+    } else {
+      console.warn('Persistencia error:',err);
+    }
+  });
+}catch(e){ console.warn('Firebase',e); }
 
 const AV_COLORS=[
   {bg:'#DBEAFE',c:'#1E40AF'},{bg:'#EDE9FE',c:'#6D28D9'},{bg:'#FCE7F3',c:'#9D174D'},
@@ -1199,14 +1214,14 @@ async function savePick(matchId){
 
   try{
     // Timeout de 10s — evita que el botón quede bloqueado para siempre
-    const timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),10000));
+    // Con persistencia offline activada, este await resuelve inmediatamente
+    // (escribe en caché local) y Firebase sincroniza en background.
     const ref=db.collection(COLLECTION).doc(docId);
-    // Usar update() para docs existentes (solo actualiza el pick específico)
-    // o set() para docs nuevos — más confiable que set({merge:true})
-    const writeOp=ex
-      ? ref.update({[`picks.${String(matchId)}`]:pickData, name:me, updatedAt:Date.now()})
-      : ref.set({name:me, pin:myPin||null, picks:{[String(matchId)]:pickData}, bonus:null, ts:Date.now(), updatedAt:Date.now()});
-    await Promise.race([writeOp, timeout]);
+    if(ex){
+      await ref.update({[`picks.${String(matchId)}`]:pickData, name:me, updatedAt:Date.now()});
+    } else {
+      await ref.set({name:me,pin:myPin||null,picks:{[String(matchId)]:pickData},bonus:null,ts:Date.now(),updatedAt:Date.now()});
+    }
     toast(toastMsg);
     // Actualizar badge del partido SIN re-renderizar toda la sección
     if(btn){
@@ -1296,7 +1311,7 @@ async function saveBonus(){
   const _idx=parts.findIndex(p=>p._id===docId||p.name?.toLowerCase()===me.toLowerCase());
   if(_idx>=0)parts[_idx]={...parts[_idx],...entry};else parts.push({_id:docId,...entry});
   renderBonus();buildMyPicks();syncBadges();
-  try{await db.collection(COLLECTION).doc(docId).set(entry,{merge:true});toast(`🏆 ¡${team} guardado como tu campeón!`);}
+  try{const bref=db.collection(COLLECTION).doc(docId);if(ex){await bref.update({bonus:{team,ts:Date.now()},name:me,updatedAt:Date.now()});}else{await bref.set(entry);}toast(`🏆 ¡${team} guardado como tu campeón!`);}
   catch(e){console.error(e);toast('Error al guardar');}
 }
 
