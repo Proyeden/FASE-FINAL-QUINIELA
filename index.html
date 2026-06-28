@@ -189,6 +189,131 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
   .pick-row{border-bottom-color:#2E3240}
 }
 @media(max-width:380px){.tname{font-size:11px}.score-box{width:40px;height:38px;font-size:18px}}
+
+/* ── WINNER PICKER (Octavos en adelante) ── */
+.winner-row{display:flex;gap:8px;padding:10px;align-items:stretch}
+.winner-btn{flex:1;padding:12px 8px;border:2px solid var(--border);border-radius:var(--radius-sm);background:var(--card);color:var(--text);cursor:pointer;font-family:inherit;transition:.15s;display:flex;flex-direction:column;align-items:center;gap:5px;-webkit-tap-highlight-color:transparent}
+.winner-btn:active{transform:scale(.97)}
+.winner-btn.sel{border-color:var(--navy3)!important;background:var(--navy3)!important;color:#fff!important}
+.winner-flag{font-size:26px;line-height:1}
+.winner-name{font-size:11px;font-weight:700;text-align:center;line-height:1.3}
+.winner-pts{font-size:9px;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;opacity:.7}
+.winner-vs{display:flex;align-items:center;font-size:13px;font-weight:800;color:var(--red);padding:0 2px;flex-shrink:0}
+/* ── PENALTY WINNER BUTTONS (16avos) ── */
+.pen-winner-row{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fffbf0;border-top:1px dashed #fbbf24;flex-wrap:wrap}
+.pen-winner-btn{flex:1;padding:8px 6px;border:1.5px solid var(--gold);border-radius:6px;background:#fff;color:var(--navy);cursor:pointer;font-family:inherit;font-size:11px;font-weight:700;text-align:center;transition:.15s;-webkit-tap-highlight-color:transparent;min-width:80px}
+.pen-winner-btn:active{transform:scale(.97)}
+.pen-winner-btn.sel{background:var(--gold)!important;color:var(--navy)!important;border-color:var(--gold)!important}
+@media(prefers-color-scheme:dark){
+  .winner-btn{background:var(--card);border-color:var(--border);color:var(--text)}
+  .pen-winner-btn{background:var(--card);color:var(--text)}
+}
+
+/* ── CARTELERA ELIMINATORIA ── */
+.upcoming-elim{margin-bottom:1rem}
+.upcoming-elim-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.65rem}
+.upcoming-elim-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:6px}
+.live-dot{width:7px;height:7px;background:var(--red);border-radius:50%;animation:blink 1.4s infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.uc{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:8px;overflow:hidden;box-shadow:var(--shadow)}
+.uc-top{padding:5px 12px;display:flex;justify-content:space-between;align-items:center}
+.uc-label{font-size:9px;font-weight:700;color:rgba(255,255,255,.8);letter-spacing:.5px;text-transform:uppercase}
+.uc-tv{font-size:9px;color:rgba(255,255,255,.5)}
+.uc-body{padding:10px 12px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
+.uc-team{font-size:13px;font-weight:700;color:var(--text);line-height:1.25}
+.uc-team.r{text-align:right}
+.uc-flag{font-size:18px;display:block;line-height:1.1}
+.uc-score{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:70px}
+.uc-score-nums{font-family:'Bebas Neue',sans-serif;font-size:28px;font-weight:800;letter-spacing:2px;line-height:1}
+.uc-score-nums.live{color:var(--red)}
+.uc-score-nums.final{color:var(--green)}
+.uc-score-badge{font-size:8px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:2px 6px;border-radius:99px;color:#fff}
+.uc-score-badge.live{background:var(--red)}
+.uc-score-badge.final{background:var(--green)}
+.uc-vs{font-size:13px;font-weight:800;color:var(--red);text-align:center}
+.uc-footer{padding:6px 12px 8px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.report-btn-elim{background:var(--navy3);color:#fff;border:none;border-radius:var(--radius-sm);padding:7px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s;-webkit-tap-highlight-color:transparent}
+.report-btn-elim:hover{background:var(--gold);color:var(--navy)}
+.report-panel-elim{display:none;border-top:1px solid var(--border);background:#f8f9ff;padding:10px 12px}
+.rp-note{font-size:10px;color:#5b7abf;background:#eef4ff;border:1px solid #c7d7ff;border-radius:6px;padding:6px 8px;margin-bottom:8px;line-height:1.6}
+.rp-input-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.rp-box{width:44px;height:40px;border:2px solid #ccc;border-radius:8px;font-size:20px;font-weight:700;text-align:center;font-family:inherit;background:#fff;color:var(--navy);-moz-appearance:textfield;appearance:textfield}
+.rp-box::-webkit-inner-spin-button,.rp-box::-webkit-outer-spin-button{-webkit-appearance:none}
+.rp-box:focus{outline:none;border-color:var(--navy3)}
+.rp-live-btn{background:var(--red);color:#fff;border:none;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.rp-final-btn{background:var(--green);color:#fff;border:none;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.rp-votes{font-size:11px;color:var(--muted);margin-top:4px}
+.rp-vote-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid #f0f0f0;font-size:11px}
+.rp-vote-row:last-child{border-bottom:none}
+.rp-vote-sc{font-weight:800;color:var(--navy);background:#e0f2fe;padding:2px 8px;border-radius:6px}
+@media(prefers-color-scheme:dark){.uc{background:var(--card);border-color:var(--border)}.report-panel-elim{background:#181b22}}
+
+/* ── MIS PRONÓSTICOS ── */
+.mypicks-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:1rem;overflow:hidden;box-shadow:var(--shadow)}
+.mypicks-header{padding:.85rem 1.25rem;background:linear-gradient(135deg,var(--navy3),#1a237e);display:flex;align-items:center;justify-content:space-between}
+.mypicks-title{font-size:13px;font-weight:700;color:#fff}
+.mypicks-sub{font-size:10px;color:rgba(255,255,255,.6);margin-top:2px}
+.mypick-row{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-bottom:1px solid var(--border);font-size:12px;gap:8px}
+.mypick-row:last-child{border-bottom:none}
+.mypick-left{flex:1}
+.mypick-teams{font-weight:600;color:var(--text);font-size:12px}
+.mypick-meta{font-size:10px;color:var(--muted);margin-top:1px}
+.mypick-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.mypick-score{font-weight:800;font-size:14px;color:var(--navy);background:#e0f2fe;padding:3px 10px;border-radius:8px;text-align:center}
+.mypick-score.pending{color:#bbb;background:#f4f4f4;font-size:11px;font-weight:500}
+.mypick-pts{font-size:10px;font-weight:700;border-radius:99px;padding:2px 7px}
+.phase-group-label{padding:6px 14px;background:linear-gradient(90deg,var(--light),transparent);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid var(--border)}
+/* ── PICKS PANEL (cartelera) ── */
+.picks-panel{display:none;border-top:1px solid var(--border);background:#fafaf8}
+.picks-panel.open{display:block}
+.picks-panel-head{padding:6px 12px;background:var(--navy3);display:flex;justify-content:space-between;align-items:center}
+.picks-panel-title{font-size:10px;font-weight:800;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.6px}
+.pick-p-row{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-bottom:1px solid #f0f0eb;font-size:12px}
+.pick-p-row:last-child{border-bottom:none}
+.pick-p-name{font-weight:600;color:var(--text);flex:1}
+.pick-p-score{font-weight:800;font-size:13px;color:var(--navy);background:#e0f2fe;padding:3px 10px;border-radius:7px;text-align:center;min-width:52px;flex-shrink:0}
+.pick-p-score.no-pick{color:#ccc;background:#f4f4f4;font-size:11px;font-weight:500}
+/* ── SIMULADOR ── */
+.sim-card{margin:0;border-top:2px solid var(--gold);background:#fffdf4;overflow:hidden}
+.sim-head{background:linear-gradient(135deg,var(--navy),var(--navy3));padding:8px 12px;display:flex;align-items:center;justify-content:space-between}
+.sim-title{font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.8px}
+.sim-close{background:none;border:none;color:rgba(255,255,255,.4);font-size:16px;cursor:pointer;padding:2px 6px;border-radius:4px}
+.sim-close:hover{color:#fff;background:rgba(255,255,255,.1)}
+.sim-inputs{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff8e8;border-bottom:1px solid #fde68a;flex-wrap:wrap}
+.sim-label{font-size:11px;font-weight:600;color:#92400e;white-space:nowrap}
+.sim-box{width:40px;height:36px;border:2px solid #fbbf24;border-radius:6px;font-size:17px;font-weight:700;text-align:center;background:#fff;color:var(--navy);font-family:inherit;-moz-appearance:textfield;appearance:textfield;-webkit-appearance:none}
+.sim-box::-webkit-inner-spin-button,.sim-box::-webkit-outer-spin-button{-webkit-appearance:none}
+.sim-box:focus{outline:none;border-color:var(--gold)}
+.sim-dash{font-size:14px;font-weight:800;color:#d97706}
+.sim-results{overflow:hidden}
+.sim-results-head{padding:5px 12px;background:var(--navy);display:flex;justify-content:space-between;align-items:center}
+.sim-results-title{font-size:9px;font-weight:800;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.5px}
+.sim-row{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-bottom:1px solid #fef9ec}
+.sim-row:last-child{border-bottom:none}
+.sim-row.me-row{background:#fff8e8;border-left:3px solid var(--gold)}
+.sim-row-left{display:flex;align-items:center;gap:8px;flex:1}
+.sim-pos{font-size:10px;font-weight:800;color:var(--muted);width:16px;text-align:center;flex-shrink:0}
+.sim-av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
+.sim-name{font-weight:600;color:var(--text);font-size:12px}
+.sim-pts-chip{font-size:10px;font-weight:700;border-radius:99px;padding:2px 8px;white-space:nowrap}
+.sim-no-picks{padding:10px 12px;font-size:11px;color:var(--muted);text-align:center;font-style:italic}
+/* ── PWA ── */
+.ios-tip{position:fixed;bottom:0;left:0;right:0;z-index:500;background:#1E2128;border-top:2px solid var(--gold);padding:1rem 1.25rem 1.5rem;display:none}
+.ios-tip.show{display:block}
+.ios-tip-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center}
+.ios-tip-body{font-size:12px;color:rgba(255,255,255,.7);line-height:1.8}
+.ios-tip-body span{color:var(--gold);font-weight:700}
+.ios-close{background:none;border:none;color:#666;font-size:18px;cursor:pointer;padding:0 4px}
+@media(prefers-color-scheme:dark){
+  .mypicks-card,.sim-card,.picks-panel{background:var(--card)}
+  .mypick-row,.pick-p-row,.sim-row{border-bottom-color:var(--border)}
+  .sim-inputs{background:#1e1a0e;border-bottom-color:#4a3800}
+  .sim-label{color:#d4a04a}
+  .sim-box{background:#252007;color:var(--text);border-color:#a07030}
+  .sim-row{border-bottom-color:#252830}
+  .sim-row.me-row{background:#1e1a07}
+  .phase-group-label{background:var(--light)}
+}
 </style>
 </head>
 <body>
@@ -200,6 +325,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
       <div class="install-sub">Instalar como app en tu dispositivo</div>
     </div>
     <div><button class="install-yes" onclick="installPWA()">Instalar</button><button class="install-no" onclick="dismissInstall()">Ahora no</button></div>
+  </div>
+</div>
+<div class="ios-tip" id="ios-tip">
+  <div class="ios-tip-title">
+    Instalar en iPhone / iPad
+    <button class="ios-close" id="ios-close-btn">✕</button>
+  </div>
+  <div class="ios-tip-body">
+    1. Toca el ícono <span>Compartir ↑</span> en la barra de Safari<br>
+    2. Desliza y toca <span>"Agregar a pantalla de inicio"</span><br>
+    3. Toca <span>Agregar</span>
   </div>
 </div>
 
@@ -223,7 +359,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
 
 <!-- FORM -->
 <div class="page active" id="page-form">
-  <div class="phase-nav-wrap"><div class="phase-nav" id="phase-nav"><div class="phase-tabs" id="phase-tabs"></div></div></div>
+  <div id="upcoming-section"></div>
+<div class="phase-nav-wrap"><div class="phase-nav" id="phase-nav"><div class="phase-tabs" id="phase-tabs"></div></div></div>
   <div class="wrap">
     <div class="name-card">
       <div class="field-label">Tu nombre completo</div>
@@ -281,6 +418,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
         </div>
       </div>
     </div>
+    <div id="mypicks-section" style="display:none"></div>
     <div id="pin-section" style="display:none"></div>
     <div id="bonus-section"></div>
     <div id="matches-section"></div>
@@ -324,63 +462,100 @@ const PHASES = [
 ];
 
 const BASE_MATCHES = [
-  {id:1, phase:'32',num:73, local:'Sudáfrica',     lf:'🇿🇦', visita:'Canadá',         vf:'🇨🇦', date:'28 jun',time:'13:00',tv:'FOX'},
-  {id:2, phase:'32',num:74, local:'Alemania',      lf:'🇩🇪', visita:'Por definir',    vf:'🏳',  date:'28 jun',time:'14:30',tv:'FOX'},
-  {id:3, phase:'32',num:75, local:'Países Bajos',  lf:'🇳🇱', visita:'Marruecos',      vf:'🇲🇦', date:'28 jun',time:'19:00',tv:'FOX'},
-  {id:4, phase:'32',num:76, local:'Brasil',        lf:'🇧🇷', visita:'Japón',          vf:'🇯🇵', date:'29 jun',time:'11:00',tv:'FOX'},
-  {id:5, phase:'32',num:77, local:'Francia',       lf:'🇫🇷', visita:'Por definir',    vf:'🏳',  date:'29 jun',time:'15:00',tv:'FOX'},
-  {id:6, phase:'32',num:78, local:'Costa de Marfil',lf:'🇨🇮',visita:'Noruega',       vf:'🇳🇴', date:'29 jun',time:'11:00',tv:'FOX'},
-  {id:7, phase:'32',num:79, local:'México',        lf:'🇲🇽', visita:'Por definir',    vf:'🏳',  date:'29 jun',time:'19:00',tv:'FOX'},
-  {id:8, phase:'32',num:80, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'30 jun',time:'10:00',tv:'FOX'},
-  {id:9, phase:'32',num:81, local:'Estados Unidos',lf:'🇺🇸', visita:'Bosnia y Herz.', vf:'🇧🇦', date:'30 jun',time:'18:00',tv:'FOX'},
-  {id:10,phase:'32',num:82, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'30 jun',time:'14:00',tv:'FOX'},
-  {id:11,phase:'32',num:83, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'1 jul', time:'17:00',tv:'FOX'},
-  {id:12,phase:'32',num:84, local:'España',        lf:'🇪🇸', visita:'Por definir',    vf:'🏳',  date:'1 jul', time:'13:00',tv:'FOX'},
-  {id:13,phase:'32',num:85, local:'Suiza',         lf:'🇨🇭', visita:'Por definir',    vf:'🏳',  date:'1 jul', time:'21:00',tv:'FOX'},
-  {id:14,phase:'32',num:88, local:'Australia',     lf:'🇦🇺', visita:'Egipto',         vf:'🇪🇬', date:'3 jul', time:'12:00',tv:'FOX'},
-  {id:15,phase:'32',num:86, local:'Argentina',     lf:'🇦🇷', visita:'Cabo Verde',     vf:'🇨🇻', date:'3 jul', time:'16:00',tv:'FOX'},
-  {id:16,phase:'32',num:87, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'3 jul', time:'19:30',tv:'FOX'},
-  {id:17,phase:'16',num:89, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'4 jul', time:'11:00',tv:'FOX'},
-  {id:18,phase:'16',num:90, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'4 jul', time:'15:00',tv:'FOX'},
-  {id:19,phase:'16',num:91, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'5 jul', time:'14:00',tv:'FOX'},
-  {id:20,phase:'16',num:92, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'5 jul', time:'18:00',tv:'FOX'},
-  {id:21,phase:'16',num:93, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'6 jul', time:'13:00',tv:'FOX'},
-  {id:22,phase:'16',num:94, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'6 jul', time:'18:00',tv:'FOX'},
-  {id:23,phase:'16',num:95, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'7 jul', time:'10:00',tv:'FOX'},
-  {id:24,phase:'16',num:96, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'7 jul', time:'14:00',tv:'FOX'},
-  {id:25,phase:'qf',num:97, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'9 jul', time:'14:00',tv:'FOX'},
-  {id:26,phase:'qf',num:98, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'10 jul',time:'13:00',tv:'FOX'},
-  {id:27,phase:'qf',num:99, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'11 jul',time:'15:00',tv:'FOX'},
-  {id:28,phase:'qf',num:100,local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'11 jul',time:'19:00',tv:'FOX'},
-  {id:29,phase:'sf',num:101,local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'14 jul',time:'13:00',tv:'FOX'},
-  {id:30,phase:'sf',num:102,local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'15 jul',time:'14:00',tv:'FOX'},
-  {id:31,phase:'3p',num:103,local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'18 jul',time:'13:00',tv:'FOX'},
-  {id:32,phase:'f', num:104,local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'19 jul',time:'13:00',tv:'FOX'},
+  // ── 16AVOS DE FINAL (cruces confirmados) ──
+  // 28 jun
+  {id:1, phase:'32',num:73, local:'Sudáfrica',      lf:'🇿🇦', visita:'Canadá',         vf:'🇨🇦', date:'28 jun',time:'13:00',tv:'Tigo'},
+  // 29 jun
+  {id:2, phase:'32',num:76, local:'Brasil',          lf:'🇧🇷', visita:'Japón',           vf:'🇯🇵', date:'29 jun',time:'11:00',tv:'Tigo'},
+  {id:3, phase:'32',num:74, local:'Alemania',        lf:'🇩🇪', visita:'Paraguay',        vf:'🇵🇾', date:'29 jun',time:'14:30',tv:'Tigo'},
+  {id:4, phase:'32',num:75, local:'Países Bajos',   lf:'🇳🇱', visita:'Marruecos',       vf:'🇲🇦', date:'29 jun',time:'19:00',tv:'Tigo'},
+  // 30 jun
+  {id:5, phase:'32',num:78, local:'C. de Marfil',   lf:'🇨🇮', visita:'Noruega',         vf:'🇳🇴', date:'30 jun',time:'11:00',tv:'Tigo'},
+  {id:6, phase:'32',num:77, local:'Francia',         lf:'🇫🇷', visita:'Suecia',          vf:'🇸🇪', date:'30 jun',time:'15:00',tv:'Tigo'},
+  {id:7, phase:'32',num:79, local:'México',          lf:'🇲🇽', visita:'Ecuador',         vf:'🇪🇨', date:'30 jun',time:'19:00',tv:'Tigo'},
+  // 1 jul
+  {id:8, phase:'32',num:80, local:'Inglaterra',      lf:'🏴󠁧󠁢󠁥󠁮󠁧󠁿', visita:'RD Congo',       vf:'🇨🇩', date:'1 jul', time:'10:00',tv:'Tigo'},
+  {id:9, phase:'32',num:82, local:'Bélgica',         lf:'🇧🇪', visita:'Senegal',         vf:'🇸🇳', date:'1 jul', time:'14:00',tv:'Tigo'},
+  {id:10,phase:'32',num:81, local:'Estados Unidos',  lf:'🇺🇸', visita:'Bosnia y Herz.',  vf:'🇧🇦', date:'1 jul', time:'18:00',tv:'Tigo'},
+  // 2 jul
+  {id:11,phase:'32',num:84, local:'España',          lf:'🇪🇸', visita:'Austria',         vf:'🇦🇹', date:'2 jul', time:'13:00',tv:'Tigo'},
+  {id:12,phase:'32',num:83, local:'Portugal',        lf:'🇵🇹', visita:'Croacia',         vf:'🇭🇷', date:'2 jul', time:'17:00',tv:'Tigo'},
+  {id:13,phase:'32',num:85, local:'Suiza',           lf:'🇨🇭', visita:'Argelia',         vf:'🇩🇿', date:'2 jul', time:'21:00',tv:'Tigo'},
+  // 3 jul
+  {id:14,phase:'32',num:88, local:'Australia',       lf:'🇦🇺', visita:'Egipto',          vf:'🇪🇬', date:'3 jul', time:'12:00',tv:'Tigo'},
+  {id:15,phase:'32',num:86, local:'Argentina',       lf:'🇦🇷', visita:'Cabo Verde',      vf:'🇨🇻', date:'3 jul', time:'16:00',tv:'Tigo'},
+  {id:16,phase:'32',num:87, local:'Colombia',        lf:'🇨🇴', visita:'Ghana',           vf:'🇬🇭', date:'3 jul', time:'19:30',tv:'Tigo'},
+  // ── OCTAVOS DE FINAL (4–7 jul) ──
+  {id:17,phase:'16',num:89, local:'Por definir',lf:'🏳',visita:'Por definir',vf:'🏳',date:'4 jul', time:'11:00',tv:'Tigo'},
+  {id:18,phase:'16',num:90, local:'Por definir',lf:'🏳',visita:'Por definir',vf:'🏳',date:'4 jul', time:'15:00',tv:'Tigo'},
+  {id:19,phase:'16',num:91, local:'Por definir',lf:'🏳',visita:'Por definir',vf:'🏳',date:'5 jul', time:'14:00',tv:'Tigo'},
+  {id:20,phase:'16',num:92, local:'Por definir',lf:'🏳',visita:'Por definir',vf:'🏳',date:'5 jul', time:'18:00',tv:'Tigo'},
+  {id:21,phase:'16',num:93, local:'Por definir',lf:'🏳',visita:'Por definir',vf:'🏳',date:'6 jul', time:'13:00',tv:'Tigo'},
+  {id:22,phase:'16',num:94, local:'Por definir',lf:'🏳',visita:'Por definir',vf:'🏳',date:'6 jul', time:'18:00',tv:'Tigo'},
+  {id:23,phase:'16',num:95, local:'Por definir',lf:'🏳',visita:'Por definir',vf:'🏳',date:'7 jul', time:'10:00',tv:'Tigo'},
+  {id:24,phase:'16',num:96, local:'Por definir',lf:'🏳',visita:'Por definir',vf:'🏳',date:'7 jul', time:'14:00',tv:'Tigo'},
+  // ── CUARTOS DE FINAL (9–11 jul) ──
+  {id:25,phase:'qf',num:97, local:'Por definir',lf:'🏳',visita:'Por definir',vf:'🏳',date:'9 jul', time:'14:00',tv:'Tigo'},
+  {id:26,phase:'qf',num:98, local:'Por definir',lf:'🏳',visita:'Por definir',vf:'🏳',date:'10 jul',time:'13:00',tv:'Tigo'},
+  {id:27,phase:'qf',num:99, local:'Por definir',lf:'🏳',visita:'Por definir',vf:'🏳',date:'11 jul',time:'15:00',tv:'Tigo'},
+  {id:28,phase:'qf',num:100,local:'Por definir',lf:'🏳',visita:'Por definir',vf:'🏳',date:'11 jul',time:'19:00',tv:'Tigo'},
+  // ── SEMIFINALES (14–15 jul) ──
+  {id:29,phase:'sf',num:101,local:'Por definir',lf:'🏳',visita:'Por definir',vf:'🏳',date:'14 jul',time:'13:00',tv:'Tigo'},
+  {id:30,phase:'sf',num:102,local:'Por definir',lf:'🏳',visita:'Por definir',vf:'🏳',date:'15 jul',time:'14:00',tv:'Tigo'},
+  // ── TERCER PUESTO (18 jul) ──
+  {id:31,phase:'3p',num:103,local:'Por definir',lf:'🏳',visita:'Por definir',vf:'🏳',date:'18 jul',time:'13:00',tv:'Tigo'},
+  // ── FINAL (19 jul) ──
+  {id:32,phase:'f', num:104,local:'Por definir',lf:'🏳',visita:'Por definir',vf:'🏳',date:'19 jul',time:'13:00',tv:'Tigo'},
 ];
 
+// BRACKET: progresión del cuadro según cruces confirmados FIFA 2026
+// Cada par de 16avos alimenta el mismo partido de Octavos
 const BRACKET = {
-  1:{winner:{id:18,pos:'local'}},  2:{winner:{id:17,pos:'local'}},
-  3:{winner:{id:18,pos:'visita'}}, 4:{winner:{id:19,pos:'local'}},
-  5:{winner:{id:17,pos:'visita'}}, 6:{winner:{id:19,pos:'visita'}},
-  7:{winner:{id:20,pos:'local'}},  8:{winner:{id:20,pos:'visita'}},
-  9:{winner:{id:22,pos:'local'}},  10:{winner:{id:22,pos:'visita'}},
-  11:{winner:{id:21,pos:'local'}}, 12:{winner:{id:21,pos:'visita'}},
-  13:{winner:{id:24,pos:'local'}}, 14:{winner:{id:23,pos:'visita'}},
-  15:{winner:{id:23,pos:'local'}}, 16:{winner:{id:24,pos:'visita'}},
+  // 16avos → Octavos
+  // Par 1: Alemania/Paraguay + Francia/Suecia → Octavos id:17
+  3:{winner:{id:17,pos:'local'}},   // Alemania/Paraguay
+  6:{winner:{id:17,pos:'visita'}},  // Francia/Suecia
+  // Par 2: Sudáfrica/Canadá + Países Bajos/Marruecos → Octavos id:18
+  1:{winner:{id:18,pos:'local'}},   // Sudáfrica/Canadá
+  4:{winner:{id:18,pos:'visita'}},  // Países Bajos/Marruecos
+  // Par 3: Portugal/Croacia + España/Austria → Octavos id:19
+  12:{winner:{id:19,pos:'local'}},  // Portugal/Croacia
+  11:{winner:{id:19,pos:'visita'}}, // España/Austria
+  // Par 4: EE.UU/Bosnia + Bélgica/Senegal → Octavos id:20
+  10:{winner:{id:20,pos:'local'}},  // EE.UU/Bosnia
+  9:{winner:{id:20,pos:'visita'}},  // Bélgica/Senegal
+  // Par 5: Brasil/Japón + C.Marfil/Noruega → Octavos id:21
+  2:{winner:{id:21,pos:'local'}},   // Brasil/Japón
+  5:{winner:{id:21,pos:'visita'}},  // C.Marfil/Noruega
+  // Par 6: México/Ecuador + Inglaterra/RD Congo → Octavos id:22
+  7:{winner:{id:22,pos:'local'}},   // México/Ecuador
+  8:{winner:{id:22,pos:'visita'}},  // Inglaterra/RD Congo
+  // Par 7: Argentina/Cabo Verde + Australia/Egipto → Octavos id:23
+  15:{winner:{id:23,pos:'local'}},  // Argentina/Cabo Verde
+  14:{winner:{id:23,pos:'visita'}}, // Australia/Egipto
+  // Par 8: Suiza/Argelia + Colombia/Ghana → Octavos id:24
+  13:{winner:{id:24,pos:'local'}},  // Suiza/Argelia
+  16:{winner:{id:24,pos:'visita'}}, // Colombia/Ghana
+  // Octavos → Cuartos
   17:{winner:{id:25,pos:'local'}}, 18:{winner:{id:25,pos:'visita'}},
-  19:{winner:{id:27,pos:'local'}}, 20:{winner:{id:27,pos:'visita'}},
-  21:{winner:{id:26,pos:'local'}}, 22:{winner:{id:26,pos:'visita'}},
+  19:{winner:{id:26,pos:'local'}}, 20:{winner:{id:26,pos:'visita'}},
+  21:{winner:{id:27,pos:'local'}}, 22:{winner:{id:27,pos:'visita'}},
   23:{winner:{id:28,pos:'local'}}, 24:{winner:{id:28,pos:'visita'}},
+  // Cuartos → Semis
   25:{winner:{id:29,pos:'local'}}, 26:{winner:{id:29,pos:'visita'}},
   27:{winner:{id:30,pos:'local'}}, 28:{winner:{id:30,pos:'visita'}},
+  // Semis → Final + 3er Puesto
   29:{winner:{id:32,pos:'local'},  loser:{id:31,pos:'local'}},
   30:{winner:{id:32,pos:'visita'}, loser:{id:31,pos:'visita'}},
 };
 
+// ── FASES ──
 const BONUS_TEAMS_BASE = [
-  'Argentina','Alemania','Australia','Bélgica','Bosnia y Herz.','Brasil',
-  'Cabo Verde','Canadá','Costa de Marfil','Egipto','España','Estados Unidos',
-  'Francia','Japón','Marruecos','México','Noruega','Países Bajos','Suiza','Sudáfrica',
+  'Alemania','Argentina','Australia','Austria','Bélgica','Bosnia y Herz.',
+  'Brasil','C. de Marfil','Cabo Verde','Canadá','Colombia','Croacia',
+  'Ecuador','Egipto','España','Estados Unidos','Francia','Ghana',
+  'Inglaterra','Japón','Marruecos','México','Noruega','países Bajos',
+  'Paraguay','Portugal','RD Congo','Senegal','Sudáfrica','Suecia','Suiza',
 ];
 
 const DATE_MAP = {};
@@ -419,6 +594,8 @@ let parts=[], me=null, myPin=null, pinVerified=false;
 let isAdmin=sessionStorage.getItem('qm26e_admin')==='1';
 let realResults={}, phaseActive={'32':true}, teamOverrides={}, bonusResult=null;
 let currentPhase='32';
+let _proposals={}; // {matchId: {score: [voters,...]}}
+const VOTES_NEEDED=3;
 
 // Restore session on page load
 (function restoreSession(){
@@ -472,15 +649,23 @@ function load(){
     if(ap==='page-ranking')buildRanking();
     if(ap==='page-admin')buildAdmin();
     renderPhaseNav();
+    buildUpcoming();
     if(pinVerified){renderCurrentPhase();renderBonus();}
   },err=>console.warn('Config',err));
+  // Snapshot para propuestas de marcadores
+  db.collection(SCOL).doc('proposals').onSnapshot(doc=>{
+    _proposals=doc.exists?(doc.data().votes||{}):{};
+    buildUpcoming();
+  },err=>console.warn('Proposals error',err));
+
   db.collection(COLLECTION).orderBy('ts','desc').onSnapshot(snap=>{
     parts=snap.docs.map(d=>({_id:d.id,...d.data()}));
     syncBadges();
     const ap=document.querySelector('.page.active')?.id||'';
     if(ap==='page-ranking')buildRanking();
     if(ap==='page-admin')buildAdmin();
-    if(pinVerified)renderCurrentPhase();
+    buildUpcoming();
+    if(pinVerified){renderCurrentPhase();buildMyPicks();}
   },err=>{console.error(err);toast('Error conectando');});
 }
 
@@ -688,8 +873,10 @@ async function saveOptionalPin(){
 
 function activateForm(){
   renderPhaseNav();
+  buildUpcoming();
   renderCurrentPhase();
   renderBonus();
+  buildMyPicks();
 }
 
 function toggleScoringLegend(){
@@ -722,28 +909,53 @@ function calcPoints(myGl,myGv,realGl,realGv){
   if(eL&&eV)return 50;if(wOk&&(eL||eV))return 30;if(wOk)return 20;if(eL||eV)return 10;return 0;
 }
 
-// Penalty bonus:
-//  +25 = predicted draw + EXACT penalty score (e.g. 4-2, result 4-2)
-//  +15 = predicted draw + correct penalty WINNER (e.g. 3-2 Arg, result 4-3 Arg)
-//   +0 = predicted draw + wrong winner, or no penalty prediction
+// ── SCORING — igual para todas las fases ──
+// Marcador 90min: 50/30/20/10/0
+// Si empate + ganador ET/Pen correcto: +25 (máx 75)
+// Funciona con penWinner (botones Octavos+) Y penLocal/penVisita (16avos)
+
+// Determina el ganador real a partir del resultado
+function realWinnerFromRes(res){
+  const gl=parseInt(res.gl),gv=parseInt(res.gv);
+  if(!isNaN(gl)&&!isNaN(gv)){
+    if(gl>gv)return'local';
+    if(gv>gl)return'visita';
+  }
+  // Empate → buscar en penales o tieWinner
+  const pL=parseInt(res.penLocal),pV=parseInt(res.penVisita);
+  if(!isNaN(pL)&&!isNaN(pV))return pL>pV?'local':'visita';
+  return res.tieWinner||null;
+}
+
+// Puntos para Octavos en adelante (solo ganador)
+function calcWinnerPoints(pick,res,phase){
+  if(!pick?.winner||!res)return null;
+  const pts=PHASE_WINNER_PTS[phase]||30;
+  const real=realWinnerFromRes(res);
+  if(!real)return null;
+  return pick.winner===real?pts:0;
+}
+
+// Puntos para TODAS las fases (marcador 90min + bonus ganador ET/Pen)
 function calcMatchPoints(pick,res){
   if(!pick||!res)return null;
   const base=calcPoints(pick.gl,pick.gv,res.gl,res.gv);
   if(base===null)return null;
   const myGl=parseInt(pick.gl),myGv=parseInt(pick.gv);
-  if(myGl!==myGv||isNaN(myGl))return base;        // user did not predict draw
-  const rPL=parseInt(res.penLocal),rPV=parseInt(res.penVisita);
-  const hasPenRes=!isNaN(rPL)&&!isNaN(rPV);
-  if(!hasPenRes&&!res.tieWinner)return base;        // match did not go to penalties
-  const myPL=parseInt(pick.penLocal),myPV=parseInt(pick.penVisita);
-  if(isNaN(myPL)||isNaN(myPV)||pick.penLocal===undefined)return base; // no pen pick
-  if(hasPenRes){
-    if(myPL===rPL&&myPV===rPV)return base+25;      // exact penalty score
-    const myW=myPL>myPV?'L':'V',rW=rPL>rPV?'L':'V';
-    return base+(myW===rW?15:0);
+  if(myGl!==myGv||isNaN(myGl))return base; // no predijo empate → sin bonus
+  const realW=realWinnerFromRes(res);
+  const hasPenalties=!isNaN(parseInt(res.penLocal))||res.tieWinner||!isNaN(parseInt(res.penVisita));
+  if(!hasPenalties||!realW)return base;
+  // Determinar ganador predicho — dos formatos posibles:
+  let myPenW=null;
+  if(pick.penWinner){
+    myPenW=pick.penWinner; // Octavos+: botón ganador
+  } else if(pick.penLocal!==undefined&&pick.penVisita!==undefined){
+    const pL=parseInt(pick.penLocal),pV=parseInt(pick.penVisita);
+    if(!isNaN(pL)&&!isNaN(pV))myPenW=pL>pV?'local':'visita'; // 16avos: goles
   }
-  const myW2=myPL>myPV?'local':'visita';            // fallback tieWinner
-  return base+(myW2===res.tieWinner?15:0);
+  if(!myPenW)return base;
+  return base+(myPenW===realW?25:0); // +25 si acierta → máx 75pts
 }
 
 function calcTotalPoints(p){
@@ -752,7 +964,7 @@ function calcTotalPoints(p){
     if(res.final===false)continue;
     const pk=(p.picks||{})[mid];
     if(!pk||pk.gl===''||pk.gv==='')continue;
-    const pts=calcMatchPoints(pk,res);
+    const pts=calcMatchPoints(pk,res); // misma función para todas las fases
     if(pts!==null)t+=pts;
   }
   if(bonusResult?.team&&p.bonus?.team===bonusResult.team)t+=100;
@@ -760,7 +972,7 @@ function calcTotalPoints(p){
 }
 function countPicks(p){return Object.values(p.picks||{}).filter(pk=>pk.gl!==''&&pk.gv!=='').length;}
 function ptsStyle(pts){
-  if(pts>=70)return'background:#dcfce7;color:#166534';
+  if(pts>=75)return'background:#fef9c3;color:#854d0e;font-weight:800'; // max bonus
   if(pts>=50)return'background:#dcfce7;color:#166534';
   if(pts>=30)return'background:#dbeafe;color:#1e40af';
   if(pts>=20)return'background:#fef9c3;color:#854d0e';
@@ -831,8 +1043,11 @@ function buildMatchCard(m,phaseOpen,phColor){
       <div class="tname"><span class="tflag">${m.vf}</span>${m.visita}</div>
     </div>`;
     statusHtml=`<div class="status-pending">🔐 Ingresa tu nombre y clave para pronosticar</div>`;
-  } else {
+  } else if(m.phase!=='32'){
+    // ── OCTAVOS EN ADELANTE: marcador 90min + botón ganador en penales si empate ──
     const initGlEq=hasPick&&myPick.gl!==''&&myPick.gv!==''&&myPick.gl===myPick.gv;
+    const selPenL=myPick?.penWinner==='local';
+    const selPenV=myPick?.penWinner==='visita';
     bodyHtml=`<div class="match-body">
       <div class="tname r"><span class="tflag">${m.lf}</span>${m.local}</div>
       <input class="score-box${hasPick&&myPick.gl!==''?' has-v':''}" type="number" id="gl-${m.id}" min="0" max="30" placeholder="–" inputmode="decimal" value="${myPick?.gl??''}" oninput="this.classList.toggle('has-v',this.value!=='');togglePenRow(${m.id})">
@@ -840,15 +1055,37 @@ function buildMatchCard(m,phaseOpen,phColor){
       <input class="score-box${hasPick&&myPick.gv!==''?' has-v':''}" type="number" id="gv-${m.id}" min="0" max="30" placeholder="–" inputmode="decimal" value="${myPick?.gv??''}" oninput="this.classList.toggle('has-v',this.value!=='');togglePenRow(${m.id})">
       <div class="tname"><span class="tflag">${m.vf}</span>${m.visita}</div>
     </div>
-    <div id="gw-${m.id}" style="display:${initGlEq?'flex':'none'};align-items:center;gap:6px;padding:8px 12px;background:#fffbf0;border-top:1px dashed #fbbf24;flex-wrap:wrap">
-      <span style="font-size:11px;font-weight:700;color:#92400e">⚡ Penales:</span>
-      <span style="font-size:13px">${m.lf}</span>
-      <input type="number" id="penl-${m.id}" min="0" max="10" placeholder="0" inputmode="decimal" value="${myPick?.penLocal??''}" style="width:38px;height:34px;border:1.5px solid var(--gold);border-radius:6px;font-size:16px;font-weight:700;text-align:center;background:#fff;color:var(--navy);font-family:inherit;-moz-appearance:textfield;appearance:textfield">
-      <span style="font-size:14px;font-weight:700;color:#d97706">–</span>
-      <input type="number" id="penv-${m.id}" min="0" max="10" placeholder="0" inputmode="decimal" value="${myPick?.penVisita??''}" style="width:38px;height:34px;border:1.5px solid var(--gold);border-radius:6px;font-size:16px;font-weight:700;text-align:center;background:#fff;color:var(--navy);font-family:inherit;-moz-appearance:textfield;appearance:textfield">
-      <span style="font-size:13px">${m.vf}</span>
-      <span style="font-size:10px;color:var(--gold);font-weight:600">· +15 ganador / +25 exacto</span>
+    <div id="gw-${m.id}" style="display:${initGlEq?'block':'none'}">
+      <div class="pen-winner-row">
+        <span style="font-size:11px;font-weight:700;color:#92400e;white-space:nowrap">⚡ Penales — ¿Quién gana?</span>
+        <button class="pen-winner-btn${selPenL?' sel':''}" data-pwid="${m.id}" data-pw="local">${m.lf} ${m.local}</button>
+        <button class="pen-winner-btn${selPenV?' sel':''}" data-pwid="${m.id}" data-pw="visita">${m.vf} ${m.visita}</button>
+        <span style="font-size:10px;color:var(--gold);font-weight:600;white-space:nowrap">+25 pts</span>
+      </div>
     </div>`;
+    footerHtml=`<div class="match-footer">
+      ${hasPick?`<span class="my-pick-badge">✅ ${myPick.gl}–${myPick.gv}${myPick.penWinner?' · '+(myPick.penWinner==='local'?m.local:m.visita)+' (pen)':''}</span>`:`<span style="font-size:11px;color:var(--muted)">Sin pronóstico aún</span>`}
+      <button class="spbtn" data-mid="${m.id}">Guardar</button>
+    </div>`;
+  } else {
+    const initGlEq=hasPick&&myPick.gl!==''&&myPick.gv!==''&&myPick.gl===myPick.gv;
+    const selPenL=myPick?.penWinner==='local';
+    const selPenV=myPick?.penWinner==='visita';
+    bodyHtml=`<div class="match-body">
+      <div class="tname r"><span class="tflag">${m.lf}</span>${m.local}</div>
+      <input class="score-box${hasPick&&myPick.gl!==''?' has-v':''}" type="number" id="gl-${m.id}" min="0" max="30" placeholder="–" inputmode="decimal" value="${myPick?.gl??''}" oninput="this.classList.toggle('has-v',this.value!=='');togglePenRow(${m.id})">
+      <span class="vs-d">–</span>
+      <input class="score-box${hasPick&&myPick.gv!==''?' has-v':''}" type="number" id="gv-${m.id}" min="0" max="30" placeholder="–" inputmode="decimal" value="${myPick?.gv??''}" oninput="this.classList.toggle('has-v',this.value!=='');togglePenRow(${m.id})">
+      <div class="tname"><span class="tflag">${m.vf}</span>${m.visita}</div>
+    </div>
+    <div id="gw-${m.id}" style="display:${initGlEq?'block':'none'}">
+      <div class="pen-winner-row">
+        <span style="font-size:11px;font-weight:700;color:#92400e;white-space:nowrap">⚡ Penales &mdash; ¿Quién gana?</span>
+        <button class="pen-winner-btn${selPenL?' sel':''}" data-pwid="${m.id}" data-pw="local">${m.lf} ${m.local}</button>
+        <button class="pen-winner-btn${selPenV?' sel':''}" data-pwid="${m.id}" data-pw="visita">${m.vf} ${m.visita}</button>
+        <span style="font-size:10px;color:var(--gold);font-weight:600;white-space:nowrap">+15 pts</span>
+      </div>
+    </div>`
     footerHtml=`<div class="match-footer">
       ${hasPick?`<span class="my-pick-badge">✅ ${myPick.gl}–${myPick.gv}${hasPenPick?` pen:${myPick.penLocal}–${myPick.penVisita}`:''}</span>`:`<span style="font-size:11px;color:var(--muted)">Sin pronóstico aún</span>`}
       <button class="spbtn" data-mid="${m.id}">Guardar</button>
@@ -895,33 +1132,47 @@ function renderCurrentPhase(){
 // ── SAVE PICK ──
 async function savePick(matchId){
   if(!me||!pinVerified)return toast('🔐 Ingresa tu nombre y clave primero');
+  const m=getMatches().find(x=>x.id===matchId);
+  // Siempre leer marcador (igual para todas las fases)
   const gl=document.getElementById('gl-'+matchId)?.value??'';
   const gv=document.getElementById('gv-'+matchId)?.value??'';
   if(gl===''||gv==='')return toast('Ingresa ambos goles');
-  const penL=document.getElementById('penl-'+matchId)?.value??'';
-  const penV=document.getElementById('penv-'+matchId)?.value??'';
-  const penData=(penL!==''&&penV!=='')?{penLocal:penL,penVisita:penV}:{};
+  let penData={};
+  if(m?.phase==='32'){
+    // 16avos: leer goles de penales
+    const penL=document.getElementById('penl-'+matchId)?.value??'';
+    const penV=document.getElementById('penv-'+matchId)?.value??'';
+    if(penL!==''&&penV!=='')penData={penLocal:penL,penVisita:penV};
+  } else {
+    // Octavos+: leer botón ganador en penales
+    const penBtn=document.querySelector(`button[data-pwid="${matchId}"].sel`);
+    const penWinner=penBtn?.getAttribute('data-pw')||null;
+    if(penWinner)penData={penWinner};
+  }
+  const pickData={gl,gv,...penData};
   const btn=document.querySelector(`button[data-mid="${matchId}"]`);
   if(btn){btn.textContent='...';btn.disabled=true;}
   const docId=docIdFromName(me);
   const ex=parts.find(p=>p._id===docId||p.name?.toLowerCase()===me.toLowerCase());
-  // Verify PIN matches stored PIN
   if(ex?.pin&&ex.pin!==myPin){
     if(btn){btn.textContent='Guardar';btn.disabled=false;}
     return toast('❌ Clave incorrecta — acceso denegado');
   }
-  const picks={...(ex?.picks||{}),[String(matchId)]:{gl,gv,...penData,ts:Date.now()}};
+  const picks={...(ex?.picks||{}),[String(matchId)]:{...pickData,ts:Date.now()}};
   const entry={name:me,pin:myPin,picks,bonus:ex?.bonus||null,ts:ex?.ts||Date.now(),updatedAt:Date.now()};
+
+  const toastMsg=`✅ ${pickData.gl}–${pickData.gv}${pickData.penWinner?' pen: '+(pickData.penWinner==='local'?m?.local:m?.visita):''}${pickData.penLocal?' pen: '+pickData.penLocal+'-'+pickData.penVisita:''} guardado`;
+
   if(!db){
     const i=parts.findIndex(p=>p.name?.toLowerCase()===me.toLowerCase());
     if(i>=0)parts[i]={...parts[i],...entry};else parts.push({_id:docId,...entry});
     syncBadges();renderCurrentPhase();
     if(btn){btn.textContent='✅';btn.classList.add('saved');setTimeout(()=>{btn.textContent='Guardar';btn.disabled=false;btn.classList.remove('saved');},2000);}
-    toast(`✅ Guardado`);return;
+    toast(toastMsg);return;
   }
   try{
     await db.collection(COLLECTION).doc(docId).set(entry,{merge:true});
-    toast(`✅ ${gl}–${gv}${penL?' pen:'+penL+'–'+penV:''} guardado`);
+    toast(toastMsg);
     if(btn){btn.textContent='✅';btn.classList.add('saved');setTimeout(()=>{btn.textContent='Guardar';btn.disabled=false;btn.classList.remove('saved');},2000);}
   }catch(e){console.error(e);if(btn){btn.textContent='Error';btn.disabled=false;}toast('No se pudo guardar');}
 }
@@ -998,14 +1249,24 @@ function buildRanking(){
     const rows=Object.entries(p.picks||{}).map(([mid,pk])=>{
       const m=getMatches().find(x=>x.id===parseInt(mid));if(!m)return'';
       const has=pk.gl!==''&&pk.gv!=='';
+      const matchStarted=isMatchLocked(m);
       const res2=realResults[mid];
       const pts2=(has&&res2&&res2.final!==false)?calcMatchPoints(pk,res2):null;
-      const penStr=(has&&pk.penLocal!==undefined)?` pen:${pk.penLocal}–${pk.penVisita}`:'';
-      return `<div class="pick-row"><span class="pick-game">${m.lf} ${m.local} vs ${m.visita} ${m.vf}</span>
-        <div style="display:flex;align-items:center;gap:5px">
-          ${pts2!==null?`<span style="font-size:9px;font-weight:700;color:${pts2>=50?'var(--green)':pts2>=20?'var(--navy3)':'var(--muted)'}">${pts2>0?'+':''}${pts2}</span>`:''}
-          <span class="pick-sc${has?'':' empty'}">${has?pk.gl+'–'+pk.gv+penStr:'–'}</span>
-        </div></div>`;
+      // Hide pick until match starts (unless it's me AND I verified my PIN)
+      if(!matchStarted&&(!me||!pinVerified||p.name.toLowerCase()!==me.toLowerCase())){
+        return `<div class="pick-row"><span class="pick-game">${m.lf} ${m.local} vs ${m.visita} ${m.vf}</span>
+          <span class="pick-sc" style="color:#ccc;background:#f4f4f4;font-size:10px">🔒 ${m.date} ${m.time}</span></div>`;
+      }
+      let pickStr='–';
+      if(has){
+        pickStr=pk.gl+'–'+pk.gv;
+        if(pk.penWinner)pickStr+=' pen: '+(pk.penWinner==='local'?m.local:m.visita);
+        else if(pk.penLocal!==undefined)pickStr+=' pen: '+pk.penLocal+'–'+pk.penVisita;
+      }
+      const pickDisplay=has?pickStr:null;
+      const ptsColor2=pts2>=50?'var(--green)':pts2>=20?'var(--navy3)':'var(--muted)';
+      const ptsSign2=pts2>0?'+':'';
+      return '<div class="pick-row"><span class="pick-game">'+m.lf+' '+m.local+' vs '+m.visita+' '+m.vf+'</span>'+'<div style="display:flex;align-items:center;gap:5px">'+(pts2!==null?'<span style="font-size:9px;font-weight:700;color:'+ptsColor2+'">'+ptsSign2+pts2+'</span>':'')+'<span class="pick-sc'+(has?'':' empty')+'">'+( pickDisplay||'\u2013')+'</span></div></div>';
     }).join('')+(p.bonus?.team?`<div class="pick-row"><span class="pick-game">🏆 Campeón: ${p.bonus.team}</span>
       <span class="pick-sc" style="background:#fef9c3;color:#854d0e">${bonusResult?.team?bonusResult.team===p.bonus.team?'✅ 100':'0':' ...'}</span></div>`:'');
     return `<div class="rank-card">
@@ -1334,10 +1595,417 @@ async function clearAll(){
   catch(e){console.error(e);toast('Error');}
 }
 
+// ── CARTELERA DE PRÓXIMOS PARTIDOS ──
+function buildUpcoming(){
+  const wrap=document.getElementById('upcoming-section');
+  if(!wrap)return;
+  const now=new Date();
+  const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const limit=new Date(today); limit.setDate(today.getDate()+2);
+  const upcoming=getMatches().filter(m=>{
+    const d=DATE_MAP[m.date];
+    if(!d)return false;
+    const md=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+    return md>=today&&md<limit;
+  }).sort((a,b)=>{
+    const da=DATE_MAP[a.date]||0,db2=DATE_MAP[b.date]||0;
+    if(da-db2!==0)return da-db2;
+    const ta=a.time.split(':').map(Number),tb=b.time.split(':').map(Number);
+    return(ta[0]*60+ta[1])-(tb[0]*60+tb[1]);
+  });
+  if(!upcoming.length){
+    const future=getMatches().filter(m=>{const d=DATE_MAP[m.date];return d&&new Date(d.getFullYear(),d.getMonth(),d.getDate())>=today&&!isPending(m);});
+    if(!future.length){wrap.innerHTML='';return;}
+    wrap.innerHTML=`<div class="upcoming-elim"><div style="background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:1rem;text-align:center;font-size:12px;color:var(--muted);box-shadow:var(--shadow)">Próximo partido: <strong>${future[0].date} ${future[0].time} GT · ${future[0].lf} ${future[0].local} vs ${future[0].visita} ${future[0].vf}</strong></div></div>`;
+    return;
+  }
+  const ph=PHASES.find(p=>p.id===upcoming[0]?.phase);
+  let html=`<div class="upcoming-elim"><div class="upcoming-elim-header"><div class="upcoming-elim-title"><span class="live-dot"></span>Próximos partidos</div><span style="font-size:10px;color:var(--muted)">Hoy y mañana</span></div>`;
+  upcoming.forEach(m=>{
+    const phase=PHASES.find(p=>p.id===m.phase)||{color:'#1565C0',full:'Partido'};
+    const res=realResults[m.id]||realResults[String(m.id)];
+    const isFinal=res&&res.final!==false;
+    const isLive=res&&res.final===false;
+    let scoreHtml=`<span class="uc-vs">vs</span>`;
+    if(res){
+      scoreHtml=`<div class="uc-score">
+        <span class="uc-score-nums ${isFinal?'final':'live'}">${res.gl} – ${res.gv}</span>
+        <span class="uc-score-badge ${isFinal?'final':'live'}">${isFinal?'FINAL':'EN VIVO'}</span>
+      </div>`;
+    }
+    // Show ¿Cómo va? button only when match is live (started, not yet confirmed final)
+    const[hh,mm]=m.time.split(':').map(Number);
+    const matchStart=new Date(DATE_MAP[m.date]||new Date());
+    matchStart.setHours(hh,mm,0,0);
+    const started=now>=new Date(matchStart.getTime()-10*60*1000);
+    const showReport=started&&!isFinal&&!isPending(m);
+    // Votes summary
+    const props=_proposals[String(m.id)]||{};
+    const voteCount=Object.values(props).reduce((s,v)=>s+v.length,0);
+    html+=`<div class="uc" id="uc-${m.id}">
+      <div class="uc-top" style="background:${phase.color}">
+        <span class="uc-label">${phase.full} · ${m.date} · ${m.time} GT</span>
+        <span class="uc-tv">📺 ${m.tv}</span>
+      </div>
+      <div class="uc-body">
+        <div class="uc-team r"><span class="uc-flag">${m.lf}</span>${m.local}</div>
+        ${scoreHtml}
+        <div class="uc-team"><span class="uc-flag">${m.vf}</span>${m.visita}</div>
+      </div>
+      <div class="uc-footer">
+        ${showReport?`<button class="report-btn-elim" id="rpbtn-${m.id}" data-rpid="${m.id}">📺 ¿Cómo va?${voteCount>0?' ('+voteCount+')':''}</button>`:''}
+        <span style="display:flex;align-items:center;gap:8px;margin-left:auto">
+          <span style="font-size:10px;color:var(--navy3);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:3px" data-picks="${m.id}">👥 Picks <span id="pchev-${m.id}">▼</span></span>
+          <span style="font-size:10px;color:var(--gold);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:3px" data-sim="${m.id}">🧮 Sim <span id="simchev-${m.id}">▼</span></span>
+        </span>
+      </div>
+      <div class="picks-panel" id="ppanel-${m.id}"></div>
+      <div class="report-panel-elim" id="rp-${m.id}"></div>
+      <div class="sim-card" id="sim-${m.id}" style="display:none"></div>
+    </div>`;
+  });
+  html+='</div>';
+  wrap.innerHTML=html;
+  // Attach report button listeners
+  wrap.querySelectorAll('[data-rpid]').forEach(btn=>{
+    btn.addEventListener('click',()=>openReport(parseInt(btn.getAttribute('data-rpid'))));
+  });
+  // Picks panel toggles
+  wrap.querySelectorAll('[data-picks]').forEach(btn=>{
+    btn.addEventListener('click',()=>togglePicks(parseInt(btn.getAttribute('data-picks'))));
+  });
+  // Simulator toggles
+  wrap.querySelectorAll('[data-sim]').forEach(btn=>{
+    btn.addEventListener('click',()=>toggleSimulator(parseInt(btn.getAttribute('data-sim'))));
+  });
+}
+
+// ── SISTEMA DE REPORTE ──
+function openReport(matchId){
+  const panel=document.getElementById('rp-'+matchId);
+  const btn=document.getElementById('rpbtn-'+matchId);
+  if(!panel)return;
+  const isOpen=panel.style.display==='block';
+  if(isOpen){panel.style.display='none';if(btn)btn.textContent='📺 ¿Cómo va?';return;}
+  panel.style.display='block';
+  if(btn)btn.textContent='✕ Cerrar';
+  const m=getMatches().find(x=>x.id===matchId);
+  const props=_proposals[String(matchId)]||{};
+  let vHtml='';
+  Object.entries(props).sort((a,b)=>b[1].length-a[1].length).forEach(([score,voters])=>{
+    const[gl,gv]=score.split('-');
+    const n=voters.length;
+    vHtml+=`<div class="rp-vote-row">
+      <span class="rp-vote-sc">${gl} – ${gv}</span>
+      <span style="color:var(--muted);font-size:10px">${voters.slice(0,2).join(', ')}${n>2?' +'+( n-2):''}</span>
+      <span style="font-weight:700;color:${n>=VOTES_NEEDED?'var(--green)':'#aaa'}">${n}/${VOTES_NEEDED}${n>=VOTES_NEEDED?' ✅':''}</span>
+    </div>`;
+  });
+  panel.innerHTML=`<div class="rp-note">${VOTES_NEEDED} votos iguales confirman · Admin confirma con 1 voto</div>
+    ${vHtml?'<div class="rp-votes">'+vHtml+'</div>':''}
+    <div class="rp-input-row">
+      <span style="font-size:14px">${m?m.lf:''}</span>
+      <input type="number" id="rgl-${matchId}" min="0" max="30" placeholder="0" inputmode="decimal" class="rp-box">
+      <span style="font-size:16px;font-weight:800;color:var(--red)">–</span>
+      <input type="number" id="rgv-${matchId}" min="0" max="30" placeholder="0" inputmode="decimal" class="rp-box">
+      <span style="font-size:14px">${m?m.vf:''}</span>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button class="rp-live-btn" data-rp="${matchId}" data-final="0">🔴 En vivo</button>
+      <button class="rp-final-btn" data-rp="${matchId}" data-final="1">✅ Final</button>
+    </div>`;
+  panel.querySelectorAll('[data-rp]').forEach(btn=>{
+    btn.addEventListener('click',()=>sendReport(parseInt(btn.getAttribute('data-rp')),btn.getAttribute('data-final')==='1'));
+  });
+}
+
+async function sendReport(matchId,isFinal){
+  const mid=String(matchId);
+  const gl=document.getElementById('rgl-'+matchId)?.value??'';
+  const gv=document.getElementById('rgv-'+matchId)?.value??'';
+  if(gl===''||gv==='')return toast('Ingresa el marcador completo');
+  if(!me){const n=prompt('Tu nombre:');if(!n?.trim())return;me=n.trim();}
+  // Admin confirma directo
+  if(isAdmin){await applyReport(matchId,gl,gv,isFinal);return;}
+  // Participante: registrar voto
+  if(!db)return toast('Requiere Firebase');
+  const key=gl+'-'+gv;
+  if(!_proposals[mid])_proposals[mid]={};
+  // Remover voto anterior del mismo participante
+  Object.keys(_proposals[mid]).forEach(k=>{
+    _proposals[mid][k]=(_proposals[mid][k]||[]).filter(n=>n!==me);
+    if(!_proposals[mid][k].length)delete _proposals[mid][k];
+  });
+  if(!_proposals[mid][key])_proposals[mid][key]=[];
+  if(!_proposals[mid][key].includes(me))_proposals[mid][key].push(me);
+  try{
+    await db.collection(SCOL).doc('proposals').set({votes:_proposals,updatedAt:Date.now()},{merge:false});
+    const votes=_proposals[mid][key].length;
+    toast(`✅ Reporte registrado (${votes}/${VOTES_NEEDED})`);
+    if(votes>=VOTES_NEEDED){
+      await applyReport(matchId,gl,gv,isFinal);
+    } else {
+      openReport(matchId); // refresh panel
+    }
+  }catch(e){console.error(e);toast('No se pudo registrar');}
+}
+
+async function applyReport(matchId,gl,gv,isFinal){
+  const mid=String(matchId);
+  realResults[mid]={gl:String(gl),gv:String(gv),final:isFinal===true||isFinal==='true'};
+  buildUpcoming();
+  buildRanking();
+  if(pinVerified)renderCurrentPhase();
+  if(db){
+    try{await db.collection(SCOL).doc(SDOC).set({realResults,updatedAt:Date.now()},{merge:true});}
+    catch(e){console.error(e);toast('Error guardando en Firebase');}
+  }
+  toast(isFinal?`✅ Final: ${gl}–${gv}`:`🔴 En vivo: ${gl}–${gv}`);
+}
+
+// ══════════════════════════════════════════════
+//  MIS PRONÓSTICOS
+// ══════════════════════════════════════════════
+function buildMyPicks(){
+  const sec=document.getElementById('mypicks-section');
+  if(!sec||!me)return;
+  const myPart=parts.find(p=>p.name?.toLowerCase()===me.toLowerCase());
+  if(!myPart){sec.style.display='none';return;}
+  sec.style.display='block';
+  // PIN no verificado → no mostrar pronósticos propios
+  if(!pinVerified){
+    sec.innerHTML=`<div style="background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:1.25rem;margin-bottom:1rem;text-align:center;box-shadow:var(--shadow)">
+      <div style="font-size:24px;margin-bottom:.5rem">🔐</div>
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">Ingresa tu clave para ver tus pronósticos</div>
+      <div style="font-size:11px;color:var(--muted)">Tus picks están protegidos hasta que verifiques tu identidad</div>
+    </div>`;
+    return;
+  }
+  const hasResults=Object.keys(realResults).some(k=>realResults[k].final!==false);
+  let html=`<div class="mypicks-card">
+    <div class="mypicks-header">
+      <div><div class="mypicks-title">Mis pronósticos — ${myPart.name}</div>
+        <div class="mypicks-sub">${countPicks(myPart)}/32 partidos · ${myPart.bonus?.team||'sin campeón'} 🏆</div>
+      </div>
+    </div>
+    <div style="padding:7px 14px;background:#fff3cd;border-bottom:1px solid #fde68a;font-size:11px;color:#92400e;display:flex;align-items:center;gap:5px">
+      🔒 Solo tú puedes ver tus pronósticos antes de que inicie cada partido
+    </div>`;
+  PHASES.forEach(ph=>{
+    const ms=getMatches().filter(m=>m.phase===ph.id);
+    const phPicks=ms.filter(m=>{const pk=(myPart.picks||{})[String(m.id)];return pk&&pk.gl!==''&&pk.gv!=='';});
+    if(!phPicks.length)return;
+    html+=`<div class="phase-group-label" style="color:${ph.color}">${ph.full}</div>`;
+    ms.forEach(m=>{
+      const pk=(myPart.picks||{})[String(m.id)];
+      const hasPk=pk&&pk.gl!==''&&pk.gv!=='';
+      const res=realResults[m.id]||realResults[String(m.id)];
+      const pts=(hasPk&&res&&res.final!==false)?calcMatchPoints(pk,res):null;
+      const penStr=hasPk?(pk.penWinner?' · pen: '+(pk.penWinner==='local'?m.local:m.visita):pk.penLocal!==undefined?' · pen: '+pk.penLocal+'–'+pk.penVisita:''):'';
+      html+=`<div class="mypick-row">
+        <div class="mypick-left">
+          <div class="mypick-teams">${m.lf} ${m.local} vs ${m.visita} ${m.vf}</div>
+          <div class="mypick-meta">${ph.name} · ${m.date} ${m.time} GT</div>
+        </div>
+        <div class="mypick-right">
+          ${pts!==null?`<span class="mypick-pts" style="${ptsStyle(pts)}">${pts}pts</span>`:''}
+          <span class="mypick-score${hasPk?'':' pending'}">${hasPk?pk.gl+'–'+pk.gv+penStr:'pendiente'}</span>
+        </div>
+      </div>`;
+    });
+  });
+  // Bonus
+  const bonusPts=bonusResult?.team&&myPart.bonus?.team===bonusResult.team?100:null;
+  html+=`<div class="phase-group-label" style="color:var(--gold)">Bonus Campeón</div>
+    <div class="mypick-row">
+      <div class="mypick-left"><div class="mypick-teams">🏆 Campeón del Mundial</div></div>
+      <div class="mypick-right">
+        ${bonusPts!==null?`<span class="mypick-pts" style="background:#dcfce7;color:#166534">${bonusPts}pts</span>`:''}
+        <span class="mypick-score${myPart.bonus?.team?'':' pending'}">${myPart.bonus?.team||'pendiente'}</span>
+      </div>
+    </div>`;
+  html+='</div>';
+  sec.innerHTML=html;
+}
+
+// ══════════════════════════════════════════════
+//  PANEL DE PRONÓSTICOS POR PARTIDO
+// ══════════════════════════════════════════════
+function buildPicksPanel(m){
+  const sorted=[...parts].sort((a,b)=>a.name.localeCompare(b.name));
+  if(!sorted.length)return '<div style="padding:12px;text-align:center;font-size:12px;color:var(--muted)">Sin participantes aún</div>';
+  // Solo se revelan cuando el partido ya inició
+  if(!isMatchLocked(m)){
+    return `<div style="padding:14px 12px;text-align:center;font-size:12px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:6px">
+      🔒 Los pronósticos se revelan cuando inicie el partido · <strong>${m.date} ${m.time} GT</strong>
+    </div>`;
+  }
+  let html=`<div class="picks-panel-head"><span class="picks-panel-title">Pronósticos — ${m.lf} ${m.local} vs ${m.visita} ${m.vf}</span><span style="font-size:10px;color:rgba(255,255,255,.5)">${sorted.length}</span></div>`;
+  const res=realResults[m.id]||realResults[String(m.id)];
+  sorted.forEach((p,i)=>{
+    const av=AV_COLORS[i%AV_COLORS.length];
+    const ini=p.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+    const pk=(p.picks||{})[String(m.id)];
+    const hasPk=pk&&pk.gl!==''&&pk.gv!=='';
+    const pts=(hasPk&&res&&res.final!==false)?calcMatchPoints(pk,res):null;
+    const penStr=hasPk?(pk.penWinner?' pen:'+(pk.penWinner==='local'?m.local:m.visita):pk.penLocal!==undefined?' pen:'+pk.penLocal+'–'+pk.penVisita:''):'';
+    html+=`<div class="pick-p-row">
+      <div style="display:flex;align-items:center;gap:8px;flex:1">
+        <div style="width:26px;height:26px;border-radius:50%;background:${av.bg};color:${av.c};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">${ini}</div>
+        <span class="pick-p-name">${p.name}</span>
+        ${pts!==null?`<span class="mypick-pts" style="${ptsStyle(pts)};font-size:9px">${pts}pts</span>`:''}
+      </div>
+      <span class="pick-p-score${hasPk?'':' no-pick'}">${hasPk?pk.gl+'–'+pk.gv+penStr:'sin pick'}</span>
+    </div>`;
+  });
+  return html;
+}
+
+function togglePicks(matchId){
+  const panel=document.getElementById('ppanel-'+matchId);
+  const chev=document.getElementById('pchev-'+matchId);
+  if(!panel)return;
+  const m=getMatches().find(x=>x.id===matchId);
+  if(m)panel.innerHTML=buildPicksPanel(m);
+  panel.classList.toggle('open');
+  if(chev)chev.textContent=panel.classList.contains('open')?'▲':'▼';
+}
+
+// ══════════════════════════════════════════════
+//  SIMULADOR DE PUNTOS
+// ══════════════════════════════════════════════
+function buildSimInner(m){
+  return `<div class="sim-head">
+    <span class="sim-title">🧮 Simulador · ${m.lf} ${m.local} vs ${m.visita} ${m.vf}</span>
+    <button class="sim-close" data-simclose="${m.id}">✕</button>
+  </div>
+  <div class="sim-inputs">
+    <span class="sim-label">${m.lf} ${m.local}</span>
+    <input class="sim-box" type="number" id="simgl-${m.id}" min="0" max="30" placeholder="–" inputmode="decimal">
+    <span class="sim-dash">–</span>
+    <input class="sim-box" type="number" id="simgv-${m.id}" min="0" max="30" placeholder="–" inputmode="decimal">
+    <span class="sim-label">${m.visita} ${m.vf}</span>
+  </div>
+  <div id="sim-pen-row-${m.id}" style="display:none;align-items:center;gap:8px;padding:6px 12px;background:#fff8e8;border-bottom:1px solid #fde68a;flex-wrap:wrap">
+    <span style="font-size:11px;font-weight:600;color:#92400e">⚡ Sim penales →</span>
+    <button class="pen-winner-btn" data-simpw="${m.id}" data-simpwv="local" style="flex:1">${m.lf} ${m.local}</button>
+    <button class="pen-winner-btn" data-simpw="${m.id}" data-simpwv="visita" style="flex:1">${m.vf} ${m.visita}</button>
+  </div>
+  <div style="padding:3px 12px 6px;text-align:center;font-size:10px;color:#92400e;background:#fff8e8;border-bottom:1px solid #fde68a">Los puntos se calculan automáticamente</div>
+  <div class="sim-results" id="simres-${m.id}"><div class="sim-no-picks">Ingresa el marcador para simular</div></div>`;
+}
+
+function toggleSimulator(matchId){
+  const card=document.getElementById('sim-'+matchId);
+  const chev=document.getElementById('simchev-'+matchId);
+  if(!card)return;
+  const isOpen=card.style.display==='block';
+  card.style.display=isOpen?'none':'block';
+  if(!isOpen){
+    const m=getMatches().find(x=>x.id===matchId);
+    if(m)card.innerHTML=buildSimInner(m);
+    // Pre-fill with real result if available
+    const res=realResults[matchId]||realResults[String(matchId)];
+    if(res){
+      const glEl=document.getElementById('simgl-'+matchId);
+      const gvEl=document.getElementById('simgv-'+matchId);
+      if(glEl&&gvEl){glEl.value=res.gl;gvEl.value=res.gv;onSimInput(matchId);}
+    }
+    // Attach listeners
+    card.querySelector('[data-simclose]')?.addEventListener('click',()=>toggleSimulator(matchId));
+    card.querySelectorAll('[data-simpw]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        card.querySelectorAll(`[data-simpw="${matchId}"]`).forEach(b=>b.classList.remove('sel'));
+        btn.classList.add('sel');
+        runSimulation(matchId);
+      });
+    });
+    document.getElementById('simgl-'+matchId)?.addEventListener('input',()=>onSimInput(matchId));
+    document.getElementById('simgv-'+matchId)?.addEventListener('input',()=>onSimInput(matchId));
+  }
+  if(chev)chev.textContent=isOpen?'▼':'▲';
+}
+
+function onSimInput(matchId){
+  const gl=document.getElementById('simgl-'+matchId)?.value;
+  const gv=document.getElementById('simgv-'+matchId)?.value;
+  const penRow=document.getElementById('sim-pen-row-'+matchId);
+  if(penRow)penRow.style.display=(gl!==''&&gv!==''&&gl===gv)?'flex':'none';
+  if(gl!==''&&gv!=='')runSimulation(matchId);
+}
+
+function runSimulation(matchId){
+  const gl=document.getElementById('simgl-'+matchId)?.value;
+  const gv=document.getElementById('simgv-'+matchId)?.value;
+  const rc=document.getElementById('simres-'+matchId);
+  if(!rc||gl===''||gl===undefined||gv===''||gv===undefined){
+    if(rc)rc.innerHTML='<div class="sim-no-picks">Ingresa ambos goles</div>';return;
+  }
+  const m=getMatches().find(x=>x.id===matchId);
+  // Simulated result object
+  const simCard=document.getElementById('sim-'+matchId);
+  const selPwBtn=simCard?.querySelector('[data-simpwv].sel');
+  const simPenW=selPwBtn?.getAttribute('data-simpwv')||null;
+  const simRes={gl:String(gl),gv:String(gv),final:true,...(simPenW?{tieWinner:simPenW}:{})};
+
+  const sims=parts.filter(p=>{
+    const pk=(p.picks||{})[String(matchId)];
+    return pk&&pk.gl!==''&&pk.gv!=='';
+  }).map(p=>{
+    const pk=(p.picks||{})[String(matchId)];
+    return{...p,simPts:calcMatchPoints(pk,simRes),pickGl:pk.gl,pickGv:pk.gv,pk};
+  }).sort((a,b)=>(b.simPts??-1)-(a.simPts??-1));
+
+  if(!sims.length){rc.innerHTML='<div class="sim-no-picks">Ningún participante ha pronosticado este partido</div>';return;}
+
+  const realResNow=realResults[matchId]||realResults[String(matchId)];
+  const isReal=realResNow&&String(realResNow.gl)===String(gl)&&String(realResNow.gv)===String(gv);
+  const simLabel=isReal&&realResNow.final!==false?'✅ FINAL':isReal?'🔴 EN VIVO':'🧮 Simulado';
+
+  let html=`<div class="sim-results-head"><span class="sim-results-title">${simLabel}: ${m?m.lf:''} ${gl}–${gv} ${m?m.vf:''}</span></div>`;
+  sims.forEach((p,i)=>{
+    const isMe=me&&p.name.toLowerCase()===me.toLowerCase();
+    const av=AV_COLORS[i%AV_COLORS.length];
+    const ini=p.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+    const pts=p.simPts??0;
+    const penStr=p.pk.penWinner?' pen:'+(p.pk.penWinner==='local'?m?.local:m?.visita):(p.pk.penLocal!==undefined?' pen:'+p.pk.penLocal+'–'+p.pk.penVisita:'');
+    html+=`<div class="sim-row${isMe?' me-row':''}">
+      <div class="sim-row-left">
+        <span class="sim-pos">${i+1}</span>
+        <div class="sim-av" style="background:${av.bg};color:${av.c}">${ini}</div>
+        <div><div class="sim-name">${p.name}${isMe?' 👤':''}</div>
+          <div style="font-size:10px;color:var(--muted)">Pick: ${p.pickGl}–${p.pickGv}${penStr}</div>
+        </div>
+      </div>
+      <span class="sim-pts-chip" style="${ptsStyle(pts)}">${pts>0?'+':''}${pts} pts</span>
+    </div>`;
+  });
+  const sinPick=parts.filter(p=>!sims.find(s=>s.name===p.name));
+  if(sinPick.length)html+=`<div style="padding:5px 12px;font-size:10px;color:var(--muted);background:#fafafa;border-top:1px solid #f0f0eb">Sin pronóstico: ${sinPick.map(p=>p.name).join(', ')}</div>`;
+  rc.innerHTML=html;
+}
+
+
 // ── TOAST ──
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._tid);t._tid=setTimeout(()=>t.classList.remove('show'),3500);}
 
 // ── PWA ──
+// ── PWA FULL ──
+function showInstallBtn(){
+  const h=document.querySelector('.hero-inner');
+  if(!h||document.getElementById('hero-install-btn'))return;
+  const wrap=document.createElement('div');
+  wrap.id='hero-install-btn';
+  wrap.style.cssText='margin-top:.9rem;padding:.6rem 1rem .8rem;background:linear-gradient(135deg,rgba(245,166,35,.15),rgba(245,166,35,.05));border:1px solid rgba(245,166,35,.35);border-radius:12px;text-align:center';
+  wrap.innerHTML='<div style="font-size:10px;color:rgba(255,255,255,.5);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Instala la app</div><button id="hero-pwa-btn" style="background:var(--gold);color:#1A1A2E;border:none;border-radius:99px;padding:9px 22px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit">📲 Agregar a inicio</button>';
+  h.appendChild(wrap);
+  document.getElementById('hero-pwa-btn').addEventListener('click',installPWA);
+}
+function hideInstallBtn(){
+  const b=document.getElementById('hero-install-btn');
+  if(b)b.style.display='none';
+  document.getElementById('install-banner').classList.remove('show');
+}
 (function(){
   const m={name:'Quiniela Eliminatoria 2026',short_name:'Eliminatoria 26',start_url:'./',display:'standalone',background_color:'#1A1A2E',theme_color:'#1A1A2E',orientation:'portrait',icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%231A1A2E'/%3E%3Ctext y='150' x='10' font-size='150'%3E%F0%9F%8F%86%3C/text%3E%3C/svg%3E",sizes:'192x192',type:'image/svg+xml'}]};
   const link=document.getElementById('pwa-manifest');
@@ -1348,16 +2016,38 @@ if('serviceWorker' in navigator){
   navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'text/javascript'}))).catch(()=>{});
 }
 let deferredInstallPrompt=null;
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;const s=parseInt(localStorage.getItem('pwa_s2')||'0');if(Date.now()>s)setTimeout(()=>document.getElementById('install-banner').classList.add('show'),2500);});
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;showInstallBtn();const s=parseInt(localStorage.getItem('pwa_s2')||'0');if(Date.now()>s)setTimeout(()=>document.getElementById('install-banner').classList.add('show'),2500);});
+window.addEventListener('appinstalled',()=>{hideInstallBtn();deferredInstallPrompt=null;toast('✅ App instalada');});
 function installPWA(){document.getElementById('install-banner').classList.remove('show');if(deferredInstallPrompt){deferredInstallPrompt.prompt();deferredInstallPrompt.userChoice.then(()=>{deferredInstallPrompt=null;});}}
 function dismissInstall(){document.getElementById('install-banner').classList.remove('show');localStorage.setItem('pwa_s2',String(Date.now()+24*60*60*1000));}
-window.addEventListener('load',()=>{if(window.matchMedia('(display-mode: standalone)').matches||!!window.navigator.standalone)document.getElementById('install-banner').style.display='none';});
+window.addEventListener('load',()=>{
+  const isStandalone=window.matchMedia('(display-mode: standalone)').matches||!!window.navigator.standalone;
+  if(isStandalone){hideInstallBtn();return;}
+  if(/iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream){
+    showInstallBtn();
+    const s=parseInt(localStorage.getItem('ios_snoozed2')||'0');
+    if(Date.now()>s)setTimeout(()=>document.getElementById('ios-tip').classList.add('show'),3000);
+  }
+});
+document.addEventListener('DOMContentLoaded',()=>{
+  const cb=document.getElementById('ios-close-btn');
+  if(cb)cb.addEventListener('click',()=>{document.getElementById('ios-tip').classList.remove('show');localStorage.setItem('ios_snoozed2',String(Date.now()+24*60*60*1000));});
+});
 
 // ── INIT ──
 load();
 renderPhaseNav();
+buildUpcoming();
 if(pinVerified)activateForm();
 
+  // Pen winner buttons (16avos)
+  sec.querySelectorAll('button[data-pwid]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const mid=btn.getAttribute('data-pwid');
+      sec.querySelectorAll(`button[data-pwid="${mid}"]`).forEach(b=>b.classList.remove('sel'));
+      btn.classList.add('sel');
+    });
+  });
 </script>
 </body>
 </html>
