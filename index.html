@@ -1444,12 +1444,14 @@ function adminLogout(){isAdmin=false;sessionStorage.removeItem('qm26e_admin');re
 function buildAdmin(){
   renderAdminGate();
   const ctrl=document.getElementById('admin-controls');if(!ctrl||!isAdmin)return;
-  ctrl.innerHTML=buildPhaseToggles()+buildBonusAdmin()+buildResultsAdmin()+buildTeamEditor()+buildPartsAdmin();
+  ctrl.innerHTML=buildPhaseToggles()+buildBonusAdmin()+buildResultsAdmin()+buildTeamEditor()+buildAdminPicksEditor()+buildPartsAdmin();
   ctrl.querySelectorAll('[data-toggle-phase]').forEach(b=>b.addEventListener('click',()=>togglePhase(b.getAttribute('data-toggle-phase'))));
   ctrl.querySelectorAll('[data-sec-toggle]').forEach(b=>b.addEventListener('click',()=>toggleSec(b.getAttribute('data-sec-toggle'))));
   document.getElementById('bonus-save-res-btn')?.addEventListener('click',saveBonusResult);
   document.getElementById('save-results-btn')?.addEventListener('click',saveResultados);
   document.getElementById('save-teams-btn')?.addEventListener('click',saveTeamOverrides);
+  document.getElementById('admin-load-picks-btn')?.addEventListener('click',loadAdminPicks);
+  ctrl.querySelectorAll('[data-save-admin-pick]').forEach(b=>b.addEventListener('click',()=>saveAdminPick(parseInt(b.getAttribute('data-save-admin-pick')))));
   document.getElementById('clear-all-btn')?.addEventListener('click',clearAll);
   document.getElementById('logout-admin-btn')?.addEventListener('click',adminLogout);
   getMatches().forEach(m=>{
@@ -1595,6 +1597,161 @@ function buildPartsAdmin(){
 
 function toggleSec(id){document.getElementById('sec-'+id)?.classList.toggle('open');document.getElementById('chev-'+id)?.classList.toggle('open');}
 
+// ── ADMIN: EDITOR DE PICKS ──
+function buildAdminPicksEditor(){
+  const opts=parts.map(p=>`<option value="${p.name.replace(/"/g,'&quot;')}">${p.name} (${Object.values(p.picks||{}).filter(pk=>pk.gl!==''&&pk.gv!=='').length}/32)</option>`).join('');
+  return `<div class="sec-card">
+    <div class="sec-head" data-sec-toggle="admin-picks">
+      <span class="sec-title">✍️ Ingresar pronósticos manualmente</span>
+      <span class="chev" id="chev-admin-picks">▼</span>
+    </div>
+    <div class="sec-body" id="sec-admin-picks">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:.75rem;line-height:1.6">
+        Ingresa picks en nombre de un participante, sin importar si el partido ya inició.
+        Útil para pronósticos en papel o correcciones.
+      </p>
+      <div style="display:flex;gap:8px;margin-bottom:.75rem;flex-wrap:wrap">
+        <select id="admin-part-sel" style="flex:1;padding:10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;background:var(--card);color:var(--text)">
+          <option value="">— Seleccionar participante —</option>
+          ${opts}
+        </select>
+        <button id="admin-load-picks-btn" class="btn-save" style="padding:10px 16px;margin:0;width:auto">Cargar picks</button>
+      </div>
+      <div id="admin-picks-form"></div>
+    </div>
+  </div>`;
+}
+
+function loadAdminPicks(){
+  const sel=document.getElementById('admin-part-sel');
+  const name=sel?.value;
+  if(!name)return toast('Selecciona un participante');
+  const part=parts.find(p=>p.name===name);
+  const form=document.getElementById('admin-picks-form');
+  if(!form)return;
+  let html='';
+  PHASES.forEach(ph=>{
+    const ms=getMatches().filter(m=>m.phase===ph.id&&!isPending(m));
+    if(!ms.length)return;
+    html+=`<div style="padding:5px 0 3px"><span style="font-size:10px;font-weight:800;color:${ph.color};text-transform:uppercase;letter-spacing:.5px">${ph.full}</span></div>`;
+    ms.forEach(m=>{
+      const pk=(part?.picks||{})[String(m.id)];
+      const hasPk=pk&&pk.gl!==''&&pk.gv!=='';
+      const res=realResults[m.id]||realResults[String(m.id)];
+      const isFinal=res&&res.final!==false;
+      html+=`<div style="background:var(--light);border-radius:var(--radius-sm);border:1px solid var(--border);padding:8px 10px;margin-bottom:5px">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:5px;display:flex;justify-content:space-between">
+          <span>${m.lf} ${m.local} vs ${m.visita} ${m.vf}</span>
+          <span>${m.date} ${m.time}${isFinal?' · ✅ FINAL '+res.gl+'-'+res.gv:''}${hasPk?' · pick: '+pk.gl+'-'+pk.gv:''}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="font-size:13px">${m.lf}</span>
+          <input type="number" id="adm-gl-${m.id}" min="0" max="30" placeholder="–" inputmode="decimal" value="${pk?.gl??''}" style="width:44px;height:36px;border:1.5px solid var(--border);border-radius:6px;font-size:17px;font-weight:700;text-align:center;background:var(--card);color:var(--text);font-family:inherit;-moz-appearance:textfield;appearance:textfield" oninput="adminTogglePen(${m.id},'${m.phase}')">
+          <span style="font-weight:800;color:var(--red)">–</span>
+          <input type="number" id="adm-gv-${m.id}" min="0" max="30" placeholder="–" inputmode="decimal" value="${pk?.gv??''}" style="width:44px;height:36px;border:1.5px solid var(--border);border-radius:6px;font-size:17px;font-weight:700;text-align:center;background:var(--card);color:var(--text);font-family:inherit;-moz-appearance:textfield;appearance:textfield" oninput="adminTogglePen(${m.id},'${m.phase}')">
+          <span style="font-size:13px">${m.vf}</span>
+          <button class="btn-save" data-save-admin-pick="${m.id}" style="padding:7px 14px;margin:0;width:auto;font-size:11px">Guardar</button>
+        </div>
+        <div id="adm-pen-${m.id}" style="display:${hasPk&&pk.gl===pk.gv?'flex':'none'};align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap">
+          ${m.phase==='32'
+            ?`<span style="font-size:11px;font-weight:600;color:#92400e">⚡ Pen:</span>
+              <span style="font-size:13px">${m.lf}</span>
+              <input type="number" id="adm-pl-${m.id}" min="0" max="10" placeholder="0" inputmode="decimal" value="${pk?.penLocal??''}" style="width:38px;height:32px;border:1.5px solid var(--gold);border-radius:6px;font-size:15px;font-weight:700;text-align:center;background:var(--card);color:var(--text);font-family:inherit;-moz-appearance:textfield;appearance:textfield">
+              <span style="font-weight:700;color:#d97706">–</span>
+              <input type="number" id="adm-pv-${m.id}" min="0" max="10" placeholder="0" inputmode="decimal" value="${pk?.penVisita??''}" style="width:38px;height:32px;border:1.5px solid var(--gold);border-radius:6px;font-size:15px;font-weight:700;text-align:center;background:var(--card);color:var(--text);font-family:inherit;-moz-appearance:textfield;appearance:textfield">
+              <span style="font-size:13px">${m.vf}</span>`
+            :`<span style="font-size:11px;font-weight:600;color:#92400e">⚡ ¿Quién gana en pen?</span>
+              <button class="pen-winner-btn${pk?.penWinner==='local'?' sel':''}" id="adm-pw-l-${m.id}" onclick="adminSelPen(${m.id},'local')">${m.lf} ${m.local}</button>
+              <button class="pen-winner-btn${pk?.penWinner==='visita'?' sel':''}" id="adm-pw-v-${m.id}" onclick="adminSelPen(${m.id},'visita')">${m.vf} ${m.visita}</button>`
+          }
+        </div>
+      </div>`;
+    });
+  });
+  // Bonus
+  const myBonus=part?.bonus?.team||'';
+  const teams=[...new Set([...BONUS_TEAMS_BASE,...Object.values(teamOverrides).flatMap(o=>[o.local,o.visita]).filter(Boolean)])].filter(t=>t&&t!=='Por definir').sort();
+  html+=`<div style="padding:5px 0 3px"><span style="font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.5px">Bonus Campeón</span></div>
+    <div style="background:var(--light);border-radius:var(--radius-sm);border:1px solid var(--border);padding:8px 10px;margin-bottom:5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <select id="adm-bonus-sel" style="flex:1;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:inherit;background:var(--card);color:var(--text)">
+        <option value="">— Sin campeón —</option>
+        ${teams.map(t=>`<option value="${t}"${t===myBonus?' selected':''}}>${t}</option>`).join('')}
+      </select>
+      <button class="btn-save" onclick="saveAdminBonus()" style="padding:7px 14px;margin:0;width:auto;font-size:11px">Guardar campeón</button>
+    </div>`;
+  form.innerHTML=html;
+  // Re-attach save-admin-pick listeners (since innerHTML replaced them)
+  form.querySelectorAll('[data-save-admin-pick]').forEach(b=>b.addEventListener('click',()=>saveAdminPick(parseInt(b.getAttribute('data-save-admin-pick')))));
+  toast('✅ Picks de '+name+' cargados');
+}
+
+function adminTogglePen(matchId, phase){
+  const gl=document.getElementById('adm-gl-'+matchId)?.value;
+  const gv=document.getElementById('adm-gv-'+matchId)?.value;
+  const row=document.getElementById('adm-pen-'+matchId);
+  if(row)row.style.display=(gl!==''&&gv!==''&&gl===gv)?'flex':'none';
+}
+
+function adminSelPen(matchId, side){
+  const l=document.getElementById('adm-pw-l-'+matchId);
+  const v=document.getElementById('adm-pw-v-'+matchId);
+  if(l)l.classList.toggle('sel', side==='local');
+  if(v)v.classList.toggle('sel', side==='visita');
+}
+
+async function saveAdminPick(matchId){
+  if(!isAdmin)return;
+  const name=document.getElementById('admin-part-sel')?.value;
+  if(!name)return toast('Selecciona un participante');
+  const gl=document.getElementById('adm-gl-'+matchId)?.value??'';
+  const gv=document.getElementById('adm-gv-'+matchId)?.value??'';
+  if(gl===''||gv==='')return toast('Ingresa el marcador');
+  const m=getMatches().find(x=>x.id===matchId);
+  let penData={};
+  if(m?.phase==='32'){
+    const pl=document.getElementById('adm-pl-'+matchId)?.value??'';
+    const pv=document.getElementById('adm-pv-'+matchId)?.value??'';
+    if(pl&&pv)penData={penLocal:pl,penVisita:pv};
+  } else {
+    const lBtn=document.getElementById('adm-pw-l-'+matchId);
+    const vBtn=document.getElementById('adm-pw-v-'+matchId);
+    const pw=lBtn?.classList.contains('sel')?'local':vBtn?.classList.contains('sel')?'visita':null;
+    if(pw)penData={penWinner:pw};
+  }
+  const pickData={gl,gv,...penData,ts:Date.now()};
+  const docId=docIdFromName(name);
+  const part=parts.find(p=>p.name===name);
+  if(!db)return toast('Sin Firebase');
+  try{
+    await db.collection(COLLECTION).doc(docId).set({
+      name,picks:{...(part?.picks||{}),[String(matchId)]:pickData},
+      pin:part?.pin||null,bonus:part?.bonus||null,
+      ts:part?.ts||Date.now(),updatedAt:Date.now()
+    },{merge:true});
+    toast(`✅ Pick de ${name}: ${gl}–${gv} guardado`);
+    // Update local
+    const idx=parts.findIndex(p=>p.name===name);
+    const updated={...(part||{_id:docId,name}),picks:{...(part?.picks||{}),[String(matchId)]:pickData}};
+    if(idx>=0)parts[idx]=updated;else parts.push({_id:docId,...updated});
+  }catch(e){console.error(e);toast('❌ Error: '+e.message);}
+}
+
+async function saveAdminBonus(){
+  if(!isAdmin)return;
+  const name=document.getElementById('admin-part-sel')?.value;
+  const team=document.getElementById('adm-bonus-sel')?.value;
+  if(!name)return toast('Selecciona un participante');
+  const docId=docIdFromName(name);
+  const part=parts.find(p=>p.name===name);
+  if(!db)return toast('Sin Firebase');
+  try{
+    await db.collection(COLLECTION).doc(docId).set({bonus:team?{team,ts:Date.now()}:null},{merge:true});
+    toast(`✅ Campeón de ${name}: ${team||'borrado'}`);
+    const idx=parts.findIndex(p=>p.name===name);
+    if(idx>=0)parts[idx]={...parts[idx],bonus:team?{team,ts:Date.now()}:null};
+  }catch(e){console.error(e);toast('❌ Error: '+e.message);}
+}
+
 async function togglePhase(id){
   phaseActive[id]=!phaseActive[id];
   if(!db){renderPhaseNav();renderCurrentPhase();buildAdmin();return;}
@@ -1686,23 +1843,82 @@ function buildUpcoming(){
   const now=new Date();
   const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
   const limit=new Date(today); limit.setDate(today.getDate()+2);
-  const upcoming=getMatches().filter(m=>{
-    const d=DATE_MAP[m.date];
-    if(!d)return false;
-    const md=new Date(d.getFullYear(),d.getMonth(),d.getDate());
-    return md>=today&&md<limit;
-  }).sort((a,b)=>{
+  const sortFn=(a,b)=>{
     const da=DATE_MAP[a.date]||0,db2=DATE_MAP[b.date]||0;
     if(da-db2!==0)return da-db2;
     const ta=a.time.split(':').map(Number),tb=b.time.split(':').map(Number);
     return(ta[0]*60+ta[1])-(tb[0]*60+tb[1]);
-  });
+  };
+  // Admin ve todos los partidos sin resultado (pasados, hoy y futuros próximos)
+  // Usuario normal ve solo hoy y mañana
+  const upcoming=getMatches().filter(m=>{
+    const d=DATE_MAP[m.date];
+    if(!d)return false;
+    const md=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+    if(isAdmin){
+      // Admin: partidos de los últimos 3 días sin resultado + hoy y mañana
+      const past3=new Date(today); past3.setDate(today.getDate()-3);
+      return md>=past3&&md<limit;
+    }
+    return md>=today&&md<limit;
+  }).sort(sortFn);
   if(!upcoming.length){
     const future=getMatches().filter(m=>{const d=DATE_MAP[m.date];return d&&new Date(d.getFullYear(),d.getMonth(),d.getDate())>=today&&!isPending(m);});
     if(!future.length){wrap.innerHTML='';return;}
     wrap.innerHTML=`<div class="upcoming-elim"><div style="background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:1rem;text-align:center;font-size:12px;color:var(--muted);box-shadow:var(--shadow)">Próximo partido: <strong>${future[0].date} ${future[0].time} GT · ${future[0].lf} ${future[0].local} vs ${future[0].visita} ${future[0].vf}</strong></div></div>`;
     return;
   }
+  // Partidos pasados sin resultado (solo admin)
+  if(isAdmin){
+    const sinResultado=getMatches().filter(m=>{
+      const d=DATE_MAP[m.date];
+      if(!d)return false;
+      const md=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+      const res=realResults[m.id]||realResults[String(m.id)];
+      return md<today&&(!res||res.final===false)&&!isPending(m);
+    }).sort(sortFn);
+    if(sinResultado.length){
+      let adminHtml=`<div class="upcoming-elim" style="margin-bottom:.5rem">
+        <div class="upcoming-elim-header">
+          <div class="upcoming-elim-title" style="color:var(--red)">⚠️ Partidos sin resultado</div>
+          <span style="font-size:10px;color:var(--red);font-weight:600">${sinResultado.length} pendientes</span>
+        </div>`;
+      sinResultado.forEach(m=>{
+        const phase=PHASES.find(p=>p.id===m.phase)||{color:'#1565C0',full:'Partido'};
+        const res=realResults[m.id]||realResults[String(m.id)];
+        const props=_proposals[String(m.id)]||{};
+        const voteCount=Object.values(props).reduce((s,v)=>s+v.length,0);
+        adminHtml+=`<div class="uc" id="uc-${m.id}">
+          <div class="uc-top" style="background:${phase.color}">
+            <span class="uc-label">${phase.full} · ${m.date} · ${m.time} GT · ⚠️ SIN RESULTADO</span>
+            <span class="uc-tv">📺 ${m.tv}</span>
+          </div>
+          <div class="uc-body">
+            <div class="uc-team r"><span class="uc-flag">${m.lf}</span>${m.local}</div>
+            <span class="uc-vs">vs</span>
+            <div class="uc-team"><span class="uc-flag">${m.vf}</span>${m.visita}</div>
+          </div>
+          <div class="uc-footer">
+            <button class="report-btn-elim" id="rpbtn-${m.id}" data-rpid="${m.id}" style="background:var(--red)">⚽ Ingresar resultado</button>
+            <span style="display:flex;align-items:center;gap:8px;margin-left:auto">
+              <span style="font-size:10px;color:var(--navy3);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:3px" data-picks="${m.id}">👥 Picks <span id="pchev-${m.id}">▼</span></span>
+              <span style="font-size:10px;color:var(--gold);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:3px" data-sim="${m.id}">🧮 Sim <span id="simchev-${m.id}">▼</span></span>
+            </span>
+          </div>
+          <div class="picks-panel" id="ppanel-${m.id}"></div>
+          <div class="report-panel-elim" id="rp-${m.id}"></div>
+          <div class="sim-card" id="sim-${m.id}" style="display:none"></div>
+        </div>`;
+      });
+      adminHtml+='</div>';
+      wrap.innerHTML=adminHtml;
+      // Attach listeners
+      wrap.querySelectorAll('[data-rpid]').forEach(btn=>btn.addEventListener('click',()=>openReport(parseInt(btn.getAttribute('data-rpid')))));
+      wrap.querySelectorAll('[data-picks]').forEach(btn=>btn.addEventListener('click',()=>togglePicks(parseInt(btn.getAttribute('data-picks')))));
+      wrap.querySelectorAll('[data-sim]').forEach(btn=>btn.addEventListener('click',()=>toggleSimulator(parseInt(btn.getAttribute('data-sim')))));
+    }
+  }
+
   const ph=PHASES.find(p=>p.id===upcoming[0]?.phase);
   let html=`<div class="upcoming-elim"><div class="upcoming-elim-header"><div class="upcoming-elim-title"><span class="live-dot"></span>Próximos partidos</div><span style="font-size:10px;color:var(--muted)">Hoy y mañana</span></div>`;
   upcoming.forEach(m=>{
@@ -1722,7 +1938,8 @@ function buildUpcoming(){
     const matchStart=new Date(DATE_MAP[m.date]||new Date());
     matchStart.setHours(hh,mm,0,0);
     const started=now>=new Date(matchStart.getTime()-10*60*1000);
-    const showReport=started&&!isFinal&&!isPending(m);
+    // Admin puede reportar cualquier partido sin resultado (sin límite de hora)
+    const showReport=(!isFinal&&!isPending(m))&&(isAdmin||started);
     // Votes summary
     const props=_proposals[String(m.id)]||{};
     const voteCount=Object.values(props).reduce((s,v)=>s+v.length,0);
