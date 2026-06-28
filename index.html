@@ -281,6 +281,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
         </div>
       </div>
     </div>
+    <div id="pin-section" style="display:none"></div>
     <div id="bonus-section"></div>
     <div id="matches-section"></div>
   </div>
@@ -310,8 +311,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script>
 // ══════════════════════════════════════════════════════════════
-//  QUINIELA ELIMINATORIA MUNDIAL 2026
-//  Firebase: fase-final-mundial
+//  QUINIELA ELIMINATORIA MUNDIAL 2026  — con sistema de claves
 // ══════════════════════════════════════════════════════════════
 
 const PHASES = [
@@ -323,125 +323,89 @@ const PHASES = [
   { id:'f',  name:'Final',   full:'Gran Final',        color:'#B71C1C', dates:'19 jul' },
 ];
 
-// ── BASE MATCHES (teams con overrides de Firebase) ──
-// Fechas en hora Guatemala (UTC-6). ET - 2h
 const BASE_MATCHES = [
-  // 16AVOS DE FINAL
-  {id:1, phase:'32',num:73, local:'Sudáfrica',    lf:'🇿🇦', visita:'Canadá',          vf:'🇨🇦', date:'28 jun',time:'13:00',tv:'FOX'},
-  {id:2, phase:'32',num:74, local:'Alemania',     lf:'🇩🇪', visita:'Por definir',     vf:'🏳', date:'28 jun',time:'14:30',tv:'FOX'},
-  {id:3, phase:'32',num:75, local:'Países Bajos', lf:'🇳🇱', visita:'Marruecos',       vf:'🇲🇦', date:'28 jun',time:'19:00',tv:'FOX'},
-  {id:4, phase:'32',num:76, local:'Brasil',       lf:'🇧🇷', visita:'Japón',           vf:'🇯🇵', date:'29 jun',time:'11:00',tv:'FOX'},
-  {id:5, phase:'32',num:77, local:'Francia',      lf:'🇫🇷', visita:'Por definir',     vf:'🏳', date:'29 jun',time:'15:00',tv:'FOX'},
+  {id:1, phase:'32',num:73, local:'Sudáfrica',     lf:'🇿🇦', visita:'Canadá',         vf:'🇨🇦', date:'28 jun',time:'13:00',tv:'FOX'},
+  {id:2, phase:'32',num:74, local:'Alemania',      lf:'🇩🇪', visita:'Por definir',    vf:'🏳',  date:'28 jun',time:'14:30',tv:'FOX'},
+  {id:3, phase:'32',num:75, local:'Países Bajos',  lf:'🇳🇱', visita:'Marruecos',      vf:'🇲🇦', date:'28 jun',time:'19:00',tv:'FOX'},
+  {id:4, phase:'32',num:76, local:'Brasil',        lf:'🇧🇷', visita:'Japón',          vf:'🇯🇵', date:'29 jun',time:'11:00',tv:'FOX'},
+  {id:5, phase:'32',num:77, local:'Francia',       lf:'🇫🇷', visita:'Por definir',    vf:'🏳',  date:'29 jun',time:'15:00',tv:'FOX'},
   {id:6, phase:'32',num:78, local:'Costa de Marfil',lf:'🇨🇮',visita:'Noruega',       vf:'🇳🇴', date:'29 jun',time:'11:00',tv:'FOX'},
-  {id:7, phase:'32',num:79, local:'México',       lf:'🇲🇽', visita:'Por definir',     vf:'🏳', date:'29 jun',time:'19:00',tv:'FOX'},
-  {id:8, phase:'32',num:80, local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'30 jun',time:'10:00',tv:'FOX'},
-  {id:9, phase:'32',num:81, local:'Estados Unidos',lf:'🇺🇸',visita:'Bosnia y Herz.', vf:'🇧🇦', date:'30 jun',time:'18:00',tv:'FOX'},
-  {id:10,phase:'32',num:82, local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'30 jun',time:'14:00',tv:'FOX'},
-  {id:11,phase:'32',num:83, local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'1 jul', time:'17:00',tv:'FOX'},
-  {id:12,phase:'32',num:84, local:'España',       lf:'🇪🇸', visita:'Por definir',     vf:'🏳', date:'1 jul', time:'13:00',tv:'FOX'},
-  {id:13,phase:'32',num:85, local:'Suiza',        lf:'🇨🇭', visita:'Por definir',     vf:'🏳', date:'1 jul', time:'21:00',tv:'FOX'},
-  {id:14,phase:'32',num:88, local:'Australia',    lf:'🇦🇺', visita:'Egipto',          vf:'🇪🇬', date:'3 jul', time:'12:00',tv:'FOX'},
-  {id:15,phase:'32',num:86, local:'Argentina',    lf:'🇦🇷', visita:'Cabo Verde',      vf:'🇨🇻', date:'3 jul', time:'16:00',tv:'FOX'},
-  {id:16,phase:'32',num:87, local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'3 jul', time:'19:30',tv:'FOX'},
-  // OCTAVOS DE FINAL
-  {id:17,phase:'16',num:89, local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'4 jul', time:'11:00',tv:'FOX'},
-  {id:18,phase:'16',num:90, local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'4 jul', time:'15:00',tv:'FOX'},
-  {id:19,phase:'16',num:91, local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'5 jul', time:'14:00',tv:'FOX'},
-  {id:20,phase:'16',num:92, local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'5 jul', time:'18:00',tv:'FOX'},
-  {id:21,phase:'16',num:93, local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'6 jul', time:'13:00',tv:'FOX'},
-  {id:22,phase:'16',num:94, local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'6 jul', time:'18:00',tv:'FOX'},
-  {id:23,phase:'16',num:95, local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'7 jul', time:'10:00',tv:'FOX'},
-  {id:24,phase:'16',num:96, local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'7 jul', time:'14:00',tv:'FOX'},
-  // CUARTOS DE FINAL
-  {id:25,phase:'qf',num:97, local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'9 jul', time:'14:00',tv:'FOX'},
-  {id:26,phase:'qf',num:98, local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'10 jul',time:'13:00',tv:'FOX'},
-  {id:27,phase:'qf',num:99, local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'11 jul',time:'15:00',tv:'FOX'},
-  {id:28,phase:'qf',num:100,local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'11 jul',time:'19:00',tv:'FOX'},
-  // SEMIFINALES
-  {id:29,phase:'sf',num:101,local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'14 jul',time:'13:00',tv:'FOX'},
-  {id:30,phase:'sf',num:102,local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'15 jul',time:'14:00',tv:'FOX'},
-  // TERCER PUESTO
-  {id:31,phase:'3p',num:103,local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'18 jul',time:'13:00',tv:'FOX'},
-  // FINAL
-  {id:32,phase:'f', num:104,local:'Por definir',  lf:'🏳', visita:'Por definir',      vf:'🏳', date:'19 jul',time:'13:00',tv:'FOX'},
+  {id:7, phase:'32',num:79, local:'México',        lf:'🇲🇽', visita:'Por definir',    vf:'🏳',  date:'29 jun',time:'19:00',tv:'FOX'},
+  {id:8, phase:'32',num:80, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'30 jun',time:'10:00',tv:'FOX'},
+  {id:9, phase:'32',num:81, local:'Estados Unidos',lf:'🇺🇸', visita:'Bosnia y Herz.', vf:'🇧🇦', date:'30 jun',time:'18:00',tv:'FOX'},
+  {id:10,phase:'32',num:82, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'30 jun',time:'14:00',tv:'FOX'},
+  {id:11,phase:'32',num:83, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'1 jul', time:'17:00',tv:'FOX'},
+  {id:12,phase:'32',num:84, local:'España',        lf:'🇪🇸', visita:'Por definir',    vf:'🏳',  date:'1 jul', time:'13:00',tv:'FOX'},
+  {id:13,phase:'32',num:85, local:'Suiza',         lf:'🇨🇭', visita:'Por definir',    vf:'🏳',  date:'1 jul', time:'21:00',tv:'FOX'},
+  {id:14,phase:'32',num:88, local:'Australia',     lf:'🇦🇺', visita:'Egipto',         vf:'🇪🇬', date:'3 jul', time:'12:00',tv:'FOX'},
+  {id:15,phase:'32',num:86, local:'Argentina',     lf:'🇦🇷', visita:'Cabo Verde',     vf:'🇨🇻', date:'3 jul', time:'16:00',tv:'FOX'},
+  {id:16,phase:'32',num:87, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'3 jul', time:'19:30',tv:'FOX'},
+  {id:17,phase:'16',num:89, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'4 jul', time:'11:00',tv:'FOX'},
+  {id:18,phase:'16',num:90, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'4 jul', time:'15:00',tv:'FOX'},
+  {id:19,phase:'16',num:91, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'5 jul', time:'14:00',tv:'FOX'},
+  {id:20,phase:'16',num:92, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'5 jul', time:'18:00',tv:'FOX'},
+  {id:21,phase:'16',num:93, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'6 jul', time:'13:00',tv:'FOX'},
+  {id:22,phase:'16',num:94, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'6 jul', time:'18:00',tv:'FOX'},
+  {id:23,phase:'16',num:95, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'7 jul', time:'10:00',tv:'FOX'},
+  {id:24,phase:'16',num:96, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'7 jul', time:'14:00',tv:'FOX'},
+  {id:25,phase:'qf',num:97, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'9 jul', time:'14:00',tv:'FOX'},
+  {id:26,phase:'qf',num:98, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'10 jul',time:'13:00',tv:'FOX'},
+  {id:27,phase:'qf',num:99, local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'11 jul',time:'15:00',tv:'FOX'},
+  {id:28,phase:'qf',num:100,local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'11 jul',time:'19:00',tv:'FOX'},
+  {id:29,phase:'sf',num:101,local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'14 jul',time:'13:00',tv:'FOX'},
+  {id:30,phase:'sf',num:102,local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'15 jul',time:'14:00',tv:'FOX'},
+  {id:31,phase:'3p',num:103,local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'18 jul',time:'13:00',tv:'FOX'},
+  {id:32,phase:'f', num:104,local:'Por definir',   lf:'🏳',  visita:'Por definir',    vf:'🏳',  date:'19 jul',time:'13:00',tv:'FOX'},
 ];
 
-// ── BRACKET: quién avanza a qué partido ──
-// winner: {id, pos:'local'|'visita'}  → ganador del marcador (o ET/penales)
-// loser:  {id, pos}                   → solo para semifinales (van al 3er puesto)
 const BRACKET = {
-  // 16avos → Octavos
-  1:  { winner:{id:18,pos:'local'} },
-  2:  { winner:{id:17,pos:'local'} },
-  3:  { winner:{id:18,pos:'visita'} },
-  4:  { winner:{id:19,pos:'local'} },
-  5:  { winner:{id:17,pos:'visita'} },
-  6:  { winner:{id:19,pos:'visita'} },
-  7:  { winner:{id:20,pos:'local'} },
-  8:  { winner:{id:20,pos:'visita'} },
-  9:  { winner:{id:22,pos:'local'} },
-  10: { winner:{id:22,pos:'visita'} },
-  11: { winner:{id:21,pos:'local'} },
-  12: { winner:{id:21,pos:'visita'} },
-  13: { winner:{id:24,pos:'local'} },
-  14: { winner:{id:23,pos:'visita'} },
-  15: { winner:{id:23,pos:'local'} },
-  16: { winner:{id:24,pos:'visita'} },
-  // Octavos → Cuartos
-  17: { winner:{id:25,pos:'local'} },
-  18: { winner:{id:25,pos:'visita'} },
-  19: { winner:{id:27,pos:'local'} },
-  20: { winner:{id:27,pos:'visita'} },
-  21: { winner:{id:26,pos:'local'} },
-  22: { winner:{id:26,pos:'visita'} },
-  23: { winner:{id:28,pos:'local'} },
-  24: { winner:{id:28,pos:'visita'} },
-  // Cuartos → Semis
-  25: { winner:{id:29,pos:'local'} },
-  26: { winner:{id:29,pos:'visita'} },
-  27: { winner:{id:30,pos:'local'} },
-  28: { winner:{id:30,pos:'visita'} },
-  // Semis → Final + 3er puesto
-  29: { winner:{id:32,pos:'local'}, loser:{id:31,pos:'local'} },
-  30: { winner:{id:32,pos:'visita'}, loser:{id:31,pos:'visita'} },
+  1:{winner:{id:18,pos:'local'}},  2:{winner:{id:17,pos:'local'}},
+  3:{winner:{id:18,pos:'visita'}}, 4:{winner:{id:19,pos:'local'}},
+  5:{winner:{id:17,pos:'visita'}}, 6:{winner:{id:19,pos:'visita'}},
+  7:{winner:{id:20,pos:'local'}},  8:{winner:{id:20,pos:'visita'}},
+  9:{winner:{id:22,pos:'local'}},  10:{winner:{id:22,pos:'visita'}},
+  11:{winner:{id:21,pos:'local'}}, 12:{winner:{id:21,pos:'visita'}},
+  13:{winner:{id:24,pos:'local'}}, 14:{winner:{id:23,pos:'visita'}},
+  15:{winner:{id:23,pos:'local'}}, 16:{winner:{id:24,pos:'visita'}},
+  17:{winner:{id:25,pos:'local'}}, 18:{winner:{id:25,pos:'visita'}},
+  19:{winner:{id:27,pos:'local'}}, 20:{winner:{id:27,pos:'visita'}},
+  21:{winner:{id:26,pos:'local'}}, 22:{winner:{id:26,pos:'visita'}},
+  23:{winner:{id:28,pos:'local'}}, 24:{winner:{id:28,pos:'visita'}},
+  25:{winner:{id:29,pos:'local'}}, 26:{winner:{id:29,pos:'visita'}},
+  27:{winner:{id:30,pos:'local'}}, 28:{winner:{id:30,pos:'visita'}},
+  29:{winner:{id:32,pos:'local'},  loser:{id:31,pos:'local'}},
+  30:{winner:{id:32,pos:'visita'}, loser:{id:31,pos:'visita'}},
 };
 
-// Equipos para el bonus campeón
 const BONUS_TEAMS_BASE = [
-  'Sudáfrica','Canadá','Alemania','Países Bajos','Marruecos','Brasil','Japón','Francia',
-  'Costa de Marfil','Noruega','México','Estados Unidos','Bosnia y Herz.','España','Suiza',
-  'Australia','Egipto','Argentina','Cabo Verde','Bélgica','Ecuador','Escocia','Croacia','Ghana',
-  'Panamá','Portugal','Colombia','Inglaterra','Portugal','Turquía','Por confirmar A','Por confirmar B',
+  'Argentina','Alemania','Australia','Bélgica','Bosnia y Herz.','Brasil',
+  'Cabo Verde','Canadá','Costa de Marfil','Egipto','España','Estados Unidos',
+  'Francia','Japón','Marruecos','México','Noruega','Países Bajos','Suiza','Sudáfrica',
 ];
 
 const DATE_MAP = {};
 (function(){
   const months={jun:5,jul:6};
   [...new Set(BASE_MATCHES.map(m=>m.date))].forEach(ds=>{
-    const[d,mon]=ds.split(' ');DATE_MAP[ds]=new Date(2026,months[mon]??5,parseInt(d));
+    const[d,mon]=ds.split(' ');
+    DATE_MAP[ds]=new Date(2026,months[mon]||5,parseInt(d));
   });
 })();
 
-// ── FIREBASE ──
 const ADMIN_PIN = '20262026';
 const firebaseConfig = {
-  apiKey: 'AIzaSyCcQyxm94v0_MtaRrGmT-HFDgUXKAIjrdA',
-  authDomain: 'fase-final-mundial.firebaseapp.com',
-  projectId: 'fase-final-mundial',
-  storageBucket: 'fase-final-mundial.firebasestorage.app',
-  messagingSenderId: '1067481058320',
-  appId: '1:1067481058320:web:0943f1717a332293e5ce95',
-  measurementId: 'G-0NLELJCYNW'
+  apiKey:'AIzaSyCcQyxm94v0_MtaRrGmT-HFDgUXKAIjrdA',
+  authDomain:'fase-final-mundial.firebaseapp.com',
+  projectId:'fase-final-mundial',
+  storageBucket:'fase-final-mundial.firebasestorage.app',
+  messagingSenderId:'1067481058320',
+  appId:'1:1067481058320:web:0943f1717a332293e5ce95',
 };
-let db = null;
-const COLLECTION = 'quiniela_elim_2026';
-const SCOL = 'quiniela_elim_config';
-const SDOC = 'control';
-
-try {
-  firebase.initializeApp(firebaseConfig);
-  db = firebase.firestore();
-} catch(e) { console.warn('Firebase init failed', e); }
+let db=null;
+const COLLECTION='quiniela_elim_2026';
+const SCOL='quiniela_elim_config';
+const SDOC='control';
+try{ firebase.initializeApp(firebaseConfig); db=firebase.firestore(); }catch(e){ console.warn('Firebase',e); }
 
 const AV_COLORS=[
   {bg:'#DBEAFE',c:'#1E40AF'},{bg:'#EDE9FE',c:'#6D28D9'},{bg:'#FCE7F3',c:'#9D174D'},
@@ -451,28 +415,32 @@ const AV_COLORS=[
 ];
 
 // ── STATE ──
-let parts=[], me=null;
-let isAdmin = sessionStorage.getItem('qm26e_admin')==='1';
-let realResults={};    // {matchId: {gl,gv,final,tieWinner:'local'|'visita'}}
-let phaseActive={32:true};
-let teamOverrides={};  // {matchId: {local,lf,visita,vf}}
-let bonusResult=null;  // {team}
+let parts=[], me=null, myPin=null, pinVerified=false;
+let isAdmin=sessionStorage.getItem('qm26e_admin')==='1';
+let realResults={}, phaseActive={'32':true}, teamOverrides={}, bonusResult=null;
 let currentPhase='32';
 
-function getMatches() {
-  return BASE_MATCHES.map(m=>{const o=teamOverrides[m.id]||{};return{...m,...o};});
-}
-function isPending(m){return m.local==='Por definir'||m.visita==='Por definir';}
+// Restore session on page load
+(function restoreSession(){
+  const sm=sessionStorage.getItem('qm26e_me');
+  const sp=sessionStorage.getItem('qm26e_pin');
+  if(sm&&sp){ me=sm; myPin=sp; pinVerified=true;
+    const inp=document.getElementById('inp-name');
+    if(inp)inp.value=sm;
+  }
+})();
+
+function getMatches(){ return BASE_MATCHES.map(m=>{const o=teamOverrides[m.id]||{};return{...m,...o};}); }
+function isPending(m){ return m.local==='Por definir'||m.visita==='Por definir'; }
 function isMatchLocked(m){
-  const d=DATE_MAP[m.date];if(!d)return false;
+  const d=DATE_MAP[m.date]; if(!d) return false;
   const[hh,mm]=m.time.split(':').map(Number);
-  const s=new Date(d);s.setHours(hh,mm,0,0);
+  const s=new Date(d); s.setHours(hh,mm,0,0);
   return new Date()>=new Date(s.getTime()-10*60*1000);
 }
 function isBonusLocked(){
-  // Cierra antes del primer partido de 16avos
   const first=getMatches().filter(m=>m.phase==='32').sort((a,b)=>{
-    const da=DATE_MAP[a.date],db2=DATE_MAP[b.date];
+    const da=DATE_MAP[a.date]||0,db2=DATE_MAP[b.date]||0;
     if(da-db2!==0)return da-db2;
     const ta=a.time.split(':').map(Number),tb=b.time.split(':').map(Number);
     return(ta[0]*60+ta[1])-(tb[0]*60+tb[1]);
@@ -485,42 +453,42 @@ function docIdFromName(n){
 }
 
 // ── LOAD ──
-function load() {
-  if (!db) {
+function load(){
+  if(!db){
     try{parts=JSON.parse(localStorage.getItem('qm26e_v2')||'[]');}catch(e){parts=[];}
-    syncBadges(); toast('Modo local — sin Firebase'); return;
+    syncBadges();
+    if(pinVerified)activateForm();
+    return;
   }
   db.collection(SCOL).doc(SDOC).onSnapshot(doc=>{
     if(doc.exists){
       const d=doc.data();
-      realResults  = d.realResults  || {};
-      phaseActive  = d.phaseActive  || {32:true};
-      teamOverrides= d.teamOverrides|| {};
-      bonusResult  = d.bonusResult  || null;
+      realResults  =d.realResults  ||{};
+      phaseActive  =d.phaseActive  ||{'32':true};
+      teamOverrides=d.teamOverrides||{};
+      bonusResult  =d.bonusResult  ||null;
     }
     const ap=document.querySelector('.page.active')?.id||'';
-    if(ap==='page-ranking') buildRanking();
-    if(ap==='page-admin')   buildAdmin();
+    if(ap==='page-ranking')buildRanking();
+    if(ap==='page-admin')buildAdmin();
     renderPhaseNav();
-    renderCurrentPhase();
-    renderBonus();
-  },err=>console.warn('Config error',err));
-
+    if(pinVerified){renderCurrentPhase();renderBonus();}
+  },err=>console.warn('Config',err));
   db.collection(COLLECTION).orderBy('ts','desc').onSnapshot(snap=>{
     parts=snap.docs.map(d=>({_id:d.id,...d.data()}));
     syncBadges();
     const ap=document.querySelector('.page.active')?.id||'';
-    if(ap==='page-ranking') buildRanking();
-    if(ap==='page-admin')   buildAdmin();
-    renderCurrentPhase();
+    if(ap==='page-ranking')buildRanking();
+    if(ap==='page-admin')buildAdmin();
+    if(pinVerified)renderCurrentPhase();
   },err=>{console.error(err);toast('Error conectando');});
 }
 
 function syncBadges(){
   const n=parts.length;
   ['b-rank','b-admin'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent=n;el.classList.toggle('on',n>0);}});
-  document.getElementById('st-total').textContent=n;
-  document.getElementById('st-played').textContent=Object.values(realResults).filter(r=>r.final!==false).length;
+  const st=document.getElementById('st-total');if(st)st.textContent=n;
+  const sp=document.getElementById('st-played');if(sp)sp.textContent=Object.values(realResults).filter(r=>r.final!==false).length;
 }
 
 function goPage(p){
@@ -531,259 +499,253 @@ function goPage(p){
   if(p==='admin'){renderAdminGate();buildAdmin();}
 }
 
-function startForm(){
+// ── FORM / PIN FLOW ──
+async function startForm(){
   const n=document.getElementById('inp-name').value.trim();
   if(!n){document.getElementById('inp-name').focus();return;}
   me=n;
-  renderPhaseNav();renderCurrentPhase();renderBonus();
-  toast('¡Bienvenid@, '+n.split(' ')[0]+'!');
+
+  // If same session user, skip PIN
+  const sm=sessionStorage.getItem('qm26e_me');
+  const sp=sessionStorage.getItem('qm26e_pin');
+  if(sm?.toLowerCase()===n.toLowerCase()&&sp){
+    myPin=sp; pinVerified=true;
+    activateForm(); return;
+  }
+
+  // No Firebase — skip PIN for local mode
+  if(!db){ pinVerified=true; activateForm(); return; }
+
+  // Look up user document
+  const docId=docIdFromName(n);
+  try{
+    const snap=await db.collection(COLLECTION).doc(docId).get();
+    if(snap.exists&&snap.data().pin){
+      showPinForm(false, snap.data().pin); // has PIN → verify
+    } else {
+      // No PIN (new or existing user) → enter directly, offer optional PIN setup
+      pinVerified=true;
+      sessionStorage.setItem('qm26e_me',me);
+      hidePinForm();
+      activateForm();
+      // Show optional PIN setup if they don't have one yet
+      if(!snap.exists||!snap.data()?.pin) showOptionalPinSetup();
+    }
+  }catch(e){ console.error(e); toast('Error al verificar usuario'); }
 }
 document.getElementById('inp-name').addEventListener('keydown',e=>{if(e.key==='Enter')startForm();});
+
+function showPinForm(isNew, storedPin){
+  const sec=document.getElementById('pin-section');
+  if(!sec)return;
+  sec.style.display='block';
+  if(isNew){
+    sec.innerHTML=`<div class="name-card" style="border:1.5px solid var(--gold);border-radius:var(--radius)">
+      <div class="field-label" style="color:var(--gold)">🔐 Crea tu clave personal (4 dígitos)</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:.85rem;line-height:1.5">
+        Esta clave protege tus pronósticos. Solo tú podrás modificarlos.<br>
+        <strong style="color:var(--text)">Anótala bien — si la olvidas tendrás que contactar al admin.</strong>
+      </p>
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <input type="password" id="pin1" maxlength="4" inputmode="numeric" pattern="[0-9]{4}"
+          placeholder="Elige 4 dígitos" class="name-input"
+          style="letter-spacing:6px;font-size:20px;font-weight:700;text-align:center">
+      </div>
+      <div class="name-row">
+        <input type="password" id="pin2" maxlength="4" inputmode="numeric" pattern="[0-9]{4}"
+          placeholder="Repite tu clave" class="name-input"
+          style="letter-spacing:6px;font-size:20px;font-weight:700;text-align:center">
+        <button class="go-btn" id="pin-create-btn" style="background:var(--gold);color:var(--navy)">Crear clave</button>
+      </div>
+      <div id="pin-err" style="font-size:12px;color:var(--red);margin-top:8px;display:none"></div>
+    </div>`;
+    document.getElementById('pin-create-btn').addEventListener('click',createPin);
+    document.getElementById('pin2').addEventListener('keydown',e=>{if(e.key==='Enter')createPin();});
+  } else {
+    sec.innerHTML=`<div class="name-card" style="border:1.5px solid var(--navy3);border-radius:var(--radius)">
+      <div class="field-label">🔐 Ingresa tu clave personal</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:.85rem;line-height:1.5">
+        Tus pronósticos están protegidos. Ingresa tu clave de 4 dígitos para acceder.
+      </p>
+      <div class="name-row">
+        <input type="password" id="pin1" maxlength="4" inputmode="numeric" pattern="[0-9]{4}"
+          placeholder="Tu clave" class="name-input"
+          style="letter-spacing:6px;font-size:20px;font-weight:700;text-align:center">
+        <button class="go-btn" id="pin-verify-btn">Entrar</button>
+      </div>
+      <div id="pin-err" style="font-size:12px;color:var(--red);margin-top:8px;display:none"></div>
+      <div style="margin-top:.6rem;font-size:11px;color:var(--muted)">¿Olvidaste tu clave? Contacta al administrador.</div>
+    </div>`;
+    document.getElementById('pin-verify-btn').addEventListener('click',()=>verifyPin(storedPin));
+    document.getElementById('pin1').addEventListener('keydown',e=>{if(e.key==='Enter')verifyPin(storedPin);});
+  }
+  // Scroll to PIN form
+  sec.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function setPinErr(msg){
+  const el=document.getElementById('pin-err');
+  if(el){el.textContent=msg;el.style.display='block';}
+}
+
+async function createPin(){
+  const p1=document.getElementById('pin1')?.value?.trim();
+  const p2=document.getElementById('pin2')?.value?.trim();
+  if(!p1||!/^\d{4}$/.test(p1)){setPinErr('❌ La clave debe ser exactamente 4 dígitos');return;}
+  if(p1!==p2){setPinErr('❌ Las claves no coinciden');return;}
+  myPin=p1; pinVerified=true;
+  sessionStorage.setItem('qm26e_me',me);
+  sessionStorage.setItem('qm26e_pin',myPin);
+  // Save pin to Firebase
+  const docId=docIdFromName(me);
+  const ex=parts.find(p=>p._id===docId||p.name?.toLowerCase()===me.toLowerCase());
+  const entry={name:me,pin:myPin,picks:ex?.picks||{},bonus:ex?.bonus||null,ts:ex?.ts||Date.now(),updatedAt:Date.now()};
+  if(db){
+    try{await db.collection(COLLECTION).doc(docId).set(entry,{merge:true});}
+    catch(e){console.warn('Could not save pin',e);}
+  }
+  hidePinForm();
+  activateForm();
+  toast('✅ Clave creada — ¡bienvenid@, '+me.split(' ')[0]+'!');
+}
+
+function verifyPin(storedPin){
+  const entered=document.getElementById('pin1')?.value?.trim();
+  if(!entered||!/^\d{4}$/.test(entered)){setPinErr('❌ Ingresa tus 4 dígitos');return;}
+  if(entered!==storedPin){setPinErr('❌ Clave incorrecta — intenta de nuevo');return;}
+  myPin=entered; pinVerified=true;
+  sessionStorage.setItem('qm26e_me',me);
+  sessionStorage.setItem('qm26e_pin',myPin);
+  hidePinForm();
+  activateForm();
+  toast('¡Bienvenid@, '+me.split(' ')[0]+'! 👋');
+}
+
+function hidePinForm(){
+  const sec=document.getElementById('pin-section');
+  if(sec)sec.style.display='none';
+}
+
+function showOptionalPinSetup(){
+  // Show a subtle card below bonus section inviting the user to set a PIN
+  const sec=document.getElementById('pin-section');
+  if(!sec)return;
+  sec.style.display='block';
+  sec.innerHTML=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem;box-shadow:var(--shadow)">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px">🔐 Protege tus pronósticos</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.5">Crea una clave de 4 dígitos para que nadie más pueda modificarlos. Es opcional.</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0">
+        <button id="opt-pin-btn" class="go-btn" style="font-size:11px;padding:8px 14px;background:var(--navy3)">Crear clave</button>
+        <button id="opt-pin-dismiss" style="border:none;background:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 8px;line-height:1">✕</button>
+      </div>
+    </div>
+    <div id="opt-pin-form" style="display:none;margin-top:.85rem;border-top:1px solid var(--border);padding-top:.85rem">
+      <div class="field-label">Tu clave (4 dígitos)</div>
+      <div style="display:flex;gap:8px;margin-top:.5rem">
+        <input type="password" id="opt-pin1" maxlength="4" inputmode="numeric" pattern="[0-9]{4}"
+          placeholder="Ej: 1234" class="name-input" style="letter-spacing:4px;font-size:18px;font-weight:700;text-align:center">
+        <input type="password" id="opt-pin2" maxlength="4" inputmode="numeric" pattern="[0-9]{4}"
+          placeholder="Repite" class="name-input" style="letter-spacing:4px;font-size:18px;font-weight:700;text-align:center">
+        <button id="opt-pin-save" class="go-btn" style="background:var(--gold);color:var(--navy)">Guardar</button>
+      </div>
+      <div id="opt-pin-err" style="font-size:11px;color:var(--red);margin-top:6px;display:none"></div>
+    </div>
+  </div>`;
+  document.getElementById('opt-pin-btn').addEventListener('click',()=>{
+    document.getElementById('opt-pin-form').style.display='block';
+    document.getElementById('opt-pin-btn').style.display='none';
+    document.getElementById('opt-pin1').focus();
+  });
+  document.getElementById('opt-pin-dismiss').addEventListener('click',()=>{sec.style.display='none';});
+  document.getElementById('opt-pin-save').addEventListener('click',saveOptionalPin);
+  document.getElementById('opt-pin2').addEventListener('keydown',e=>{if(e.key==='Enter')saveOptionalPin();});
+}
+
+async function saveOptionalPin(){
+  const p1=document.getElementById('opt-pin1')?.value?.trim();
+  const p2=document.getElementById('opt-pin2')?.value?.trim();
+  const errEl=document.getElementById('opt-pin-err');
+  if(!p1||!/^\d{4}$/.test(p1)){if(errEl){errEl.textContent='❌ Usa exactamente 4 dígitos';errEl.style.display='block';}return;}
+  if(p1!==p2){if(errEl){errEl.textContent='❌ Las claves no coinciden';errEl.style.display='block';}return;}
+  myPin=p1;
+  sessionStorage.setItem('qm26e_pin',myPin);
+  const docId=docIdFromName(me);
+  const ex=parts.find(p=>p._id===docId||p.name?.toLowerCase()===me.toLowerCase());
+  const entry={name:me,pin:myPin,picks:ex?.picks||{},bonus:ex?.bonus||null,ts:ex?.ts||Date.now(),updatedAt:Date.now()};
+  if(db){
+    try{await db.collection(COLLECTION).doc(docId).set(entry,{merge:true});}
+    catch(e){console.warn('Could not save pin',e);}
+  }
+  const sec=document.getElementById('pin-section');
+  if(sec)sec.innerHTML=`<div style="background:#e7f8ee;border:1px solid #a7d7b8;border-radius:var(--radius);padding:.75rem 1.25rem;margin-bottom:1rem;font-size:12px;color:#176b3a;font-weight:600">
+    ✅ Clave activada — tus pronósticos ahora están protegidos 🔐</div>`;
+  setTimeout(()=>{if(sec)sec.style.display='none';},3000);
+  toast('✅ Clave creada — tus pronósticos están protegidos');
+}
+
+function activateForm(){
+  renderPhaseNav();
+  renderCurrentPhase();
+  renderBonus();
+}
+
+function toggleScoringLegend(){
+  const b=document.getElementById('scoring-body');
+  const c=document.getElementById('scoring-chev');
+  if(b)b.style.display=b.style.display==='none'?'block':'none';
+  if(c)c.style.transform=c.style.transform==='rotate(180deg)'?'':'rotate(180deg)';
+}
 
 // ── PHASE NAV ──
 function renderPhaseNav(){
   const tabs=document.getElementById('phase-tabs');if(!tabs)return;
   tabs.innerHTML=PHASES.map(ph=>{
     const isOpen=phaseActive[ph.id];
-    return `<button class="phase-tab${ph.id===currentPhase?' active':''}${!isOpen?' closed-phase':''}"
-      onclick="selectPhase('${ph.id}')">${ph.name}${!isOpen?' 🔒':''}</button>`;
+    return `<button class="phase-tab${ph.id===currentPhase?' active':''}${!isOpen?' closed-phase':''}" data-phase="${ph.id}">${ph.name}${!isOpen?' 🔒':''}</button>`;
   }).join('');
+  // Only one listener, remove old first
+  const newTabs=tabs.cloneNode(true);
+  tabs.parentNode.replaceChild(newTabs,tabs);
+  newTabs.addEventListener('click',e=>{const b=e.target.closest('[data-phase]');if(b)selectPhase(b.getAttribute('data-phase'));});
 }
 function selectPhase(id){currentPhase=id;renderPhaseNav();renderCurrentPhase();}
 
-// ── MATCHES RENDER ──
-function renderCurrentPhase(){
-  const sec=document.getElementById('matches-section');if(!sec)return;
-  const ph=PHASES.find(p=>p.id===currentPhase);if(!ph)return;
-  const matches=getMatches().filter(m=>m.phase===currentPhase);
-  const isOpen=phaseActive[currentPhase];
-
-  let html=`<div class="phase-header">
-    <div style="display:flex;align-items:center;gap:8px">
-      <span class="phase-badge" style="background:${ph.color}">${ph.full}</span>
-      <span class="phase-date">${ph.dates}</span>
-    </div>
-    <span style="font-size:10px;color:var(--muted)">${matches.length} partido${matches.length!==1?'s':''}</span>
-  </div>`;
-
-  if(!isOpen){
-    html+=`<div style="background:#fff3cd;border:1px solid #fde68a;border-radius:var(--radius-sm);padding:12px;font-size:12px;color:#92400e;font-weight:600;text-align:center;margin-bottom:.75rem">
-      🔒 Esta fase aún no está abierta para pronósticos</div>`;
-  }
-  matches.forEach(m=>{html+=buildMatchCard(m,isOpen,ph.color);});
-  sec.innerHTML=html;
-}
-
-function buildMatchCard(m, phaseOpen, phColor){
-  const locked=isMatchLocked(m);
-  const pending=isPending(m);
-  const res=realResults[m.id]||realResults[String(m.id)];
-  const myPart=parts.find(p=>me&&p.name?.toLowerCase()===me.toLowerCase());
-  const myPick=myPart?(myPart.picks||{})[String(m.id)]:null;
-  const hasPick=myPick&&myPick.gl!==''&&myPick.gv!=='';
-
-  // Determine who advanced (for display)
-  let advancedTeam='';
-  if(res&&res.final!==false){
-    const gl=parseInt(res.gl),gv=parseInt(res.gv);
-    if(gl>gv) advancedTeam=m.local;
-    else if(gv>gl) advancedTeam=m.visita;
-    else if(res.tieWinner==='local') advancedTeam=m.local+'*';
-    else if(res.tieWinner==='visita') advancedTeam=m.visita+'*';
-  }
-
-  let bodyHtml='';
-  let footerHtml='';
-  let statusHtml='';
-
-  if(res){
-    const isFinal=res.final!==false;
-    const sc=isFinal?'var(--green)':'var(--red)';
-    const lbl=isFinal?'FINAL':'EN VIVO';
-    const pts=hasPick?calcPoints(myPick.gl,myPick.gv,res.gl,res.gv):null;
-    bodyHtml=`<div class="match-body">
-      <div class="tname r"><span class="tflag">${m.lf}</span>${m.local}</div>
-      <span class="vs-d" style="font-size:11px;color:var(--muted)">–</span>
-      <span class="vs-d" style="font-size:11px;color:var(--muted)">–</span>
-      <span class="vs-d" style="font-size:11px;color:var(--muted)">–</span>
-      <div class="tname"><span class="tflag">${m.vf}</span>${m.visita}</div>
-    </div>`;
-    statusHtml=`<div class="status-result" style="background:${isFinal?'#f0faf4':'#fff0f3'}">
-      <span class="res-score-big" style="color:${sc}">${m.lf} ${res.gl} – ${res.gv} ${m.vf}</span>
-      <span class="res-badge" style="background:${sc}">${lbl}</span>
-      ${advancedTeam?`<span class="advanced-tag">↗ ${advancedTeam.replace('*','')}</span>`:''}
-      ${pts!==null?`<span class="pts-chip" style="${ptsStyle(pts)}">${pts} pts${(hasPick&&myPick.ganador&&res.tieWinner&&parseInt(myPick.gl)===parseInt(myPick.gv)&&myPick.ganador===res.tieWinner)?' (+25⚡)':'' }</span>`:''}
-    </div>`;
-  } else if(pending){
-    bodyHtml=`<div class="match-body">
-      <div class="tname r"><span class="tflag">${m.lf}</span>${m.local}</div>
-      <span class="vs-d">–</span><span class="vs-d"></span><span class="vs-d"></span>
-      <div class="tname"><span class="tflag">${m.vf}</span>${m.visita}</div>
-    </div>`;
-    statusHtml=`<div class="status-pending">⏳ Equipos por confirmar</div>`;
-  } else if(locked||!phaseOpen){
-    bodyHtml=`<div class="match-body">
-      <div class="tname r"><span class="tflag">${m.lf}</span>${m.local}</div>
-      <span class="vs-d">–</span><span class="vs-d"></span><span class="vs-d"></span>
-      <div class="tname"><span class="tflag">${m.vf}</span>${m.visita}</div>
-    </div>`;
-    statusHtml=`<div class="status-locked">🔒 ${locked?'Cerrado':'Fase no habilitada'}${hasPick?` · Tu pronóstico: ${myPick.gl}–${myPick.gv}`:' · Sin pronóstico'}</div>`;
-  } else {
-    const initGlEq = hasPick && myPick.gl!=='' && myPick.gv!=='' && myPick.gl===myPick.gv;
-    bodyHtml=`<div class="match-body">
-      <div class="tname r"><span class="tflag">${m.lf}</span>${m.local}</div>
-      <input class="score-box${hasPick&&myPick.gl!==''?' has-v':''}" type="number" id="gl-${m.id}" min="0" max="30" placeholder="–" inputmode="decimal" value="${myPick?.gl??''}" oninput="this.classList.toggle('has-v',this.value!=='');toggleGanador(${m.id})">
-      <span class="vs-d">–</span>
-      <input class="score-box${hasPick&&myPick.gv!==''?' has-v':''}" type="number" id="gv-${m.id}" min="0" max="30" placeholder="–" inputmode="decimal" value="${myPick?.gv??''}" oninput="this.classList.toggle('has-v',this.value!=='');toggleGanador(${m.id})">
-      <div class="tname"><span class="tflag">${m.vf}</span>${m.visita}</div>
-    </div>
-    <div id="gw-${m.id}" style="display:${initGlEq?'flex':'none'};align-items:center;gap:7px;padding:6px 12px;background:#fffbf0;border-top:1px dashed #fbbf24;flex-wrap:wrap">
-      <span style="font-size:11px;font-weight:700;color:#92400e">⚡ Empate → ¿Quién gana en ET/Pen?</span>
-      <select id="ganador-${m.id}" style="padding:5px 10px;border:1.5px solid var(--gold);border-radius:6px;font-size:12px;font-weight:700;font-family:inherit;background:#fff;color:var(--navy);cursor:pointer">
-        <option value="">— Sin pronóstico (+0) —</option>
-        <option value="local" ${myPick?.ganador==='local'?' selected':''}>🏠 ${m.local} gana (+25)</option>
-        <option value="visita" ${myPick?.ganador==='visita'?' selected':''}>✈️ ${m.visita} gana (+25)</option>
-      </select>
-    </div>`;
-    footerHtml=`<div class="match-footer">
-      ${hasPick?`<span class="my-pick-badge">✅ ${myPick.gl} – ${myPick.gv}</span>`:`<span style="font-size:11px;color:var(--muted)">Sin pronóstico</span>`}
-      ${me?`<button class="spbtn" id="spbtn-${m.id}" onclick="savePick(${m.id})">Guardar</button>`:`<span style="font-size:11px;color:var(--muted)">Ingresa tu nombre</span>`}
-    </div>`;
-  }
-
-  return `<div class="match-card">
-    <div class="match-top" style="background:${phColor}">
-      <span class="match-lbl">M${m.num} · ${m.date} · ${m.time} GT</span>
-      <span class="match-tv">${m.tv}</span>
-    </div>
-    ${bodyHtml}${statusHtml}${footerHtml}
-  </div>`;
-}
-
-function ptsStyle(pts){
-  if(pts===50)return 'background:#dcfce7;color:#166534';
-  if(pts===30)return 'background:#dbeafe;color:#1e40af';
-  if(pts===20)return 'background:#fef9c3;color:#854d0e';
-  if(pts===10)return 'background:#fce7f3;color:#9d174d';
-  return 'background:#f1f5f9;color:#94a3b8';
-}
-
-async function toggleGanador(matchId){
-  const gl=document.getElementById('gl-'+matchId)?.value;
-  const gv=document.getElementById('gv-'+matchId)?.value;
-  const wrap=document.getElementById('gw-'+matchId);
-  if(wrap) wrap.style.display=(gl!==''&&gv!==''&&gl===gv)?'flex':'none';
-}
-async function savePick(matchId){
-  if(!me)return toast('Ingresa tu nombre primero');
-  const gl=document.getElementById('gl-'+matchId)?.value??'';
-  const gv=document.getElementById('gv-'+matchId)?.value??'';
-  if(gl===''||gv==='')return toast('Ingresa ambos goles');
-  const btn=document.getElementById('spbtn-'+matchId);
-  if(btn){btn.textContent='...';btn.disabled=true;}
-  const docId=docIdFromName(me);
-  const ex=parts.find(p=>p._id===docId||p.name?.toLowerCase()===me.toLowerCase());
-  const ganadorEl=document.getElementById('ganador-'+matchId);
-  const ganador=ganadorEl?.value||null;
-  const picks={...(ex?.picks||{}),[String(matchId)]:{gl,gv,...(ganador?{ganador}:{}),ts:Date.now()}};
-  const entry={name:me,picks,bonus:ex?.bonus||null,ts:ex?.ts||Date.now(),updatedAt:Date.now()};
-  if(!db){
-    const i=parts.findIndex(p=>p.name?.toLowerCase()===me.toLowerCase());
-    if(i>=0)parts[i]={...parts[i],...entry};else parts.push({_id:docId,...entry});
-    syncBadges();renderCurrentPhase();
-    if(btn){btn.textContent='✅';btn.classList.add('saved');setTimeout(()=>{btn.textContent='Guardar';btn.disabled=false;btn.classList.remove('saved');},2000);}
-    toast(`✅ ${gl} – ${gv} guardado`);return;
-  }
-  try{
-    await db.collection(COLLECTION).doc(docId).set(entry,{merge:true});
-    toast(`✅ ${gl} – ${gv} guardado`);
-    if(btn){btn.textContent='✅';btn.classList.add('saved');setTimeout(()=>{btn.textContent='Guardar';btn.disabled=false;btn.classList.remove('saved');},2000);}
-  }catch(e){console.error(e);if(btn){btn.textContent='Error';btn.disabled=false;}toast('No se pudo guardar');}
-}
-
-// ── BONUS ──
-function renderBonus(){
-  const sec=document.getElementById('bonus-section');if(!sec)return;
-  const locked=isBonusLocked();
-  const myPart=parts.find(p=>me&&p.name?.toLowerCase()===me.toLowerCase());
-  const myBonus=myPart?.bonus?.team||'';
-  const firstMatch=getMatches().filter(m=>m.phase==='32').sort((a,b)=>{
-    const da=DATE_MAP[a.date],db2=DATE_MAP[b.date];
-    if(da-db2!==0)return da-db2;
-    const ta=a.time.split(':').map(Number),tb=b.time.split(':').map(Number);
-    return(ta[0]*60+ta[1])-(tb[0]*60+tb[1]);
-  })[0];
-
-  if(bonusResult?.team){
-    const isOk=myBonus===bonusResult.team;
-    sec.innerHTML=`<div class="bonus-card"><div class="bonus-head">
-      <span class="bonus-title">🏆 Campeón del Mundial</span>
-      <span class="bonus-pts-badge">100 pts</span></div>
-      <div class="bonus-body">
-        <div class="bonus-winner-box">
-          <div class="bonus-winner-label">🏆 Campeón confirmado</div>
-          <div class="bonus-winner-team">${bonusResult.team}</div>
-        </div>
-        <div class="bonus-confirmed" style="background:${isOk?'rgba(39,174,96,.15)':'rgba(233,69,96,.1)'};border-color:${isOk?'rgba(39,174,96,.4)':'rgba(233,69,96,.3)'};color:${isOk?'#86efac':'#f87171'}">
-          ${isOk?'🎉 ¡Acertaste el campeón! +100 pts':myBonus?`Tu pronóstico: ${myBonus} · 0 pts`:'No ingresaste pronóstico · 0 pts'}
-        </div>
-      </div></div>`;
-    return;
-  }
-
-  const teams=[...new Set([...BONUS_TEAMS_BASE,...(teamOverrides?Object.values(teamOverrides).flatMap(o=>[o.local,o.visita]).filter(Boolean):[])])].filter(t=>t&&t!=='Por definir'&&!t.startsWith('Por confirm')).sort();
-
-  sec.innerHTML=`<div class="bonus-card"><div class="bonus-head">
-    <span class="bonus-title">🏆 ¿Quién será Campeón?</span>
-    <span class="bonus-pts-badge">100 pts</span></div>
-    <div class="bonus-body">
-      <p class="bonus-desc">Pronostica el campeón del Mundial 2026. Solo tienes hasta antes del primer partido de 16avos.</p>
-      <div class="bonus-lock-info">🔒 Cierra: ${firstMatch?firstMatch.date+' '+firstMatch.time+' GT — antes de '+firstMatch.lf+' '+firstMatch.local+' vs '+firstMatch.visita:'28 jun 13:00 GT'}</div>
-      ${locked
-        ?(myBonus?`<div class="bonus-confirmed">🔒 Tu pronóstico guardado: <strong>${myBonus}</strong></div>`:`<div class="bonus-confirmed" style="opacity:.6">🔒 Cerrado — no ingresaste pronóstico</div>`)
-        :(me
-          ?`<select class="bonus-select" id="bonus-sel"><option value="">— Selecciona un equipo —</option>${teams.map(t=>`<option value="${t}"${t===myBonus?' selected':''}>${t}</option>`).join('')}</select>
-            <button class="bonus-save-btn" onclick="saveBonus()">💾 Guardar mi pronóstico de campeón</button>
-            ${myBonus?`<div style="margin-top:.5rem;font-size:11px;color:rgba(255,255,255,.45);text-align:center">Pronóstico actual: <strong style="color:var(--gold)">${myBonus}</strong></div>`:''}`
-          :`<div class="bonus-confirmed" style="opacity:.6">Ingresa tu nombre arriba para participar</div>`)}
-    </div></div>`;
-}
-
-async function saveBonus(){
-  if(!me)return toast('Ingresa tu nombre primero');
-  const sel=document.getElementById('bonus-sel');
-  if(!sel?.value)return toast('Selecciona un equipo');
-  const team=sel.value;
-  const docId=docIdFromName(me);
-  const ex=parts.find(p=>p._id===docId||p.name?.toLowerCase()===me.toLowerCase());
-  const entry={name:me,bonus:{team,ts:Date.now()},picks:ex?.picks||{},ts:ex?.ts||Date.now(),updatedAt:Date.now()};
-  if(!db){const i=parts.findIndex(p=>p.name?.toLowerCase()===me.toLowerCase());if(i>=0)parts[i]={...parts[i],...entry};else parts.push({_id:docId,...entry});syncBadges();toast(`🏆 ${team} guardado!`);renderBonus();return;}
-  try{
-    await db.collection(COLLECTION).doc(docId).set(entry,{merge:true});
-    toast(`🏆 ¡${team} guardado como tu campeón!`);renderBonus();
-  }catch(e){console.error(e);toast('Error al guardar');}
-}
-
 // ── SCORING ──
-// Base 90-min score: 50 / 30 / 20 / 10 / 0
 function calcPoints(myGl,myGv,realGl,realGv){
   const ml=parseInt(myGl),mv=parseInt(myGv),rl=parseInt(realGl),rv=parseInt(realGv);
   if(isNaN(ml)||isNaN(mv)||isNaN(rl)||isNaN(rv))return null;
   const eL=ml===rl,eV=mv===rv;
-  const myW=ml>mv?'L':ml<mv?'V':'E',rW=rl>rv?'L':rl<rv?'V':'E',wOk=myW===rW;
+  const mW=ml>mv?'L':ml<mv?'V':'E',rW=rl>rv?'L':rl<rv?'V':'E',wOk=mW===rW;
   if(eL&&eV)return 50;if(wOk&&(eL||eV))return 30;if(wOk)return 20;if(eL||eV)return 10;return 0;
 }
-// Knockout bonus: +25 if user predicted a draw AND correct ET/penalty winner
-// Condition: user entered equal scores + selected ganador + ganador matches tieWinner
+
+// Penalty bonus:
+//  +25 = predicted draw + EXACT penalty score (e.g. 4-2, result 4-2)
+//  +15 = predicted draw + correct penalty WINNER (e.g. 3-2 Arg, result 4-3 Arg)
+//   +0 = predicted draw + wrong winner, or no penalty prediction
 function calcMatchPoints(pick,res){
   if(!pick||!res)return null;
   const base=calcPoints(pick.gl,pick.gv,res.gl,res.gv);
   if(base===null)return null;
-  let bonus=0;
   const myGl=parseInt(pick.gl),myGv=parseInt(pick.gv);
-  if(res.tieWinner && pick.ganador && myGl===myGv && pick.ganador===res.tieWinner) bonus=25;
-  return base+bonus;
+  if(myGl!==myGv||isNaN(myGl))return base;        // user did not predict draw
+  const rPL=parseInt(res.penLocal),rPV=parseInt(res.penVisita);
+  const hasPenRes=!isNaN(rPL)&&!isNaN(rPV);
+  if(!hasPenRes&&!res.tieWinner)return base;        // match did not go to penalties
+  const myPL=parseInt(pick.penLocal),myPV=parseInt(pick.penVisita);
+  if(isNaN(myPL)||isNaN(myPV)||pick.penLocal===undefined)return base; // no pen pick
+  if(hasPenRes){
+    if(myPL===rPL&&myPV===rPV)return base+25;      // exact penalty score
+    const myW=myPL>myPV?'L':'V',rW=rPL>rPV?'L':'V';
+    return base+(myW===rW?15:0);
+  }
+  const myW2=myPL>myPV?'local':'visita';            // fallback tieWinner
+  return base+(myW2===res.tieWinner?15:0);
 }
+
 function calcTotalPoints(p){
   let t=0;
   for(const[mid,res]of Object.entries(realResults)){
@@ -797,34 +759,309 @@ function calcTotalPoints(p){
   return t;
 }
 function countPicks(p){return Object.values(p.picks||{}).filter(pk=>pk.gl!==''&&pk.gv!=='').length;}
+function ptsStyle(pts){
+  if(pts>=70)return'background:#dcfce7;color:#166534';
+  if(pts>=50)return'background:#dcfce7;color:#166534';
+  if(pts>=30)return'background:#dbeafe;color:#1e40af';
+  if(pts>=20)return'background:#fef9c3;color:#854d0e';
+  if(pts>=10)return'background:#fce7f3;color:#9d174d';
+  return'background:#f1f5f9;color:#94a3b8';
+}
+
+// ── MATCH CARD ──
+function buildMatchCard(m,phaseOpen,phColor){
+  const locked=isMatchLocked(m);
+  const pending=isPending(m);
+  const res=realResults[m.id]||realResults[String(m.id)];
+  const myPart=parts.find(p=>me&&p.name?.toLowerCase()===me.toLowerCase());
+  const myPick=myPart?(myPart.picks||{})[String(m.id)]:null;
+  const hasPick=myPick&&myPick.gl!==''&&myPick.gv!=='';
+  const hasPenPick=hasPick&&myPick.penLocal!==undefined;
+
+  let penScoreDisplay='',advancedTeam='';
+  if(res&&res.final!==false){
+    if(!isNaN(parseInt(res.penLocal)))penScoreDisplay=` (pen:${res.penLocal}–${res.penVisita})`;
+    const gl=parseInt(res.gl),gv=parseInt(res.gv);
+    if(gl>gv)advancedTeam=m.local;
+    else if(gv>gl)advancedTeam=m.visita;
+    else if(!isNaN(parseInt(res.penLocal)))advancedTeam=(parseInt(res.penLocal)>parseInt(res.penVisita)?m.local:m.visita)+' (pen)';
+    else if(res.tieWinner)advancedTeam=(res.tieWinner==='local'?m.local:m.visita)+' (pen)';
+  }
+
+  let bodyHtml='',footerHtml='',statusHtml='';
+
+  if(res){
+    const isFinal=res.final!==false;
+    const sc=isFinal?'var(--green)':'var(--red)';
+    const pts=hasPick?calcMatchPoints(myPick,res):null;
+    const basePts=hasPick?calcPoints(myPick.gl,myPick.gv,res.gl,res.gv):null;
+    const bonusPts=(pts!==null&&basePts!==null&&pts>basePts)?pts-basePts:0;
+    bodyHtml=`<div class="match-body">
+      <div class="tname r"><span class="tflag">${m.lf}</span>${m.local}</div>
+      <span class="vs-d" style="color:var(--muted);font-size:11px">–</span><span></span><span></span>
+      <div class="tname"><span class="tflag">${m.vf}</span>${m.visita}</div>
+    </div>`;
+    statusHtml=`<div class="status-result" style="background:${isFinal?'#f0faf4':'#fff0f3'}">
+      <span class="res-score-big" style="color:${sc}">${m.lf} ${res.gl}–${res.gv}${penScoreDisplay} ${m.vf}</span>
+      <span class="res-badge" style="background:${sc}">${isFinal?'FINAL':'EN VIVO'}</span>
+      ${advancedTeam?`<span style="font-size:10px;font-weight:700;background:var(--navy3);color:#fff;border-radius:99px;padding:2px 8px">↗ ${advancedTeam}</span>`:''}
+      ${pts!==null?`<span class="pts-chip" style="${ptsStyle(pts)}">${pts}pts${bonusPts>0?` (+${bonusPts}⚡)`:''}${hasPenPick?` · pen:${myPick.penLocal}–${myPick.penVisita}`:''}</span>`:''}
+    </div>`;
+  } else if(pending){
+    bodyHtml=`<div class="match-body">
+      <div class="tname r"><span class="tflag">${m.lf}</span>${m.local}</div>
+      <span class="vs-d">–</span><span></span><span></span>
+      <div class="tname"><span class="tflag">${m.vf}</span>${m.visita}</div>
+    </div>`;
+    statusHtml=`<div class="status-pending">⏳ Equipos por confirmar — el admin los actualizará pronto</div>`;
+  } else if(locked||!phaseOpen){
+    bodyHtml=`<div class="match-body">
+      <div class="tname r"><span class="tflag">${m.lf}</span>${m.local}</div>
+      <span class="vs-d">–</span><span></span><span></span>
+      <div class="tname"><span class="tflag">${m.vf}</span>${m.visita}</div>
+    </div>`;
+    const lkMsg=locked
+      ?`🔒 Cerrado${hasPick?` · Tu pronóstico: ${myPick.gl}–${myPick.gv}${hasPenPick?` pen:${myPick.penLocal}–${myPick.penVisita}`:''}`:' · Sin pronóstico'}`
+      :'🔒 Fase no habilitada';
+    statusHtml=`<div class="status-locked">${lkMsg}</div>`;
+  } else if(!pinVerified){
+    bodyHtml=`<div class="match-body">
+      <div class="tname r"><span class="tflag">${m.lf}</span>${m.local}</div>
+      <span class="vs-d">–</span><span></span><span></span>
+      <div class="tname"><span class="tflag">${m.vf}</span>${m.visita}</div>
+    </div>`;
+    statusHtml=`<div class="status-pending">🔐 Ingresa tu nombre y clave para pronosticar</div>`;
+  } else {
+    const initGlEq=hasPick&&myPick.gl!==''&&myPick.gv!==''&&myPick.gl===myPick.gv;
+    bodyHtml=`<div class="match-body">
+      <div class="tname r"><span class="tflag">${m.lf}</span>${m.local}</div>
+      <input class="score-box${hasPick&&myPick.gl!==''?' has-v':''}" type="number" id="gl-${m.id}" min="0" max="30" placeholder="–" inputmode="decimal" value="${myPick?.gl??''}" oninput="this.classList.toggle('has-v',this.value!=='');togglePenRow(${m.id})">
+      <span class="vs-d">–</span>
+      <input class="score-box${hasPick&&myPick.gv!==''?' has-v':''}" type="number" id="gv-${m.id}" min="0" max="30" placeholder="–" inputmode="decimal" value="${myPick?.gv??''}" oninput="this.classList.toggle('has-v',this.value!=='');togglePenRow(${m.id})">
+      <div class="tname"><span class="tflag">${m.vf}</span>${m.visita}</div>
+    </div>
+    <div id="gw-${m.id}" style="display:${initGlEq?'flex':'none'};align-items:center;gap:6px;padding:8px 12px;background:#fffbf0;border-top:1px dashed #fbbf24;flex-wrap:wrap">
+      <span style="font-size:11px;font-weight:700;color:#92400e">⚡ Penales:</span>
+      <span style="font-size:13px">${m.lf}</span>
+      <input type="number" id="penl-${m.id}" min="0" max="10" placeholder="0" inputmode="decimal" value="${myPick?.penLocal??''}" style="width:38px;height:34px;border:1.5px solid var(--gold);border-radius:6px;font-size:16px;font-weight:700;text-align:center;background:#fff;color:var(--navy);font-family:inherit;-moz-appearance:textfield;appearance:textfield">
+      <span style="font-size:14px;font-weight:700;color:#d97706">–</span>
+      <input type="number" id="penv-${m.id}" min="0" max="10" placeholder="0" inputmode="decimal" value="${myPick?.penVisita??''}" style="width:38px;height:34px;border:1.5px solid var(--gold);border-radius:6px;font-size:16px;font-weight:700;text-align:center;background:#fff;color:var(--navy);font-family:inherit;-moz-appearance:textfield;appearance:textfield">
+      <span style="font-size:13px">${m.vf}</span>
+      <span style="font-size:10px;color:var(--gold);font-weight:600">· +15 ganador / +25 exacto</span>
+    </div>`;
+    footerHtml=`<div class="match-footer">
+      ${hasPick?`<span class="my-pick-badge">✅ ${myPick.gl}–${myPick.gv}${hasPenPick?` pen:${myPick.penLocal}–${myPick.penVisita}`:''}</span>`:`<span style="font-size:11px;color:var(--muted)">Sin pronóstico aún</span>`}
+      <button class="spbtn" data-mid="${m.id}">Guardar</button>
+    </div>`;
+  }
+
+  return `<div class="match-card">
+    <div class="match-top" style="background:${phColor}">
+      <span class="match-lbl">M${m.num} · ${m.date} · ${m.time} GT</span>
+      <span class="match-tv">${m.tv}</span>
+    </div>
+    ${bodyHtml}${statusHtml}${footerHtml}
+  </div>`;
+}
+
+function togglePenRow(matchId){
+  const gl=document.getElementById('gl-'+matchId)?.value;
+  const gv=document.getElementById('gv-'+matchId)?.value;
+  const wrap=document.getElementById('gw-'+matchId);
+  if(wrap)wrap.style.display=(gl!==''&&gv!==''&&gl===gv)?'flex':'none';
+}
+
+// ── PHASE SECTION ──
+function renderCurrentPhase(){
+  const sec=document.getElementById('matches-section');if(!sec)return;
+  const ph=PHASES.find(p=>p.id===currentPhase);if(!ph)return;
+  const matches=getMatches().filter(m=>m.phase===currentPhase);
+  const isOpen=phaseActive[currentPhase];
+  let html=`<div class="phase-header">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="phase-badge" style="background:${ph.color}">${ph.full}</span>
+      <span class="phase-date">${ph.dates}</span>
+    </div>
+    <span style="font-size:10px;color:var(--muted)">${matches.length} partido${matches.length!==1?'s':''}</span>
+  </div>`;
+  if(!isOpen)html+=`<div style="background:#fff3cd;border:1px solid #fde68a;border-radius:var(--radius-sm);padding:12px;font-size:12px;color:#92400e;font-weight:600;text-align:center;margin-bottom:.75rem">🔒 Esta fase aún no está abierta</div>`;
+  matches.forEach(m=>{html+=buildMatchCard(m,isOpen,ph.color);});
+  sec.innerHTML=html;
+  sec.querySelectorAll('button[data-mid]').forEach(btn=>{
+    btn.addEventListener('click',()=>savePick(parseInt(btn.getAttribute('data-mid'))));
+  });
+}
+
+// ── SAVE PICK ──
+async function savePick(matchId){
+  if(!me||!pinVerified)return toast('🔐 Ingresa tu nombre y clave primero');
+  const gl=document.getElementById('gl-'+matchId)?.value??'';
+  const gv=document.getElementById('gv-'+matchId)?.value??'';
+  if(gl===''||gv==='')return toast('Ingresa ambos goles');
+  const penL=document.getElementById('penl-'+matchId)?.value??'';
+  const penV=document.getElementById('penv-'+matchId)?.value??'';
+  const penData=(penL!==''&&penV!=='')?{penLocal:penL,penVisita:penV}:{};
+  const btn=document.querySelector(`button[data-mid="${matchId}"]`);
+  if(btn){btn.textContent='...';btn.disabled=true;}
+  const docId=docIdFromName(me);
+  const ex=parts.find(p=>p._id===docId||p.name?.toLowerCase()===me.toLowerCase());
+  // Verify PIN matches stored PIN
+  if(ex?.pin&&ex.pin!==myPin){
+    if(btn){btn.textContent='Guardar';btn.disabled=false;}
+    return toast('❌ Clave incorrecta — acceso denegado');
+  }
+  const picks={...(ex?.picks||{}),[String(matchId)]:{gl,gv,...penData,ts:Date.now()}};
+  const entry={name:me,pin:myPin,picks,bonus:ex?.bonus||null,ts:ex?.ts||Date.now(),updatedAt:Date.now()};
+  if(!db){
+    const i=parts.findIndex(p=>p.name?.toLowerCase()===me.toLowerCase());
+    if(i>=0)parts[i]={...parts[i],...entry};else parts.push({_id:docId,...entry});
+    syncBadges();renderCurrentPhase();
+    if(btn){btn.textContent='✅';btn.classList.add('saved');setTimeout(()=>{btn.textContent='Guardar';btn.disabled=false;btn.classList.remove('saved');},2000);}
+    toast(`✅ Guardado`);return;
+  }
+  try{
+    await db.collection(COLLECTION).doc(docId).set(entry,{merge:true});
+    toast(`✅ ${gl}–${gv}${penL?' pen:'+penL+'–'+penV:''} guardado`);
+    if(btn){btn.textContent='✅';btn.classList.add('saved');setTimeout(()=>{btn.textContent='Guardar';btn.disabled=false;btn.classList.remove('saved');},2000);}
+  }catch(e){console.error(e);if(btn){btn.textContent='Error';btn.disabled=false;}toast('No se pudo guardar');}
+}
+
+// ── BONUS ──
+function renderBonus(){
+  const sec=document.getElementById('bonus-section');if(!sec)return;
+  const locked=isBonusLocked();
+  const myPart=parts.find(p=>me&&p.name?.toLowerCase()===me.toLowerCase());
+  const myBonus=myPart?.bonus?.team||'';
+  const firstMatch=getMatches().filter(m=>m.phase==='32').sort((a,b)=>{
+    const da=DATE_MAP[a.date]||0,db2=DATE_MAP[b.date]||0;
+    if(da-db2!==0)return da-db2;
+    const ta=a.time.split(':').map(Number),tb=b.time.split(':').map(Number);
+    return(ta[0]*60+ta[1])-(tb[0]*60+tb[1]);
+  })[0];
+  const knownTeams=[...new Set([...BONUS_TEAMS_BASE,...Object.values(teamOverrides).flatMap(o=>[o.local,o.visita]).filter(Boolean)])].filter(t=>t&&t!=='Por definir').sort();
+
+  if(bonusResult?.team){
+    const isOk=myBonus===bonusResult.team;
+    sec.innerHTML=`<div class="bonus-card"><div class="bonus-head"><span class="bonus-title">🏆 Campeón del Mundial</span><span class="bonus-pts-badge">100 pts</span></div>
+      <div class="bonus-body"><div class="bonus-winner-box"><div class="bonus-winner-label">🏆 Campeón confirmado</div><div class="bonus-winner-team">${bonusResult.team}</div></div>
+        <div class="bonus-confirmed" style="background:${isOk?'rgba(39,174,96,.15)':'rgba(233,69,96,.1)'};border-color:${isOk?'rgba(39,174,96,.4)':'rgba(233,69,96,.3)'};color:${isOk?'#86efac':'#f87171'}">
+          ${isOk?'🎉 ¡Acertaste el campeón! +100 pts':myBonus?`Tu pronóstico: ${myBonus} · 0 pts`:'No ingresaste pronóstico · 0 pts'}
+        </div></div></div>`;
+    return;
+  }
+  sec.innerHTML=`<div class="bonus-card"><div class="bonus-head"><span class="bonus-title">🏆 ¿Quién será Campeón?</span><span class="bonus-pts-badge">100 pts</span></div>
+    <div class="bonus-body">
+      <p class="bonus-desc">Elige el campeón del Mundial 2026. Cierra antes del primer partido de 16avos.</p>
+      <div class="bonus-lock-info">🔒 Cierra: ${firstMatch?firstMatch.date+' '+firstMatch.time+' GT':'28 jun 13:00 GT'}</div>
+      ${!pinVerified
+        ?`<div class="bonus-confirmed" style="opacity:.6">🔐 Ingresa tu nombre y clave para participar</div>`
+        :locked
+          ?(myBonus?`<div class="bonus-confirmed">🔒 Tu pronóstico: <strong>${myBonus}</strong></div>`:`<div class="bonus-confirmed" style="opacity:.6">🔒 Cerrado — no ingresaste pronóstico</div>`)
+          :`<select class="bonus-select" id="bonus-sel"><option value="">— Selecciona un equipo —</option>${knownTeams.map(t=>`<option value="${t}"${t===myBonus?' selected':''}>${t}</option>`).join('')}</select>
+            <button class="bonus-save-btn" id="bonus-save-btn">💾 Guardar mi pronóstico de campeón</button>
+            ${myBonus?`<div style="margin-top:.5rem;font-size:11px;color:rgba(255,255,255,.45);text-align:center">Actual: <strong style="color:var(--gold)">${myBonus}</strong></div>`:''}`
+      }
+    </div></div>`;
+  const sb=document.getElementById('bonus-save-btn');
+  if(sb)sb.addEventListener('click',saveBonus);
+}
+
+async function saveBonus(){
+  if(!me||!pinVerified)return toast('🔐 Ingresa tu nombre y clave primero');
+  const sel=document.getElementById('bonus-sel');
+  if(!sel?.value)return toast('Selecciona un equipo');
+  const team=sel.value;
+  const docId=docIdFromName(me);
+  const ex=parts.find(p=>p._id===docId||p.name?.toLowerCase()===me.toLowerCase());
+  if(ex?.pin&&ex.pin!==myPin)return toast('❌ Clave incorrecta');
+  const entry={name:me,pin:myPin,bonus:{team,ts:Date.now()},picks:ex?.picks||{},ts:ex?.ts||Date.now(),updatedAt:Date.now()};
+  if(!db){const i=parts.findIndex(p=>p.name?.toLowerCase()===me.toLowerCase());if(i>=0)parts[i]={...parts[i],...entry};else parts.push({_id:docId,...entry});syncBadges();toast(`🏆 ${team}!`);renderBonus();return;}
+  try{await db.collection(COLLECTION).doc(docId).set(entry,{merge:true});toast(`🏆 ¡${team} guardado!`);renderBonus();}
+  catch(e){console.error(e);toast('Error');}
+}
+
+// ── RANKING ──
+function buildRanking(){
+  const el=document.getElementById('ranking-list');if(!el)return;
+  if(!parts.length){el.innerHTML=`<div class="empty-state"><span class="empty-icon">📋</span><p>Aún no hay pronósticos.</p></div>`;return;}
+  const hasRes=Object.values(realResults).some(r=>r.final!==false);
+  const sorted=[...parts].map(p=>({...p,pts:calcTotalPoints(p),picked:countPicks(p)}))
+    .sort((a,b)=>hasRes?(b.pts-a.pts||b.picked-a.picked):(b.picked-a.picked||a.name.localeCompare(b.name)));
+  const medals=['🥇','🥈','🥉'];
+  const note=hasRes
+    ?`<div class="rank-note live">⚽ Clasificación en vivo · ${Object.values(realResults).filter(r=>r.final!==false).length} resultados confirmados</div>`
+    :`<div class="rank-note">📋 Los puntos aparecen cuando se ingresen resultados</div>`;
+  el.innerHTML=note+sorted.map((p,i)=>{
+    const av=AV_COLORS[i%AV_COLORS.length];
+    const ini=p.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+    const pct=Math.min(100,Math.round(p.picked/33*100));
+    const rows=Object.entries(p.picks||{}).map(([mid,pk])=>{
+      const m=getMatches().find(x=>x.id===parseInt(mid));if(!m)return'';
+      const has=pk.gl!==''&&pk.gv!=='';
+      const res2=realResults[mid];
+      const pts2=(has&&res2&&res2.final!==false)?calcMatchPoints(pk,res2):null;
+      const penStr=(has&&pk.penLocal!==undefined)?` pen:${pk.penLocal}–${pk.penVisita}`:'';
+      return `<div class="pick-row"><span class="pick-game">${m.lf} ${m.local} vs ${m.visita} ${m.vf}</span>
+        <div style="display:flex;align-items:center;gap:5px">
+          ${pts2!==null?`<span style="font-size:9px;font-weight:700;color:${pts2>=50?'var(--green)':pts2>=20?'var(--navy3)':'var(--muted)'}">${pts2>0?'+':''}${pts2}</span>`:''}
+          <span class="pick-sc${has?'':' empty'}">${has?pk.gl+'–'+pk.gv+penStr:'–'}</span>
+        </div></div>`;
+    }).join('')+(p.bonus?.team?`<div class="pick-row"><span class="pick-game">🏆 Campeón: ${p.bonus.team}</span>
+      <span class="pick-sc" style="background:#fef9c3;color:#854d0e">${bonusResult?.team?bonusResult.team===p.bonus.team?'✅ 100':'0':' ...'}</span></div>`:'');
+    return `<div class="rank-card">
+      <div class="rank-head" data-rank="${i}">
+        <div class="rank-left">
+          <div style="font-size:19px;width:26px;text-align:center">${medals[i]||'#'+(i+1)}</div>
+          <div class="avatar" style="background:${av.bg};color:${av.c}">${ini}</div>
+          <div><div class="rank-name">${p.name}</div>
+            <div class="rank-sub">${hasRes?p.pts+' pts · ':''}${p.picked}/32 · ${p.bonus?.team||'sin campeón'} 🔐</div>
+          </div>
+        </div>
+        <div class="rank-right">
+          ${hasRes?`<div style="text-align:right"><div class="rank-pts-badge">${p.pts}</div><div class="rank-pts-label">puntos</div></div>`:''}
+          <span class="chev" id="ch-r${i}">▼</span>
+        </div>
+      </div>
+      <div class="prog-mini"><div class="prog-bar-bg"><div class="prog-bar-fill" style="width:${pct}%"></div></div></div>
+      <div class="rank-body" id="rb-r${i}">${rows}</div>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('[data-rank]').forEach(h=>{
+    h.addEventListener('click',()=>{
+      const i=h.getAttribute('data-rank');
+      document.getElementById('rb-r'+i)?.classList.toggle('open');
+      document.getElementById('ch-r'+i)?.classList.toggle('open');
+    });
+  });
+}
 
 // ── BRACKET AUTO-PROGRESSION ──
-// Cuando se guarda un resultado final, actualiza automáticamente el siguiente partido
 async function propagateBracket(results){
-  const newOv={...teamOverrides};
-  let changed=false;
+  const newOv={...teamOverrides};let changed=false;
   for(const[midStr,res]of Object.entries(results)){
     if(res.final!==true)continue;
     const mid=parseInt(midStr);
-    const m=getMatches().find(x=>x.id===mid);
-    if(!m)continue;
-    const branch=BRACKET[mid];
-    if(!branch)continue;
+    const m=getMatches().find(x=>x.id===mid);if(!m)continue;
+    const branch=BRACKET[mid];if(!branch)continue;
     const gl=parseInt(res.gl),gv=parseInt(res.gv);
     let winTeam,winFlag,loseTeam,loseFlag;
     if(gl>gv){winTeam=m.local;winFlag=m.lf;loseTeam=m.visita;loseFlag=m.vf;}
     else if(gv>gl){winTeam=m.visita;winFlag=m.vf;loseTeam=m.local;loseFlag=m.lf;}
-    else if(res.tieWinner==='local'){winTeam=m.local;winFlag=m.lf;loseTeam=m.visita;loseFlag=m.vf;}
-    else if(res.tieWinner==='visita'){winTeam=m.visita;winFlag=m.vf;loseTeam=m.local;loseFlag=m.lf;}
-    else continue; // empate sin ganador definido
+    else{
+      const pL=parseInt(res.penLocal),pV=parseInt(res.penVisita);
+      if(!isNaN(pL)&&!isNaN(pV)){
+        if(pL>pV){winTeam=m.local;winFlag=m.lf;loseTeam=m.visita;loseFlag=m.vf;}
+        else{winTeam=m.visita;winFlag=m.vf;loseTeam=m.local;loseFlag=m.lf;}
+      }else if(res.tieWinner==='local'){winTeam=m.local;winFlag=m.lf;loseTeam=m.visita;loseFlag=m.vf;}
+      else if(res.tieWinner==='visita'){winTeam=m.visita;winFlag=m.vf;loseTeam=m.local;loseFlag=m.lf;}
+      else continue;
+    }
     if(!winTeam)continue;
-    // Avanzar ganador
     const{id:nid,pos}=branch.winner;
     if(!newOv[nid])newOv[nid]={};
     if(pos==='local'){newOv[nid].local=winTeam;newOv[nid].lf=winFlag;}
     else{newOv[nid].visita=winTeam;newOv[nid].vf=winFlag;}
     changed=true;
-    // Avanzar perdedor (solo semifinales)
     if(branch.loser&&loseTeam){
       const{id:lid,pos:lp}=branch.loser;
       if(!newOv[lid])newOv[lid]={};
@@ -838,54 +1075,6 @@ async function propagateBracket(results){
   }
 }
 
-// ── RANKING ──
-function buildRanking(){
-  const el=document.getElementById('ranking-list');
-  if(!parts.length){el.innerHTML=`<div class="empty-state"><span class="empty-icon">📋</span><p>Aún no hay pronósticos.</p></div>`;return;}
-  const hasRes=Object.values(realResults).some(r=>r.final!==false);
-  const sorted=[...parts].map(p=>({...p,pts:calcTotalPoints(p),picked:countPicks(p)}))
-    .sort((a,b)=>hasRes?(b.pts-a.pts||b.picked-a.picked):(b.picked-a.picked||a.name.localeCompare(b.name)));
-  const medals=['🥇','🥈','🥉'];
-  const note=hasRes
-    ?`<div class="rank-note live">⚽ Clasificación en vivo · ${Object.values(realResults).filter(r=>r.final!==false).length} partidos confirmados</div>`
-    :`<div class="rank-note">📋 Los puntos aparecen cuando el admin ingrese resultados</div>`;
-  el.innerHTML=note+sorted.map((p,i)=>{
-    const av=AV_COLORS[i%AV_COLORS.length];
-    const ini=p.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-    const pct=Math.min(100,Math.round(p.picked/33*100));
-    const rows=Object.entries(p.picks||{}).map(([mid,pk])=>{
-      const m=getMatches().find(x=>x.id===parseInt(mid));if(!m)return'';
-      const has=pk.gl!==''&&pk.gv!=='';
-      const res=realResults[mid];
-      const pts=(has&&res&&res.final!==false)?calcMatchPoints(pk,res):null;
-      return `<div class="pick-row"><span class="pick-game">${m.lf} ${m.local} vs ${m.visita} ${m.vf}</span>
-        <div style="display:flex;align-items:center;gap:5px">
-          ${pts!==null?`<span style="font-size:9px;font-weight:700;color:${pts>=50?'var(--green)':pts>=20?'var(--navy3)':'var(--muted)'}">${pts>0?'+':''}${pts}</span>`:''}
-          <span class="pick-sc${has?'':' empty'}">${has?pk.gl+' – '+pk.gv:'–'}</span>
-        </div></div>`;
-    }).join('')+(p.bonus?.team?`<div class="pick-row"><span class="pick-game">🏆 Campeón: ${p.bonus.team}</span>
-      <span class="pick-sc" style="background:#fef9c3;color:#854d0e">${bonusResult?.team?bonusResult.team===p.bonus.team?'✅ 100':'0':' ...'}</span></div>`:'');
-    return `<div class="rank-card">
-      <div class="rank-head" onclick="toggleRank('r${i}')">
-        <div class="rank-left">
-          <div style="font-size:19px;width:26px;text-align:center">${medals[i]||'#'+(i+1)}</div>
-          <div class="avatar" style="background:${av.bg};color:${av.c}">${ini}</div>
-          <div><div class="rank-name">${p.name}</div>
-            <div class="rank-sub">${hasRes?p.pts+' pts · ':''}${p.picked}/32 partidos · ${p.bonus?.team||'sin campeón'}</div>
-          </div>
-        </div>
-        <div class="rank-right">
-          ${hasRes?`<div style="text-align:right"><div class="rank-pts-badge">${p.pts}</div><div class="rank-pts-label">puntos</div></div>`:''}
-          <span class="chev" id="ch-r${i}">▼</span>
-        </div>
-      </div>
-      <div class="prog-mini"><div class="prog-bar-bg"><div class="prog-bar-fill" style="width:${pct}%"></div></div></div>
-      <div class="rank-body" id="rb-r${i}">${rows}</div>
-    </div>`;
-  }).join('');
-}
-function toggleRank(id){document.getElementById('rb-'+id)?.classList.toggle('open');document.getElementById('ch-'+id)?.classList.toggle('open');}
-
 // ── ADMIN ──
 function renderAdminGate(){
   const gate=document.getElementById('admin-gate'),ctrl=document.getElementById('admin-controls');
@@ -894,123 +1083,133 @@ function renderAdminGate(){
   ctrl.style.display='none';
   gate.innerHTML=`<div class="admin-lock">
     <div class="admin-lock-title">🔐 Panel de administrador</div>
-    <div class="admin-lock-desc">Ingresa la clave para administrar la quiniela eliminatoria.</div>
-    <div class="admin-pin-row"><input class="admin-pin-input" id="admin-pin" type="password" placeholder="Clave" onkeydown="if(event.key==='Enter')adminLogin()"><button class="go-btn" onclick="adminLogin()">Entrar</button></div>
-    <div class="admin-state">Los participantes no necesitan esta clave.</div>
+    <div class="admin-lock-desc">Ingresa la clave para administrar la quiniela.</div>
+    <div class="admin-pin-row"><input class="admin-pin-input" id="admin-pin" type="password" placeholder="Clave admin"><button class="go-btn" id="admin-login-btn">Entrar</button></div>
+    <div class="admin-state">Los participantes tienen su propia clave personal.</div>
   </div>`;
+  document.getElementById('admin-pin').addEventListener('keydown',e=>{if(e.key==='Enter')adminLogin();});
+  document.getElementById('admin-login-btn').addEventListener('click',adminLogin);
 }
 function adminLogin(){
   if((document.getElementById('admin-pin')?.value||'')!==ADMIN_PIN)return toast('Clave incorrecta');
-  isAdmin=true;sessionStorage.setItem('qm26e_admin','1');renderAdminGate();buildAdmin();toast('Modo admin activado');
+  isAdmin=true;sessionStorage.setItem('qm26e_admin','1');renderAdminGate();buildAdmin();toast('Modo admin activado ✅');
 }
 function adminLogout(){isAdmin=false;sessionStorage.removeItem('qm26e_admin');renderAdminGate();buildAdmin();}
 
 function buildAdmin(){
   renderAdminGate();
-  const ctrl=document.getElementById('admin-controls');
-  if(!ctrl||!isAdmin)return;
+  const ctrl=document.getElementById('admin-controls');if(!ctrl||!isAdmin)return;
   ctrl.innerHTML=buildPhaseToggles()+buildBonusAdmin()+buildResultsAdmin()+buildTeamEditor()+buildPartsAdmin();
+  ctrl.querySelectorAll('[data-toggle-phase]').forEach(b=>b.addEventListener('click',()=>togglePhase(b.getAttribute('data-toggle-phase'))));
+  ctrl.querySelectorAll('[data-sec-toggle]').forEach(b=>b.addEventListener('click',()=>toggleSec(b.getAttribute('data-sec-toggle'))));
+  document.getElementById('bonus-save-res-btn')?.addEventListener('click',saveBonusResult);
+  document.getElementById('save-results-btn')?.addEventListener('click',saveResultados);
+  document.getElementById('save-teams-btn')?.addEventListener('click',saveTeamOverrides);
+  document.getElementById('clear-all-btn')?.addEventListener('click',clearAll);
+  document.getElementById('logout-admin-btn')?.addEventListener('click',adminLogout);
+  getMatches().forEach(m=>{
+    document.getElementById('rgl-'+m.id)?.addEventListener('input',()=>onResIn(m.id));
+    document.getElementById('rgv-'+m.id)?.addEventListener('input',()=>onResIn(m.id));
+  });
+  ctrl.querySelectorAll('[data-del-part]').forEach(b=>b.addEventListener('click',()=>delPart(b.getAttribute('data-del-part'))));
+  ctrl.querySelectorAll('[data-reset-pin]').forEach(b=>b.addEventListener('click',()=>resetPin(b.getAttribute('data-reset-pin'))));
 }
 
 function buildPhaseToggles(){
   return `<div class="control-card">
     <div class="control-title">🔓 Abrir / Cerrar Fases</div>
-    <div class="control-desc">Abre cada fase cuando los equipos estén confirmados.</div>
+    <div class="control-desc">Abre cada fase cuando los equipos estén confirmados. Los octavos se llenan automáticamente al ingresar resultados de 16avos.</div>
     ${PHASES.map(ph=>`<div class="phase-toggle">
       <div><div class="phase-toggle-name">${ph.full}</div><div style="font-size:10px;color:var(--muted)">${ph.dates}</div></div>
       <div style="display:flex;align-items:center;gap:8px">
         <span class="phase-status${phaseActive[ph.id]?' open':''}">${phaseActive[ph.id]?'Abierta':'Cerrada'}</span>
-        <button class="toggle-btn" onclick="togglePhase('${ph.id}')">${phaseActive[ph.id]?'Cerrar':'Abrir'}</button>
+        <button class="toggle-btn" data-toggle-phase="${ph.id}">${phaseActive[ph.id]?'Cerrar':'Abrir'}</button>
       </div></div>`).join('')}
-    <div style="text-align:right;margin-top:.5rem"><button onclick="adminLogout()" style="border:none;background:none;color:#aaa;font-size:11px;cursor:pointer;font-family:inherit">Cerrar sesión</button></div>
+    <div style="text-align:right;margin-top:.5rem"><button id="logout-admin-btn" style="border:none;background:none;color:#aaa;font-size:11px;cursor:pointer;font-family:inherit">Cerrar sesión admin</button></div>
   </div>`;
 }
 
 function buildBonusAdmin(){
-  const teams=[...new Set([...BONUS_TEAMS_BASE,...Object.values(teamOverrides).flatMap(o=>[o.local,o.visita]).filter(Boolean)])].filter(t=>t&&t!=='Por definir'&&!t.startsWith('Por confirm')).sort();
+  const teams=[...new Set([...BONUS_TEAMS_BASE,...Object.values(teamOverrides).flatMap(o=>[o.local,o.visita]).filter(Boolean)])].filter(t=>t&&t!=='Por definir').sort();
   return `<div class="control-card">
     <div class="control-title">🏆 Confirmar Campeón del Mundial</div>
-    <div class="control-desc">Cuando termine la Final, confirma el campeón para otorgar los 100 puntos del bonus.</div>
+    <div class="control-desc">Confirma el campeón al terminar la Final para otorgar los 100 pts del bonus.</div>
     ${bonusResult?.team?`<div style="background:#e7f8ee;border:1px solid #a7d7b8;border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;color:#176b3a;font-weight:600;text-align:center;margin-bottom:.65rem">🏆 ${bonusResult.team} confirmado</div>`:''}
     <select id="bonus-winner-sel" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;margin-bottom:.65rem;background:var(--card);color:var(--text)">
       <option value="">— Seleccionar campeón —</option>
       ${teams.map(t=>`<option value="${t}"${bonusResult?.team===t?' selected':''}>${t}</option>`).join('')}
     </select>
-    <button class="btn-save" onclick="saveBonusResult()">✅ Confirmar campeón del Mundial</button>
+    <button class="btn-save" id="bonus-save-res-btn">✅ Confirmar campeón del Mundial</button>
   </div>`;
 }
 
 function buildResultsAdmin(){
   const resultCount=Object.values(realResults).filter(r=>r.final!==false).length;
   return `<div class="sec-card">
-    <div class="sec-head" onclick="toggleSec('res')">
-      <span class="sec-title">⚽ Resultados — Avance automático del cuadro</span>
+    <div class="sec-head" data-sec-toggle="res">
+      <span class="sec-title">⚽ Resultados · avance automático del cuadro</span>
       <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:rgba(255,255,255,.5)">${resultCount}/32</span><span class="chev" id="chev-res">▼</span></div>
     </div>
     <div class="sec-body" id="sec-res">
-      <p style="font-size:12px;color:var(--muted);margin-bottom:.75rem;line-height:1.6">
-        Al guardar un resultado final, el ganador avanza automáticamente al siguiente partido del cuadro. Si el marcador es empate (ET/penales), selecciona quién avanzó.
-      </p>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:.75rem;line-height:1.6">Al guardar un resultado, el ganador avanza automáticamente al siguiente partido. Si hay empate, ingresa el marcador de penales — el ganador se determina solo.</p>
       ${PHASES.map(ph=>{
         const ms=getMatches().filter(m=>m.phase===ph.id);
         return `<div style="padding:.35rem 0 .2rem"><span style="font-size:10px;font-weight:800;color:${ph.color};text-transform:uppercase;letter-spacing:.5px">${ph.full}</span></div>`+
         ms.map(m=>{
           const res=realResults[m.id]||realResults[String(m.id)]||{};
           const hasRes=res.gl!==undefined;
-          const gl=parseInt(res.gl),gv=parseInt(res.gv);
-          const isTie=hasRes&&gl===gv;
+          const isTie=hasRes&&parseInt(res.gl)===parseInt(res.gv);
+          const hasPen=hasRes&&res.penLocal!==undefined;
           return `<div class="res-match" style="border-left:3px solid ${ph.color}">
             <div class="res-match-top" style="background:${ph.color};padding:2px 10px">
-              <span style="font-size:9px;color:rgba(255,255,255,.8)">M${m.num} · ${m.date} · ${m.time}</span>
-              <span style="font-size:9px;color:rgba(255,255,255,.6)">${hasRes?'✅ '+res.gl+'-'+res.gv+(res.tieWinner?'→'+(res.tieWinner==='local'?m.local:m.visita):'')+' (Final)':''}</span>
+              <span style="font-size:9px;color:rgba(255,255,255,.8)">M${m.num} · ${m.date} · ${m.time} · ${m.local} vs ${m.visita}</span>
+              <span style="font-size:9px;color:rgba(255,255,255,.6)">${hasRes?'✅ '+res.gl+'–'+res.gv+(hasPen?' pen:'+res.penLocal+'–'+res.penVisita:''):isTie&&!hasPen?'⚠️ falta penales':''}</span>
             </div>
             <div class="res-match-body">
               <div class="res-team r" style="font-size:11px"><span style="font-size:14px">${m.lf}</span>${m.local}</div>
-              <input class="res-box${hasRes?' has-v':''}" type="number" id="rgl-${m.id}" min="0" max="30" placeholder="–" inputmode="decimal" value="${res.gl??''}" oninput="onResIn(${m.id})">
+              <input class="res-box${hasRes?' has-v':''}" type="number" id="rgl-${m.id}" min="0" max="30" placeholder="–" inputmode="decimal" value="${res.gl??''}">
               <span class="res-vs">–</span>
-              <input class="res-box${hasRes?' has-v':''}" type="number" id="rgv-${m.id}" min="0" max="30" placeholder="–" inputmode="decimal" value="${res.gv??''}" oninput="onResIn(${m.id})">
+              <input class="res-box${hasRes?' has-v':''}" type="number" id="rgv-${m.id}" min="0" max="30" placeholder="–" inputmode="decimal" value="${res.gv??''}">
               <div class="res-team" style="font-size:11px">${m.visita}<span style="font-size:14px">${m.vf}</span></div>
             </div>
-            <div class="tie-row" id="tie-${m.id}" style="${isTie?'':'display:none'}">
-              <span style="font-weight:600;color:#92400e">⚡ Empate → ¿Quién avanzó (ET/Pen)?</span>
-              <select class="tie-sel" id="tie-sel-${m.id}">
-                <option value="">— Seleccionar —</option>
-                <option value="local"${res.tieWinner==='local'?' selected':''}>${m.local}</option>
-                <option value="visita"${res.tieWinner==='visita'?' selected':''}>${m.visita}</option>
-              </select>
+            <div id="pen-row-${m.id}" style="display:${isTie?'flex':'none'};align-items:center;gap:6px;padding:6px 8px;background:#fffbf0;border-top:1px dashed #fbbf24;flex-wrap:wrap">
+              <span style="font-size:11px;font-weight:700;color:#92400e">⚡ Penales:</span>
+              <span style="font-size:13px">${m.lf}</span>
+              <input type="number" class="res-box${hasPen?' has-v':''}" id="penl-res-${m.id}" min="0" max="10" placeholder="0" inputmode="decimal" value="${res.penLocal??''}" style="width:38px;height:34px;font-size:16px">
+              <span class="res-vs">–</span>
+              <input type="number" class="res-box${hasPen?' has-v':''}" id="penv-res-${m.id}" min="0" max="10" placeholder="0" inputmode="decimal" value="${res.penVisita??''}" style="width:38px;height:34px;font-size:16px">
+              <span style="font-size:13px">${m.vf}</span>
+              <span style="font-size:10px;color:#666">· quien anote más avanza</span>
             </div>
           </div>`;
         }).join('');
       }).join('')}
-      <button class="btn-save" onclick="saveResultados()">💾 Guardar resultados y avanzar cuadro</button>
+      <button class="btn-save" id="save-results-btn">💾 Guardar resultados y avanzar cuadro</button>
     </div>
   </div>`;
 }
 
-function onResIn(mid){
-  const gl=document.getElementById('rgl-'+mid)?.value;
-  const gv=document.getElementById('rgv-'+mid)?.value;
-  const glEl=document.getElementById('rgl-'+mid);
-  const gvEl=document.getElementById('rgv-'+mid);
-  if(glEl)glEl.classList.toggle('has-v',gl!=='');
-  if(gvEl)gvEl.classList.toggle('has-v',gv!=='');
-  // Show tie-breaker row if scores are equal and both filled
-  const tieRow=document.getElementById('tie-'+mid);
-  if(tieRow)tieRow.style.display=(gl!==''&&gv!==''&&gl===gv)?'flex':'none';
+function onResIn(matchId){
+  const gl=document.getElementById('rgl-'+matchId)?.value;
+  const gv=document.getElementById('rgv-'+matchId)?.value;
+  document.getElementById('rgl-'+matchId)?.classList.toggle('has-v',gl!=='');
+  document.getElementById('rgv-'+matchId)?.classList.toggle('has-v',gv!=='');
+  const penRow=document.getElementById('pen-row-'+matchId);
+  if(penRow)penRow.style.display=(gl!==''&&gv!==''&&gl===gv)?'flex':'none';
 }
 
 function buildTeamEditor(){
   const pending=getMatches().filter(m=>isPending(m));
   return `<div class="sec-card">
-    <div class="sec-head" onclick="toggleSec('teams')">
-      <span class="sec-title">✏️ Actualizar Equipos (Por definir)</span>
+    <div class="sec-head" data-sec-toggle="teams">
+      <span class="sec-title">✏️ Actualizar Equipos Por definir</span>
       <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:rgba(255,255,255,.5)">${pending.length} pendientes</span><span class="chev" id="chev-teams">▼</span></div>
     </div>
     <div class="sec-body" id="sec-teams">
       <p style="font-size:12px;color:var(--muted);margin-bottom:.75rem;line-height:1.6">
-        Al guardar un resultado el cuadro avanza automáticamente, pero si hay algún equipo que falta, actualízalo aquí.
+        <strong>💡 Los equipos de Octavos en adelante se llenan automáticamente</strong> al guardar resultados. Solo actualiza aquí si quieres corregir algo o llenar los últimos equipos de 16avos.
       </p>
-      ${pending.length===0?'<div style="padding:1rem;text-align:center;font-size:12px;color:var(--green);font-weight:600">✅ Todos los equipos están definidos</div>':
+      ${pending.length===0?'<div style="padding:1rem;text-align:center;font-size:12px;color:var(--green);font-weight:600">✅ Todos los equipos definidos</div>':
         pending.map(m=>`<div style="background:var(--light);border-radius:var(--radius-sm);border:1px solid var(--border);padding:8px;margin-bottom:6px">
           <div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:6px">M${m.num} · ${m.date} · ${m.time}</div>
           <div class="team-inp-grid">
@@ -1021,23 +1220,30 @@ function buildTeamEditor(){
               <input class="team-inp" id="tn-v-${m.id}" placeholder="Equipo visita" value="${m.visita==='Por definir'?'':m.visita}">
               <input class="team-inp" id="tn-vf-${m.id}" placeholder="🏳 Bandera" value="${m.vf==='🏳'?'':m.vf}" style="margin-top:3px"></div>
           </div></div>`).join('')}
-      <button class="btn-save" onclick="saveTeamOverrides()">💾 Actualizar equipos</button>
+      <button class="btn-save" id="save-teams-btn">💾 Actualizar equipos</button>
     </div>
   </div>`;
 }
 
 function buildPartsAdmin(){
   return `<div class="sec-card">
-    <div class="sec-head" onclick="toggleSec('parts')">
-      <span class="sec-title">👥 Participantes (${parts.length})</span>
+    <div class="sec-head" data-sec-toggle="parts">
+      <span class="sec-title">👥 Participantes y Claves (${parts.length})</span>
       <span class="chev" id="chev-parts">▼</span>
     </div>
     <div class="sec-body" id="sec-parts">
-      ${parts.length?parts.map(p=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px">
-        <div><div style="font-weight:600">${p.name}</div><div style="font-size:10px;color:var(--muted)">${countPicks(p)}/32 partidos · ${p.bonus?.team||'sin campeón'}</div></div>
-        <button style="border:none;background:none;cursor:pointer;color:#ddd;font-size:13px;padding:3px 7px;border-radius:4px;transition:.15s" onmouseover="this.style.color='#E94560'" onmouseout="this.style.color='#ddd'" onclick="delPart('${p.name.replace(/'/g,"\\'")}')">✕</button>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:.65rem">Como admin puedes ver y resetear claves de participantes.</p>
+      ${parts.length?parts.map(p=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;gap:8px">
+        <div style="flex:1">
+          <div style="font-weight:600">${p.name}</div>
+          <div style="font-size:10px;color:var(--muted)">${countPicks(p)}/32 · ${p.bonus?.team||'sin campeón'} · 🔐 clave: ${p.pin||'sin clave'}</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0">
+          <button data-reset-pin="${p.name.replace(/"/g,'&quot;')}" style="border:1px solid var(--border);background:none;cursor:pointer;color:var(--navy3);font-size:10px;padding:3px 8px;border-radius:4px;font-family:inherit;white-space:nowrap">Reset clave</button>
+          <button data-del-part="${p.name.replace(/"/g,'&quot;')}" style="border:none;background:none;cursor:pointer;color:#ddd;font-size:13px;padding:3px 7px;border-radius:4px">✕</button>
+        </div>
       </div>`).join(''):'<div style="padding:1rem;text-align:center;color:var(--muted);font-size:12px">Sin participantes</div>'}
-      <div style="text-align:center;margin-top:.75rem"><button onclick="clearAll()" style="border:none;background:none;color:#ccc;font-size:11px;cursor:pointer;font-family:inherit">Borrar todos los pronósticos</button></div>
+      <div style="text-align:center;margin-top:.75rem"><button id="clear-all-btn" style="border:none;background:none;color:#ccc;font-size:11px;cursor:pointer;font-family:inherit">Borrar todos los pronósticos</button></div>
     </div>
   </div>`;
 }
@@ -1047,7 +1253,7 @@ function toggleSec(id){document.getElementById('sec-'+id)?.classList.toggle('ope
 async function togglePhase(id){
   phaseActive[id]=!phaseActive[id];
   if(!db){renderPhaseNav();renderCurrentPhase();buildAdmin();return;}
-  try{await db.collection(SCOL).doc(SDOC).set({phaseActive},{merge:true});toast(`${id}: ${phaseActive[id]?'ABIERTA':'CERRADA'}`);}
+  try{await db.collection(SCOL).doc(SDOC).set({phaseActive},{merge:true});toast(`Fase ${id}: ${phaseActive[id]?'ABIERTA':'CERRADA'}`);}
   catch(e){console.error(e);toast('Error');}
 }
 
@@ -1058,22 +1264,23 @@ async function saveResultados(){
     const gl=document.getElementById('rgl-'+m.id)?.value;
     const gv=document.getElementById('rgv-'+m.id)?.value;
     if(gl!==''&&gl!==undefined&&gv!==''&&gv!==undefined){
-      const tieSel=document.getElementById('tie-sel-'+m.id);
-      const tieWinner=tieSel?.value||null;
-      results[m.id]={gl,gv,final:true,...(tieWinner?{tieWinner}:{})};
+      const penL=document.getElementById('penl-res-'+m.id)?.value;
+      const penV=document.getElementById('penv-res-'+m.id)?.value;
+      const penData=(penL&&penV)?{penLocal:penL,penVisita:penV}:{};
+      let tw=null;
+      if(penL&&penV)tw=parseInt(penL)>parseInt(penV)?'local':'visita';
+      results[m.id]={gl,gv,final:true,...penData,...(tw?{tieWinner:tw}:{})};
     }
   });
-  // Update local immediately
   realResults=Object.assign({},realResults,results);
   renderCurrentPhase();buildRanking();
-  // Auto-propagate bracket
   await propagateBracket(results);
-  if(!db){toast(`✅ ${Object.keys(results).length} resultados guardados y cuadro actualizado`);buildAdmin();return;}
+  if(!db){toast(`✅ ${Object.keys(results).length} resultados`);buildAdmin();return;}
   try{
     await db.collection(SCOL).doc(SDOC).set({realResults,updatedAt:Date.now()},{merge:true});
-    toast(`✅ ${Object.keys(results).length} resultados guardados · cuadro avanzado automáticamente`);
+    toast(`✅ ${Object.keys(results).length} resultados · cuadro avanzado automáticamente`);
     buildAdmin();
-  }catch(e){console.error(e);toast('Error al guardar');}
+  }catch(e){console.error(e);toast('Error');}
 }
 
 async function saveBonusResult(){
@@ -1082,7 +1289,7 @@ async function saveBonusResult(){
   if(!team)return toast('Selecciona el campeón');
   bonusResult={team};
   if(!db){renderBonus();buildRanking();toast(`🏆 ${team} confirmado`);buildAdmin();return;}
-  try{await db.collection(SCOL).doc(SDOC).set({bonusResult},{merge:true});toast(`🏆 ${team} confirmado como campeón!`);}
+  try{await db.collection(SCOL).doc(SDOC).set({bonusResult},{merge:true});toast(`🏆 ${team} confirmado!`);}
   catch(e){console.error(e);toast('Error');}
 }
 
@@ -1102,8 +1309,20 @@ async function saveTeamOverrides(){
   catch(e){console.error(e);toast('Error');}
 }
 
+async function resetPin(name){
+  if(!isAdmin)return;
+  const newPin=prompt('Nueva clave de 4 dígitos para '+name+':');
+  if(!newPin||!/^\d{4}$/.test(newPin))return toast('Ingresa exactamente 4 dígitos');
+  const docId=docIdFromName(name);
+  if(!db){const i=parts.findIndex(p=>p.name===name);if(i>=0)parts[i].pin=newPin;buildAdmin();toast('✅ Clave de '+name+' → '+newPin);return;}
+  try{
+    await db.collection(COLLECTION).doc(docId).set({pin:newPin},{merge:true});
+    toast('✅ Nueva clave de '+name+': '+newPin+' — compártesela');
+  }catch(e){console.error(e);toast('Error');}
+}
+
 async function delPart(name){
-  if(!isAdmin)return;if(!confirm(`¿Eliminar a ${name}?`))return;
+  if(!isAdmin)return;if(!confirm('¿Eliminar a '+name+'?'))return;
   if(!db){parts=parts.filter(p=>p.name!==name);syncBadges();buildAdmin();return;}
   try{await db.collection(COLLECTION).doc(docIdFromName(name)).delete();toast('Eliminado');}
   catch(e){console.error(e);toast('Error');}
@@ -1120,7 +1339,7 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
 
 // ── PWA ──
 (function(){
-  const m={name:"Quiniela Eliminatoria 2026",short_name:"Eliminatoria 26",start_url:"./",display:"standalone",background_color:"#1A1A2E",theme_color:"#1A1A2E",orientation:"portrait",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%231A1A2E'/%3E%3Ctext y='150' x='10' font-size='150'%3E%F0%9F%8F%86%3C/text%3E%3C/svg%3E",sizes:"192x192",type:"image/svg+xml"}]};
+  const m={name:'Quiniela Eliminatoria 2026',short_name:'Eliminatoria 26',start_url:'./',display:'standalone',background_color:'#1A1A2E',theme_color:'#1A1A2E',orientation:'portrait',icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%231A1A2E'/%3E%3Ctext y='150' x='10' font-size='150'%3E%F0%9F%8F%86%3C/text%3E%3C/svg%3E",sizes:'192x192',type:'image/svg+xml'}]};
   const link=document.getElementById('pwa-manifest');
   if(link)link.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/json'}));
 })();
@@ -1129,21 +1348,16 @@ if('serviceWorker' in navigator){
   navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'text/javascript'}))).catch(()=>{});
 }
 let deferredInstallPrompt=null;
-function isInStandaloneMode(){return window.matchMedia('(display-mode: standalone)').matches||!!window.navigator.standalone;}
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;const s=parseInt(localStorage.getItem('pwa_s2')||'0');if(Date.now()>s)setTimeout(()=>document.getElementById('install-banner').classList.add('show'),2500);});
 function installPWA(){document.getElementById('install-banner').classList.remove('show');if(deferredInstallPrompt){deferredInstallPrompt.prompt();deferredInstallPrompt.userChoice.then(()=>{deferredInstallPrompt=null;});}}
 function dismissInstall(){document.getElementById('install-banner').classList.remove('show');localStorage.setItem('pwa_s2',String(Date.now()+24*60*60*1000));}
-window.addEventListener('load',()=>{if(isInStandaloneMode())document.getElementById('install-banner').style.display='none';});
+window.addEventListener('load',()=>{if(window.matchMedia('(display-mode: standalone)').matches||!!window.navigator.standalone)document.getElementById('install-banner').style.display='none';});
 
-function toggleScoringLegend(){
-  const b=document.getElementById('scoring-body');
-  const c=document.getElementById('scoring-chev');
-  if(b){b.style.display=b.style.display==='none'?'block':'none';}
-  if(c){c.style.transform=c.style.transform==='rotate(180deg)'?'':'rotate(180deg)';}
-}
 // ── INIT ──
 load();
 renderPhaseNav();
+if(pinVerified)activateForm();
+
 </script>
 </body>
 </html>
