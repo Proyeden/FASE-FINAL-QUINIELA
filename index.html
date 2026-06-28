@@ -1200,10 +1200,13 @@ async function savePick(matchId){
   try{
     // Timeout de 10s — evita que el botón quede bloqueado para siempre
     const timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),10000));
-    await Promise.race([
-      db.collection(COLLECTION).doc(docId).set(entry,{merge:true}),
-      timeout
-    ]);
+    const ref=db.collection(COLLECTION).doc(docId);
+    // Usar update() para docs existentes (solo actualiza el pick específico)
+    // o set() para docs nuevos — más confiable que set({merge:true})
+    const writeOp=ex
+      ? ref.update({[`picks.${String(matchId)}`]:pickData, name:me, updatedAt:Date.now()})
+      : ref.set({name:me, pin:myPin||null, picks:{[String(matchId)]:pickData}, bonus:null, ts:Date.now(), updatedAt:Date.now()});
+    await Promise.race([writeOp, timeout]);
     toast(toastMsg);
     // Actualizar badge del partido SIN re-renderizar toda la sección
     if(btn){
@@ -1225,9 +1228,17 @@ async function savePick(matchId){
       setTimeout(()=>{btn.textContent='Guardar';btn.disabled=false;btn.classList.remove('saved');},2000);
     }
   }catch(e){
-    console.error(e);
+    console.error('Firebase error:',e.code,e.message);
     if(btn){btn.textContent='Guardar';btn.disabled=false;btn.classList.remove('saved');}
-    toast(e.message==='timeout'?'⏱ Sin respuesta — verifica tu conexión y vuelve a intentar':'❌ No se pudo guardar — intenta de nuevo');
+    if(e.message==='timeout'){
+      toast('⏱ Sin respuesta de Firebase — verifica conexión');
+    } else if(e.code==='permission-denied'){
+      toast('🔒 Sin permisos — actualiza las reglas de Firestore');
+    } else if(e.code==='unavailable'){
+      toast('📡 Firebase no disponible — intenta de nuevo');
+    } else {
+      toast('❌ Error: '+(e.code||e.message||'desconocido'));
+    }
   }
 }
 
